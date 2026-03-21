@@ -1,0 +1,6 @@
+export const brand = 'cyan'
+export const timing = 'yellow'
+export const success = 'green'
+export const error = 'red'
+export const highlight = 'magenta'
+export const dim = 'gray'

@@ -1,0 +1,175 @@
+import { useState } from 'react'
+import { Box, Text, useApp } from 'ink'
+import TextInput from 'ink-text-input'
+import SelectInput from 'ink-select-input'
+import Spinner from 'ink-spinner'
+import { scaffold } from '../../lib/scaffold.js'
+import type { ScaffoldOptions } from '../../lib/scaffold.js'
+import { join } from 'path'
+
+type Step = 'name' | 'type' | 'features' | 'scaffolding' | 'done' | 'error'
+
+interface Props {
+  initialName?: string
+  initialType?: string
+}
+
+const PROJECT_TYPES = [
+  { label: 'Web App (React + Express)', value: 'webapp' },
+  { label: 'Website (PHP + MySQL)', value: 'website' },
+]
+
+const FEATURE_TOGGLES = [
+  { label: 'Authentication (JWT + bcrypt)', key: 'auth' },
+  { label: 'Email (Nodemailer)', key: 'email' },
+  { label: 'PDF Renderer', key: 'pdf' },
+]
+
+export function NewProjectWizard({ initialName, initialType }: Props) {
+  const { exit } = useApp()
+
+  const [step, setStep] = useState<Step>(initialName ? (initialType ? 'features' : 'type') : 'name')
+  const [name, setName] = useState(initialName ?? '')
+  const [nameInput, setNameInput] = useState('')
+  const [projectType, setProjectType] = useState(initialType ?? '')
+  const [features, setFeatures] = useState<ScaffoldOptions>({ auth: true, email: false, pdf: false })
+  const [scaffoldStep, setScaffoldStep] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
+
+  const handleNameSubmit = (value: string) => {
+    const trimmed = value.trim()
+    if (!trimmed) return
+    setName(trimmed)
+    setStep('type')
+  }
+
+  const handleTypeSelect = (item: { value: string }) => {
+    setProjectType(item.value)
+    if (item.value === 'webapp') {
+      setStep('features')
+    } else {
+      void doScaffold(name, item.value, features)
+    }
+  }
+
+  const handleFeaturesConfirm = () => {
+    void doScaffold(name, projectType, features)
+  }
+
+  const doScaffold = async (projName: string, type: string, opts: ScaffoldOptions) => {
+    setStep('scaffolding')
+    const destPath = join(process.cwd(), projName)
+
+    try {
+      setScaffoldStep(`Scaffolding ${projName}...`)
+      await scaffold(type, projName, destPath, opts)
+      setStep('done')
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : String(err))
+      setStep('error')
+    }
+  }
+
+  if (step === 'name') {
+    return (
+      <Box flexDirection="column" padding={1}>
+        <Text bold color="cyan">Rocket — New Project</Text>
+        <Box marginTop={1}>
+          <Text>Project name: </Text>
+          <TextInput value={nameInput} onChange={setNameInput} onSubmit={handleNameSubmit} />
+        </Box>
+      </Box>
+    )
+  }
+
+  if (step === 'type') {
+    return (
+      <Box flexDirection="column" padding={1}>
+        <Text bold color="cyan">Rocket — New Project</Text>
+        <Text dimColor>Project: {name}</Text>
+        <Box marginTop={1} flexDirection="column">
+          <Text>Select project type:</Text>
+          <SelectInput items={PROJECT_TYPES} onSelect={handleTypeSelect} />
+        </Box>
+      </Box>
+    )
+  }
+
+  if (step === 'features') {
+    return (
+      <Box flexDirection="column" padding={1}>
+        <Text bold color="cyan">Rocket — New Project</Text>
+        <Text dimColor>Project: {name} ({projectType})</Text>
+        <Box marginTop={1} flexDirection="column">
+          <Text>Feature toggles:</Text>
+          {FEATURE_TOGGLES.map((f) => {
+            const enabled = features[f.key as keyof ScaffoldOptions]
+            return (
+              <Text key={f.key}>
+                {enabled ? '  ✓ ' : '  ✗ '}
+                {f.label}
+              </Text>
+            )
+          })}
+          <Box marginTop={1}>
+            <SelectInput
+              items={[
+                ...FEATURE_TOGGLES.map((f) => ({ label: `Toggle ${f.label}`, value: f.key })),
+                { label: 'Continue →', value: '_continue' },
+              ]}
+              onSelect={(item) => {
+                if (item.value === '_continue') {
+                  handleFeaturesConfirm()
+                } else {
+                  const key = item.value as keyof ScaffoldOptions
+                  setFeatures((prev) => ({ ...prev, [key]: !prev[key] }))
+                }
+              }}
+            />
+          </Box>
+        </Box>
+      </Box>
+    )
+  }
+
+  if (step === 'scaffolding') {
+    return (
+      <Box flexDirection="column" padding={1}>
+        <Text bold color="cyan">Rocket — New Project</Text>
+        <Box marginTop={1}>
+          <Text color="yellow">
+            <Spinner type="dots" />
+          </Text>
+          <Text> {scaffoldStep}</Text>
+        </Box>
+      </Box>
+    )
+  }
+
+  if (step === 'error') {
+    setTimeout(() => exit(), 100)
+    return (
+      <Box flexDirection="column" padding={1}>
+        <Text bold color="red">Error</Text>
+        <Text>{errorMsg}</Text>
+      </Box>
+    )
+  }
+
+  // step === 'done'
+  setTimeout(() => exit(), 100)
+  return (
+    <Box flexDirection="column" padding={1}>
+      <Text bold color="green">✓ Project created!</Text>
+      <Box marginTop={1} flexDirection="column">
+        <Text>  Name:     {name}</Text>
+        <Text>  Template: {projectType}</Text>
+      </Box>
+      <Box marginTop={1} flexDirection="column">
+        <Text bold>Next steps:</Text>
+        <Text>  cd {name}</Text>
+        <Text>  rocket loop</Text>
+      </Box>
+    </Box>
+  )
+}

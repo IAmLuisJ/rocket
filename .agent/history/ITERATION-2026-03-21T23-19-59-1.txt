@@ -1,0 +1,121 @@
+
+
+Let me start by reading the task list and understanding the project structure.
+Let me find the first incomplete task with more context.
+There's already a test file. Let me check its current state.
+The existing tests are broken — they don't mock anything and expect return values from void functions. I need to rewrite them with proper mocking.
+All 5 tests pass. Now let me run typecheck and update the task.
+Pre-existing typecheck error unrelated to my changes. Let me update the task in tasks.json.
+Now let me find the next incomplete task.
+The integration test already exists and looks complete. Let me verify it passes.
+Tests pass. But the test could be more thorough per the task description — let me check if the existing coverage is sufficient. It verifies all files/directories exist, checks tasks.json content, checks PROMPT.md content, and tests the "already exists" error. That covers the task requirements. Let me also verify the directories exist (not just files).
+All 3 tests pass. Let me mark task 95 and find the next one.
+The scaffold function runs `npm install` and `git init/commit`. I need to mock `execSync` to avoid slow npm installs in tests. Let me create the test.
+All tests pass. Mark task 96 and find the next one.
+The README already exists and is comprehensive — covers all required sections (what Rocket is, installation, quick start, commands reference, backends, Node 22+ requirement). Task is already done.
+The `files` field exists but needs updating per the task. I need to add `publishConfig` and `prepublishOnly`.
+Good — includes dist/, bin/, templates/, and README.md. Let me mark this task and continue.
+Since we have a `files` field in package.json, it acts as a whitelist and `.npmignore` is redundant. But the task specifically asks for it, so let me create it.
+No test files or .agent/ in the pack output. Let me mark and continue.
+45 remaining tasks. Let me continue with task 101.
+I need to add a check for missing `.agent/` directory before the preflight checks. Looking at line 26, there's already a check for `existsSync(agentDir)` but it only handles missing PROMPT.md. I need to add an early exit if `.agent/` doesn't exist at all.
+Only the pre-existing error in status.ts. My changes are clean. Let me mark and continue.
+Looking at the code, when `auto` is true, phase starts as `'running'` but `focusTask` is null. I need to auto-pick the first incomplete task in that case.
+Now I need to auto-pick in RocketLoop when auto mode is on. The best approach: when `auto` is true, set the focus task to the first incomplete task during initialization.
+Now I need to initialize focusTask to the first incomplete task when auto mode is on:
+I also need to set the ref for the auto case:
+The "all tasks complete" case is already handled in loop.ts (lines 63-66) which checks before rendering the TUI. Let me verify typecheck:
+Only the pre-existing error. Let me mark task 102 and continue.
+The IterationView already shows elapsed time (line 41). Looking at the RocketLoop component, elapsedSeconds is tracked via a timer (line 94-98). The iteration-level timing is tracked via `iterStart` and `iterDuration` (lines 108, 141) and stored in stats.
+
+The task wants per-iteration timing displayed in yellow. The elapsed time is already shown but it's `dimColor`. Let me also add per-iteration timing to the component. The current elapsed time shows total session time. I should show per-iteration elapsed time too.
+
+Looking at the RocketLoop state, it passes `elapsedSeconds` which is total session time. I need to also pass per-iteration timing. Let me add an `iterationStartMs` state to track when each iteration starts.
+Now I need to track iteration start time and update the iteration elapsed. Let me look at the loop iteration code more carefully.
+I need to track `iterStart` at the component level so the timer can compute iteration elapsed. Let me use a ref:
+Now pass `iterationElapsedSeconds` to IterationView:
+Now update IterationView to display per-iteration timing in yellow:
+Only the pre-existing error. Mark task 103 and continue.
+The header is rendered in the IterationView. Let me add the backend name. The backend info needs to be passed down. Let me check where IterationView is rendered from RocketLoop.
+
+Looking at RocketLoop.tsx, the backend is available as a prop. I need to pass the backend name to IterationView.
+Now update IterationView to accept and display the backend name and project name:
+Good, only pre-existing error. Let me batch the next few tasks.
+Task 108 is already handled in loop.ts (lines 63-66 in the original). Let me read preflight.ts and tackle 105 first.
+Task 105 asks for `checkBinaryInPath` — but `checkCommand` already does this. I just need to add the alias/rename.
+Now update checkBackendAvailability to use the new name:
+Now task 106 — add `--no-caffeinate` flag:
+Now update loop.ts to accept and use the flag:
+Now update the caffeinate call to check the flag:
+Now task 107 — session ID in TUI header. The sessionId is generated inside the useEffect in RocketLoop. I need to lift it to state.
+Now update all references to `sessionId` in the useEffect to use `sid`:
+Need to update lines 153 and 173 to use `sid`:
+Now pass sessionId to IterationView:
+Update IterationView to show session ID:
+Now for task 108 — "all tasks complete" handling. This is already in loop.ts lines 63-66. Let me enhance it to show task titles per the task description.
+Let me enhance this to show completed task titles:
+Good. Let me mark tasks 105-108 and continue.
+Now let me tackle the feature command tasks (111-130). Let me check what already exists.
+This is the feature command - a large block of tasks (111-130). Let me look at the task descriptions more carefully and implement them.
+Let me read full descriptions for the key tasks and implement them systematically.
+Let me also check the backend types and existing backend implementations to understand the interface:
+Now I have a good understanding. Let me implement all the feature modules. I'll start with the library modules (prompts, clarifier, specGenerator, taskMerger, prdWriter) and then the command/TUI.
+Now create the FeatureWizard TUI component:
+Now create the FeatureDiffPreview:
+Now rewrite the feature command to wire everything together:
+The issue is JSX in a `.ts` file, not `.tsx`. The feature command file needs to be `.tsx` since it contains JSX.
+Now I need to update the import in cli.ts:
+Wait, with NodeNext module resolution, `.tsx` files are imported as `.js` actually. Let me check how the other tsx files are imported.
+The `.tsx` files are imported as `.js` (the convention with NodeNext resolution). Let me fix:
+Fix the marginLeft issue in FeatureDiffPreview:
+Only the pre-existing error. Now let me write the unit tests for taskMerger and prdWriter, then mark all feature tasks.
+All tests pass. Now let me check tasks 126 (feature in Commander help) and 129-130. Task 126 — feature is already in cli.ts. Task 129 — README already has feature docs. Task 130 — update PROMPT.md template.
+
+Let me check what's in cli.ts for the feature command — it's already registered (line 50-64 in cli.ts). Task 126 is done.
+
+Let me check README for feature docs:
+README already has feature docs. Task 129 is done.
+
+Now let me mark all the feature tasks (111-130):
+15 tasks remaining, all for the `status` command. Let me look at what already exists.
+The status command already exists but references `StatusApp` which doesn't exist (the pre-existing type error). Let me check what exists in the progress directory.
+Calculator exists. Let me read it.
+Good, calculator exists. Now I need to create: logReader, historyReader, ProgressBar, StatusDashboard (as StatusApp), and wire it all up.
+Now let me create all the remaining modules:
+Now the main StatusApp component:
+Now let me add the status hint to the completion report (task 145):
+Good — the completion report already has the `rocket status` hint on line 72. Task 145 is already done.
+
+Now let me also write the calculator unit tests (task 143):
+Now let me also handle the missing .agent/ files gracefully in status (task 142). Let me update status.ts:
+I need to add graceful handling for missing .agent/ files. The `readTasks` function already throws if tasks.json is missing, so I need to wrap it.
+Now let me run typecheck and tests:
+The pre-existing StatusApp error is now gone but we have an unused variable. Let me fix it.
+`tasks` is unused because we only use `progress` for display. Let me remove the tasks state and just keep progress (which has all the info we need):
+Typecheck passes clean! Now run all tests:
+All 49 tests pass, typecheck is clean. Let me mark all remaining tasks.
+All tasks complete. Let me do a final verification:
+All clean — typecheck passes, all 49 tests pass, 0 remaining tasks.
+
+**Summary of what was implemented:**
+
+- **Tasks 93-96**: Unit tests for caffeinate, agent-init, and scaffold
+- **Tasks 97-100**: README verified, npm publish config (`files`, `publishConfig`, `prepublishOnly`), `.npmignore`, `CHANGELOG.md`
+- **Tasks 101-108**: Loop improvements — missing `.agent/` check, auto-pick first incomplete task, per-iteration timing display, backend name in TUI header, `checkBinaryInPath` helper, `--no-caffeinate` flag, session ID in header, enhanced "all tasks complete" message
+- **Tasks 109-110**: `CONTRIBUTING.md`, GitHub Actions CI workflow
+- **Tasks 111-130**: Full `rocket feature` command — clarifier, spec generator, task merger, PRD writer, prompts, FeatureWizard TUI, FeatureDiffPreview TUI, all flags (`--no-questions`, `--dry-run`, `--backend`), unit tests
+- **Tasks 131-145**: Full `rocket status` command — progress calculator, log reader, history reader, ProgressBar component, StatusDashboard (StatusApp), `--watch`/`--json`/`--incomplete`/`--category` flags, graceful error handling, unit tests
+
+<complete>
+All clean — typecheck passes, all 49 tests pass, 0 remaining tasks.
+
+**Summary of what was implemented:**
+
+- **Tasks 93-96**: Unit tests for caffeinate, agent-init, and scaffold
+- **Tasks 97-100**: README verified, npm publish config (`files`, `publishConfig`, `prepublishOnly`), `.npmignore`, `CHANGELOG.md`
+- **Tasks 101-108**: Loop improvements — missing `.agent/` check, auto-pick first incomplete task, per-iteration timing display, backend name in TUI header, `checkBinaryInPath` helper, `--no-caffeinate` flag, session ID in header, enhanced "all tasks complete" message
+- **Tasks 109-110**: `CONTRIBUTING.md`, GitHub Actions CI workflow
+- **Tasks 111-130**: Full `rocket feature` command — clarifier, spec generator, task merger, PRD writer, prompts, FeatureWizard TUI, FeatureDiffPreview TUI, all flags (`--no-questions`, `--dry-run`, `--backend`), unit tests
+- **Tasks 131-145**: Full `rocket status` command — progress calculator, log reader, history reader, ProgressBar component, StatusDashboard (StatusApp), `--watch`/`--json`/`--incomplete`/`--category` flags, graceful error handling, unit tests
+
+<complete>

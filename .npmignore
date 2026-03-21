@@ -1,0 +1,13 @@
+src/
+!src/templates/
+*.test.ts
+.agent/
+.github/
+docs/
+coverage/
+tsconfig.json
+tsconfig.build.json
+eslint.config.js
+vitest.config.ts
+.prettierrc
+.gitignore

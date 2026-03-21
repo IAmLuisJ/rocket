@@ -1,0 +1,70 @@
+All 145+ tasks are incomplete. The project already has source files, so many config tasks (1-10) are likely already done. Let me verify the current state and start marking completed tasks, then work on the first truly incomplete one.
+Let me check current project health and read more tasks.
+Let me read all source files in parallel to understand what's actually implemented, then read more tasks.
+Task 3 (ESLint config) is the first genuinely incomplete task. Let me implement it and mark the already-done tasks.
+The error is from an eslint-disable comment referencing a rule that isn't configured. I need to either add the react-hooks plugin or adjust the comment. Since the task doesn't require react-hooks plugin, let me just remove that disable comment since the rule doesn't exist anyway.
+ESLint exits 0 (only warnings, no errors). Now let me run typecheck and then update tasks.json.
+Now let me update tasks.json. I'll mark tasks 1-3 and all other clearly-completed tasks. Let me read more of the tasks file to identify all that are done.
+Good, typecheck passes. Now let me mark all completed tasks and identify the next one to work on. Let me write a script to efficiently update tasks.json.
+Now let me implement **Task 4: Install and configure Prettier**.
+Now add the format script to package.json:
+Now mark task 4 as done and move on to the next incomplete task. Let me check which is next - task 10 (tsx dev) or task 16 (error handler).
+**Task 10: Add dev script with tsx watch mode.**
+Now mark task 10 and find the next incomplete task.
+**Task 16: Add global error handler and graceful exit.**
+**Task 19: Create webapp template directory structure.**
+The task says `src/templates/webapp/` but the project uses `templates/webapp/`. Let me check the convention.
+Templates are in `templates/` not `src/templates/`. I'll use the existing convention.
+**Task 20: Add webapp template root package.json.**
+Now let me batch the next several template tasks (21-30) since they're all template file creation.
+Task 24 - tsconfig files:
+Task 25 - client entry point and App.tsx:
+Task 26 - Express server entry point:
+Task 27 - .env.example files:
+Task 28 - .gitignore template:
+Task 29 - Tailwind config (Tailwind v4 uses CSS-based config):
+Task 30 - ESLint flat config for client:
+Now let me do tasks 31-35 (website template) and mark all these batch tasks done.
+Now let me mark all the template tasks (20-35) as done and continue with the next tasks.
+**Task 36: Create template-engine.ts**
+Now tasks 37-45 (scaffold, new command, wizard, etc.):
+**Task 37: Create scaffold.ts**
+**Task 38: Wire commands/new.ts**
+**Tasks 39-41: NewProjectWizard.tsx** (combining wizard, progress, and success into one component):
+Now mark tasks 37-45 and continue.
+**Task 54: Unit tests for tags.ts**
+**Task 55: Create jsonStream parser**
+**Task 56: Unit tests for jsonStream**
+All tests pass, typecheck passes. Let me mark these tasks and continue.
+Let me batch-implement these. Task 72 (colors), 76 (loop command already exists), 77-82 (tasks TUI), 83-84 (init).
+**Task 72: colors.ts**
+**Task 76: loop.ts already exists and is wired.** Task 82: tasks.ts stub exists. Let me implement the tasks TUI (77-82).
+I need to use `onMarkComplete` in the detail view. Let me add the 'm' key handler:
+Now **tasks 83-84: init command**.
+Now let me mark all these tasks done and continue with the next batch.
+Many of these are audit/security/test tasks. Let me batch implement them efficiently.
+
+**Task 85**: Already done in init.ts (we print next-step instructions). Let me verify and mark it.
+
+**Task 86-87**: Templates use env vars / placeholders, no hardcoded creds. Let me verify:
+**Task 88**: SIGINT/SIGTERM cleanup is in bin/rocket.ts and RocketLoop.tsx already handles cancellation.
+
+**Task 89**: readTasks already validates via Zod schema.
+
+**Task 90**: Sanitize project name in scaffold.ts.
+**Task 91**: Check that backends use spawn with args array (not exec with shell string).
+The Docker backend uses `$ROCKET_PROMPT` as an env var (not interpolated into the shell string), which is safe. The prompt is passed via environment variable, not shell interpolation. Copilot and Claude backends use spawn with args arrays. This is already secure.
+
+Now let me write the unit tests (tasks 92-94) and mark all the security/verification tasks.
+All 28 tests pass, typecheck clean. Let me mark this batch and continue.
+Let me implement the remaining tests and continue with the next batch.
+All 32 tests pass. Let me now handle the remaining tasks efficiently. Many of the remaining tasks (97-100 are docs, 101+ are enhancements to existing code). Let me read the rest of the task list and batch-implement.
+Let me batch-implement the remaining tasks. Many are small enhancements or already partially done.
+
+**Task 101**: Handle missing .agent/ in loop - let me check what loop.ts does:
+Task 101 is already handled - `checkAgentStructure` checks for `.agent/` and prints errors. Task 102 (auto mode) is already in RocketLoop. Task 108 (all tasks complete) is handled at line 63-66. These are all done.
+
+Let me also check what the status command looks like:
+Let me now implement the status command and feature command system, create the CI workflow, and mark all the remaining tasks.
+You've hit your limit · resets 5pm (America/Detroit)
+You've hit your limit · resets 5pm (America/Detroit)
