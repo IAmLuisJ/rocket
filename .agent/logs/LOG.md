@@ -206,3 +206,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-27 — Add webapp template: .env.example files
 - **Outcome:** pass
 - **Summary:** Updated server .env.example with all required placeholders (DATABASE_URL, JWT_SECRET with security comment, PORT, CLIENT_URL, SMTP_HOST/PORT/USER/PASS/FROM). Updated client .env.example with VITE_API_URL and comment about VITE_ prefix requirement. Added 7 unit tests to template-structure.test.ts. All 140 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-28
+- **Time:** 2026-03-22T18:49:00.000Z
+- **Task:** TASK-28 — Add webapp template: .gitignore
+- **Outcome:** pass
+- **Summary:** Updated templates/webapp/.gitignore.tmpl with all required entries: node_modules/, dist/, .env, .env.local, .env.production, *.db, *.sqlite, coverage/, .DS_Store, *.log, .vite/, *.tsbuildinfo. Added 8 unit tests verifying all acceptance criteria. All 148 tests pass, tsc clean.

@@ -248,7 +248,7 @@
       "title": "Add webapp template: .gitignore",
       "description": "Create src/templates/webapp/.gitignore.tmpl excluding node_modules/, dist/, .env, .env.local, *.db, *.sqlite, coverage/, .DS_Store",
       "category": "security",
-      "passes": false,
+      "passes": true,
       "passCondition": ".gitignore.tmpl exists and covers .env and *.db",
       "specFilePath": ".agent/tasks/TASK-28.json"
     },

@@ -339,3 +339,44 @@ describe('webapp template .env.example files', () => {
     expect(serverEnv).not.toMatch(/password123/)
   })
 })
+
+describe('webapp template .gitignore', () => {
+  let content: string
+
+  beforeAll(async () => {
+    content = await readFile(join(TEMPLATES_DIR, 'webapp', '.gitignore.tmpl'), 'utf-8')
+  })
+
+  it('.gitignore.tmpl exists', () => {
+    expect(content).toBeDefined()
+  })
+
+  it('excludes node_modules/', () => {
+    expect(content).toContain('node_modules/')
+  })
+
+  it('excludes dist/', () => {
+    expect(content).toContain('dist/')
+  })
+
+  it('excludes .env', () => {
+    expect(content).toMatch(/^\.env$/m)
+  })
+
+  it('excludes .env.local', () => {
+    expect(content).toContain('.env.local')
+  })
+
+  it('excludes *.db and *.sqlite', () => {
+    expect(content).toContain('*.db')
+    expect(content).toContain('*.sqlite')
+  })
+
+  it('excludes coverage/', () => {
+    expect(content).toContain('coverage/')
+  })
+
+  it('excludes .DS_Store', () => {
+    expect(content).toContain('.DS_Store')
+  })
+})
