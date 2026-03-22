@@ -254,3 +254,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-35 — Add website template: Tailwind CSS via CDN
 - **Outcome:** pass
 - **Summary:** Updated layout.php to use PHP variables ($title with {{PROJECT_NAME}} fallback, $content echo). Updated home.php to set $title/$content variables and require layout.php instead of string replacement. Added 10 unit tests verifying HTML5 DOCTYPE, meta viewport, Tailwind CDN, PHP content placeholder, and home.php layout integration. All 216 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-36
+- **Time:** 2026-03-22T19:06:00.000Z
+- **Task:** TASK-36 — Create src/lib/template-engine.ts
+- **Outcome:** pass
+- **Summary:** template-engine.ts already implemented with processTemplate, replaceTokens, isBinary functions. Added 4 tests: multiple token occurrences replaced, binary files copied without modification, .gitignore.tmpl renamed to .gitignore, export verification. All 220 tests pass, tsc clean.
