@@ -140,3 +140,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-16 — Add global error handler and graceful exit to CLI
 - **Outcome:** pass
 - **Summary:** Added unhandledRejection handler and stdout.write('\n') to SIGINT handler in bin/rocket.ts. try/catch and SIGINT handler were already in place. Added 3 unit tests verifying SIGINT handler registration before parseAsync, unhandledRejection handler presence, and try/catch with error formatting. All 62 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-17
+- **Time:** 2026-03-22T04:35:00.000Z
+- **Task:** TASK-17 — Add preflight Node.js version check at CLI startup
+- **Outcome:** pass
+- **Summary:** Added checkNodeVersion() to src/lib/preflight.ts that parses process.version and exits with code 1 if major < 22, printing a clear error with the required version and upgrade URL. Called in bin/rocket.ts before program.parseAsync. Added 4 unit tests covering Node 18 rejection, Node 22+ pass-through, and upgrade URL in error message. All 66 tests pass, tsc clean.

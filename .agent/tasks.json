@@ -149,7 +149,7 @@
       "title": "Add preflight Node.js version check at CLI startup",
       "description": "In src/cli.ts or a src/lib/preflight.ts module, check process.version against semver >=22. If the check fails, print an error message with the required version and exit with code 1 before any command runs.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Running with Node 18 prints a clear version error and exits; Node 22+ runs normally",
       "specFilePath": ".agent/tasks/TASK-17.json"
     },

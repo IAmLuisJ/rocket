@@ -1,3 +1,13 @@
+export function checkNodeVersion(): void {
+  const [major] = process.version.slice(1).split('.').map(Number)
+  if (major < 22) {
+    console.error(
+      `\x1b[31mError:\x1b[0m Rocket requires Node.js >=22. You are running ${process.version}.\nPlease upgrade: https://nodejs.org`,
+    )
+    process.exit(1)
+  }
+}
+
 import { existsSync } from 'fs'
 import { join } from 'path'
 import { execSync } from 'child_process'

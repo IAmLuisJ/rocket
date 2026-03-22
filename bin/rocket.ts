@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+import { checkNodeVersion } from '../src/lib/preflight.js'
+
+checkNodeVersion()
+
 import { program } from '../src/cli.js'
 
 // Graceful SIGINT handling — exit cleanly without stack trace
