@@ -50,7 +50,7 @@
       "title": "Install core runtime dependencies",
       "description": "Install commander, ink, react, ink-select-input, ink-spinner, ink-text-input, fs-extra, zod, strip-ansi. Install @types/* for all packages that need them as devDependencies.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm install exits 0; all packages present in node_modules",
       "specFilePath": ".agent/tasks/TASK-6.json"
     },

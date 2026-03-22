@@ -74,3 +74,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-5 — Create bin/rocket.ts entry point
 - **Outcome:** pass
 - **Summary:** Verified bin/rocket.ts already exists with correct shebang, imports program from src/cli.js, calls parseAsync. Build produces dist/bin/rocket.js with shebang preserved. `node dist/bin/rocket.js --help` works. Added cli.test.ts with 6 tests covering entry point and Commander program. All 55 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-6
+- **Time:** 2026-03-22T04:15:00.000Z
+- **Task:** TASK-6 — Install core runtime dependencies
+- **Outcome:** pass
+- **Summary:** Added strip-ansi (the only missing runtime dependency) to package.json. All 9 runtime deps (commander, ink, react, ink-select-input, ink-spinner, ink-text-input, fs-extra, zod, strip-ansi) verified present in node_modules. @types/react and @types/fs-extra already installed as devDependencies. No peer dependency issues. All 55 tests pass, tsc clean.
