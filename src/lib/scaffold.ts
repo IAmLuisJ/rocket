@@ -1,6 +1,6 @@
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { mkdir, writeFile } from 'fs/promises'
+import { mkdir, writeFile, rm } from 'fs/promises'
 import { execSync } from 'child_process'
 import { processTemplate } from './template-engine.js'
 
@@ -31,10 +31,10 @@ export function sanitizeProjectName(name: string): string {
 }
 
 export async function scaffold(
-  templateName: string,
+  templateName: 'webapp' | 'website',
   projectName: string,
   destPath: string,
-  _options?: ScaffoldOptions,
+  options?: ScaffoldOptions,
 ): Promise<void> {
   const safeName = sanitizeProjectName(projectName)
   const templateDir = join(getTemplatesDir(), templateName)
@@ -43,18 +43,32 @@ export async function scaffold(
   // Copy and process template files
   await processTemplate(templateDir, destPath, vars)
 
+  // Post-copy cleanup for feature toggles
+  if (options?.auth === false) {
+    const authPath = join(destPath, 'server', 'src', 'middleware', 'auth.ts')
+    try {
+      await rm(authPath)
+    } catch {
+      // File may not exist in template — that's fine
+    }
+  }
+
   // Create .agent/ structure
   await createAgentStructure(destPath, projectName)
 
   // Run npm install
-  execSync('npm install', { cwd: destPath, stdio: 'pipe' })
+  try {
+    execSync('npm install', { cwd: destPath, stdio: 'inherit' })
+  } catch {
+    console.error('Warning: npm install failed. You may need to run it manually.')
+  }
 
   // Initialize git
-  execSync('git init', { cwd: destPath, stdio: 'pipe' })
-  execSync('git add -A', { cwd: destPath, stdio: 'pipe' })
-  execSync('git commit -m "Initial scaffold from rocket new"', {
+  execSync('git init', { cwd: destPath, stdio: 'inherit' })
+  execSync('git add -A', { cwd: destPath, stdio: 'inherit' })
+  execSync('git commit -m "Initial commit from Rocket"', {
     cwd: destPath,
-    stdio: 'pipe',
+    stdio: 'inherit',
     env: {
       ...process.env,
       GIT_AUTHOR_NAME: 'Rocket',

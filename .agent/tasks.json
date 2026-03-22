@@ -329,7 +329,7 @@
       "title": "Create src/lib/scaffold.ts — project scaffolding logic",
       "description": "Create scaffold.ts that takes (templateName, projectName, destPath, options) and: copies the template directory using template-engine.ts with PROJECT_NAME substitution, runs npm install in the new project dir, runs git init.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "scaffold('webapp', 'my-app', '/tmp/my-app', {}) creates the directory, runs npm install, runs git init",
       "specFilePath": ".agent/tasks/TASK-37.json"
     },

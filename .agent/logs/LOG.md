@@ -260,3 +260,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-36 — Create src/lib/template-engine.ts
 - **Outcome:** pass
 - **Summary:** template-engine.ts already implemented with processTemplate, replaceTokens, isBinary functions. Added 4 tests: multiple token occurrences replaced, binary files copied without modification, .gitignore.tmpl renamed to .gitignore, export verification. All 220 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-37
+- **Time:** 2026-03-22T19:08:00.000Z
+- **Task:** TASK-37 — Create src/lib/scaffold.ts — project scaffolding logic
+- **Outcome:** pass
+- **Summary:** Updated scaffold.ts: narrowed templateName type to 'webapp' | 'website', changed stdio from 'pipe' to 'inherit' per spec, added try/catch for npm install failure, added post-copy auth file cleanup for feature toggles. Fixed NewProjectWizard.tsx type error. Rewrote scaffold.test.ts with 9 tests covering directory creation, .agent/ structure, npm install call verification, git init/add/commit verification, name sanitization, and npm install failure handling. All 227 tests pass, tsc clean.

@@ -52,15 +52,19 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
     if (item.value === 'webapp') {
       setStep('features')
     } else {
-      void doScaffold(name, item.value, features)
+      void doScaffold(name, item.value as 'webapp' | 'website', features)
     }
   }
 
   const handleFeaturesConfirm = () => {
-    void doScaffold(name, projectType, features)
+    void doScaffold(name, projectType as 'webapp' | 'website', features)
   }
 
-  const doScaffold = async (projName: string, type: string, opts: ScaffoldOptions) => {
+  const doScaffold = async (
+    projName: string,
+    type: 'webapp' | 'website',
+    opts: ScaffoldOptions,
+  ) => {
     setStep('scaffolding')
     const destPath = join(process.cwd(), projName)
 
