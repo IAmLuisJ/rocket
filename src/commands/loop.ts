@@ -21,6 +21,11 @@ export async function runLoop(opts: {
   const projectRoot = process.cwd()
   const maxIterations = opts.once ? 1 : parseInt(opts.maxIterations ?? '10', 10)
 
+  if (!opts.once && (isNaN(maxIterations) || maxIterations < 1)) {
+    console.error('Error: --max-iterations must be a positive integer')
+    process.exit(1)
+  }
+
   // Check for .agent/ directory
   const agentDir = join(projectRoot, '.agent')
   if (!existsSync(agentDir)) {

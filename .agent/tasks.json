@@ -158,7 +158,7 @@
       "title": "Add --max-iterations flag to rocket loop",
       "description": "Add optional --max-iterations <n> flag to the loop command (default: 10). Pass this value through to the loop runner. Validate it is a positive integer; show error if not.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket loop --max-iterations 5 passes the value to the runner; invalid values show an error",
       "specFilePath": ".agent/tasks/TASK-18.json"
     },

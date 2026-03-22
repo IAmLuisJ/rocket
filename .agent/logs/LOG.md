@@ -146,3 +146,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-17 — Add preflight Node.js version check at CLI startup
 - **Outcome:** pass
 - **Summary:** Added checkNodeVersion() to src/lib/preflight.ts that parses process.version and exits with code 1 if major < 22, printing a clear error with the required version and upgrade URL. Called in bin/rocket.ts before program.parseAsync. Added 4 unit tests covering Node 18 rejection, Node 22+ pass-through, and upgrade URL in error message. All 66 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-18
+- **Time:** 2026-03-22T14:02:00.000Z
+- **Task:** TASK-18 — Add --max-iterations flag to rocket loop
+- **Outcome:** pass
+- **Summary:** Flag was already registered in cli.ts with `-n, --max-iterations <n>` and default '10'. Added validation in loop.ts for non-integer and negative values (exits with error). Created loop.test.ts with 5 tests covering invalid values (NaN, negative, zero), valid values, and flag registration. All 71 tests pass, tsc clean.
