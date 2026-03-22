@@ -402,3 +402,53 @@ describe('webapp template .gitignore', () => {
     expect(content).toContain('.DS_Store')
   })
 })
+
+describe('website template: index.php entry point', () => {
+  let content: string
+  const websiteDir = join(TEMPLATES_DIR, 'website')
+
+  beforeAll(async () => {
+    content = await readFile(join(websiteDir, 'public', 'index.php'), 'utf-8')
+  })
+
+  it('public/index.php exists', () => {
+    expect(content).toBeDefined()
+    expect(content.length).toBeGreaterThan(0)
+  })
+
+  it('requires config/database.php', () => {
+    expect(content).toContain("require_once __DIR__ . '/../config/database.php'")
+  })
+
+  it('contains basic routing logic using parse_url', () => {
+    expect(content).toContain('parse_url')
+    expect(content).toContain('REQUEST_URI')
+    expect(content).toContain('PHP_URL_PATH')
+  })
+
+  it('returns homepage for root path', () => {
+    expect(content).toContain("'/../templates/home.php'")
+  })
+
+  it('returns 404 for unknown paths', () => {
+    expect(content).toContain('http_response_code(404)')
+    expect(content).toContain("'/../templates/404.php'")
+  })
+})
+
+describe('website template: home.php', () => {
+  it('templates/home.php exists', async () => {
+    const content = await readFile(join(TEMPLATES_DIR, 'website', 'templates', 'home.php'), 'utf-8')
+    expect(content).toBeDefined()
+    expect(content).toContain('{{PROJECT_NAME}}')
+  })
+})
+
+describe('website template: 404.php', () => {
+  it('templates/404.php exists with 404 message', async () => {
+    const content = await readFile(join(TEMPLATES_DIR, 'website', 'templates', '404.php'), 'utf-8')
+    expect(content).toBeDefined()
+    expect(content).toContain('404')
+    expect(content).toContain('Page not found')
+  })
+})

@@ -230,3 +230,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-31 — Create website template directory structure
 - **Outcome:** pass
 - **Summary:** Verified templates/website/ directory structure already exists with all 4 subdirectories (public/, src/, templates/, config/) containing template files. Added 5 unit tests to template-structure.test.ts verifying all directories. All 181 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-32
+- **Time:** 2026-03-22T18:57:00.000Z
+- **Task:** TASK-32 — Add website template: index.php entry point
+- **Outcome:** pass
+- **Summary:** Updated public/index.php with simple router using parse_url and rtrim, routing root path to templates/home.php and unknown paths to templates/404.php with http_response_code(404). Created home.php and 404.php template views using layout.php. Added 7 unit tests. All 188 tests pass, tsc clean.
