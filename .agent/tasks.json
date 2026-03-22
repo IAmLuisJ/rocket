@@ -266,7 +266,7 @@
       "title": "Add webapp template: ESLint flat config",
       "description": "Create src/templates/webapp/client/eslint.config.js with typescript-eslint recommended rules, React hooks plugin, and react-refresh plugin.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": "eslint.config.js template exists with typescript and react rules",
       "specFilePath": ".agent/tasks/TASK-30.json"
     },

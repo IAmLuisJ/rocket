@@ -218,3 +218,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-29 — Add webapp template: tailwind.config.js
 - **Outcome:** pass
 - **Summary:** Added ./index.html to tailwind.config.js content paths. Created full CSS variable definitions in index.css for light (:root) and dark (.dark) themes with all shadcn/ui variables (background, foreground, primary, secondary, muted, accent, destructive, border, input, ring, radius). Added 12 unit tests. All 160 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-30
+- **Time:** 2026-03-22T18:53:00.000Z
+- **Task:** TASK-30 — Add webapp template: ESLint flat config
+- **Outcome:** pass
+- **Summary:** Rewrote templates/webapp/client/eslint.config.js to use typescript-eslint unified config with tseslint.config(), @eslint/js recommended, globals.browser, react-hooks and react-refresh plugins. Added 6 ESLint devDependencies to client package.json.tmpl (eslint, @eslint/js, globals, eslint-plugin-react-hooks, eslint-plugin-react-refresh, typescript-eslint). Created template-eslint.test.ts with 16 tests. All 176 tests pass, tsc clean.
