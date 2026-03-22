@@ -257,7 +257,7 @@
       "title": "Add webapp template: tailwind.config.js",
       "description": "Create src/templates/webapp/client/tailwind.config.js for Tailwind v4 with content paths pointing to src/**/*.{tsx,ts}. Include shadcn/ui CSS variable theme setup.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Template file exists with content paths and CSS variable theme",
       "specFilePath": ".agent/tasks/TASK-29.json"
     },

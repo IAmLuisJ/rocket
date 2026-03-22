@@ -212,3 +212,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-28 — Add webapp template: .gitignore
 - **Outcome:** pass
 - **Summary:** Updated templates/webapp/.gitignore.tmpl with all required entries: node_modules/, dist/, .env, .env.local, .env.production, *.db, *.sqlite, coverage/, .DS_Store, *.log, .vite/, *.tsbuildinfo. Added 8 unit tests verifying all acceptance criteria. All 148 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-29
+- **Time:** 2026-03-22T18:51:00.000Z
+- **Task:** TASK-29 — Add webapp template: tailwind.config.js
+- **Outcome:** pass
+- **Summary:** Added ./index.html to tailwind.config.js content paths. Created full CSS variable definitions in index.css for light (:root) and dark (.dark) themes with all shadcn/ui variables (background, foreground, primary, secondary, muted, accent, destructive, border, input, ring, radius). Added 12 unit tests. All 160 tests pass, tsc clean.
