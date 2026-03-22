@@ -170,3 +170,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-21 — Add webapp template: client package.json
 - **Outcome:** pass
 - **Summary:** Updated templates/webapp/client/package.json.tmpl to match spec: react-router changed to react-router-dom, typescript bumped to ^5.9, vite bumped to ^7, added @testing-library/user-event, version set to 0.0.1. Added 10 unit tests covering all acceptance criteria (dependencies, versions, scripts). All 92 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-22
+- **Time:** 2026-03-22T14:10:00.000Z
+- **Task:** TASK-22 — Add webapp template: server package.json
+- **Outcome:** pass
+- **Summary:** Updated templates/webapp/server/package.json.tmpl: added cors and @types/cors dependencies, fixed build script to use `tsc -p tsconfig.json`. Added 12 unit tests verifying all acceptance criteria (express ^5, better-sqlite3, jsonwebtoken, bcryptjs, nodemailer, zod, cors, tsx/vitest in devDeps, @types packages, scripts). All 104 tests pass, tsc clean.

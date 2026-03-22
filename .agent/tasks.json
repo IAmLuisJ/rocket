@@ -194,7 +194,7 @@
       "title": "Add webapp template: server package.json",
       "description": "Create src/templates/webapp/server/package.json.tmpl with Express v5, better-sqlite3, jsonwebtoken, bcryptjs, nodemailer, zod. Dev dependencies include tsx, vitest.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Template lists all required server dependencies",
       "specFilePath": ".agent/tasks/TASK-22.json"
     },

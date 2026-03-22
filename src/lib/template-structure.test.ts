@@ -64,6 +64,81 @@ describe('webapp template root package.json', () => {
   })
 })
 
+describe('webapp template server package.json', () => {
+  let pkg: Record<string, unknown>
+  let deps: Record<string, string>
+  let devDeps: Record<string, string>
+  let scripts: Record<string, string>
+
+  beforeAll(async () => {
+    const content = await readFile(
+      join(TEMPLATES_DIR, 'webapp', 'server', 'package.json.tmpl'),
+      'utf-8',
+    )
+    pkg = JSON.parse(content)
+    deps = pkg.dependencies as Record<string, string>
+    devDeps = pkg.devDependencies as Record<string, string>
+    scripts = pkg.scripts as Record<string, string>
+  })
+
+  it('uses {{PROJECT_NAME}}-server as name', () => {
+    expect(pkg.name).toBe('{{PROJECT_NAME}}-server')
+  })
+
+  it('is type module', () => {
+    expect(pkg.type).toBe('module')
+  })
+
+  it('has express ^5', () => {
+    expect(deps.express).toMatch(/^\^5/)
+  })
+
+  it('has better-sqlite3', () => {
+    expect(deps['better-sqlite3']).toBeDefined()
+  })
+
+  it('has jsonwebtoken', () => {
+    expect(deps.jsonwebtoken).toBeDefined()
+  })
+
+  it('has bcryptjs', () => {
+    expect(deps.bcryptjs).toBeDefined()
+  })
+
+  it('has nodemailer', () => {
+    expect(deps.nodemailer).toBeDefined()
+  })
+
+  it('has zod', () => {
+    expect(deps.zod).toBeDefined()
+  })
+
+  it('has cors', () => {
+    expect(deps.cors).toBeDefined()
+  })
+
+  it('has tsx and vitest in devDependencies', () => {
+    expect(devDeps.tsx).toBeDefined()
+    expect(devDeps.vitest).toBeDefined()
+  })
+
+  it('has @types for express, better-sqlite3, jsonwebtoken, bcryptjs, nodemailer, cors', () => {
+    expect(devDeps['@types/express']).toBeDefined()
+    expect(devDeps['@types/better-sqlite3']).toBeDefined()
+    expect(devDeps['@types/jsonwebtoken']).toBeDefined()
+    expect(devDeps['@types/bcryptjs']).toBeDefined()
+    expect(devDeps['@types/nodemailer']).toBeDefined()
+    expect(devDeps['@types/cors']).toBeDefined()
+  })
+
+  it('has required scripts', () => {
+    expect(scripts.dev).toBe('tsx watch src/index.ts')
+    expect(scripts.build).toBe('tsc -p tsconfig.json')
+    expect(scripts.start).toBe('node dist/index.js')
+    expect(scripts.test).toBe('vitest run')
+  })
+})
+
 describe('webapp template client package.json', () => {
   let pkg: Record<string, unknown>
   let deps: Record<string, string>
