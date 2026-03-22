@@ -50,3 +50,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-1 — Initialize package.json for rocket CLI
 - **Outcome:** pass
 - **Summary:** Verified package.json meets all acceptance criteria (name, version, type, bin, engines, scripts). Fixed environment: installed Node 22 via nvm, patched esbuild with WASM for ARM64 compatibility. All 49 tests pass, TypeScript compiles clean.
+
+## Session 2026-03-22 · TASK-2
+- **Time:** 2026-03-22T04:10:00.000Z
+- **Task:** TASK-2 — Configure tsconfig.json for ESM + Node.js 22
+- **Outcome:** pass
+- **Summary:** Updated tsconfig.json to use module/moduleResolution NodeNext, target ES2022, strict, esModuleInterop, skipLibCheck. tsconfig.build.json extends root with outDir:dist, declaration, declarationMap, sourceMap. Created src/index.ts. tsc --noEmit passes clean, build produces correct output, all 49 tests pass.

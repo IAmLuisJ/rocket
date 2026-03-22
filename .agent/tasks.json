@@ -14,7 +14,7 @@
       "title": "Configure tsconfig.json for ESM + Node.js 22",
       "description": "Create tsconfig.json with module:NodeNext, moduleResolution:NodeNext, target:ES2022, strict:true, outDir:dist, rootDir:src, and a separate tsconfig for bin/. Include composite builds.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": "tsc --noEmit passes with no errors on a minimal src/index.ts file",
       "specFilePath": ".agent/tasks/TASK-2.json"
     },
