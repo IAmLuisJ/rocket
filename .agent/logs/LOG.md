@@ -80,3 +80,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-6 — Install core runtime dependencies
 - **Outcome:** pass
 - **Summary:** Added strip-ansi (the only missing runtime dependency) to package.json. All 9 runtime deps (commander, ink, react, ink-select-input, ink-spinner, ink-text-input, fs-extra, zod, strip-ansi) verified present in node_modules. @types/react and @types/fs-extra already installed as devDependencies. No peer dependency issues. All 55 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-7
+- **Time:** 2026-03-22T04:15:00.000Z
+- **Task:** TASK-7 — Install and configure Vitest for unit testing
+- **Outcome:** pass
+- **Summary:** Vitest already installed (v2.0.5) with vitest.config.ts configured for src/**/*.test.ts. Updated test script from "vitest" to "vitest run" for CI-friendly exit behavior. All 55 tests pass, tsc clean.

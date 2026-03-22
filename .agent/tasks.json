@@ -59,7 +59,7 @@
       "title": "Install and configure Vitest for unit testing",
       "description": "Install vitest. Create vitest.config.ts pointing to src/**/*.test.ts. Add test script to package.json. Confirm vitest --run exits 0 with no test files.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm test exits 0 with message 'no test files found'",
       "specFilePath": ".agent/tasks/TASK-7.json"
     },

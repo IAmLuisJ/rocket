@@ -10,7 +10,7 @@
     "build": "tsc -p tsconfig.build.json && cp package.json dist/package.json",
     "dev": "tsx watch bin/rocket.ts",
     "start": "node dist/bin/rocket.js",
-    "test": "vitest",
+    "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src/ bin/",
     "typecheck": "tsc --noEmit",
