@@ -212,7 +212,7 @@
       "title": "Add webapp template: composite tsconfig files",
       "description": "Create tsconfig.json, tsconfig.app.json, and tsconfig.node.json for the client template. Create a server tsconfig.json with NodeNext module resolution.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "All tsconfig files exist in correct template locations",
       "specFilePath": ".agent/tasks/TASK-24.json"
     },

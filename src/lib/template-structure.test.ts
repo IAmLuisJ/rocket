@@ -183,6 +183,55 @@ describe('webapp template test setup file', () => {
   })
 })
 
+describe('webapp template tsconfig files', () => {
+  const clientDir = join(TEMPLATES_DIR, 'webapp', 'client')
+  const serverDir = join(TEMPLATES_DIR, 'webapp', 'server')
+
+  it('client tsconfig.json exists with composite references', async () => {
+    const content = await readFile(join(clientDir, 'tsconfig.json'), 'utf-8')
+    const config = JSON.parse(content)
+    expect(config.files).toEqual([])
+    expect(config.references).toEqual([
+      { path: './tsconfig.app.json' },
+      { path: './tsconfig.node.json' },
+    ])
+  })
+
+  it('client tsconfig.app.json has correct compilerOptions', async () => {
+    const content = await readFile(join(clientDir, 'tsconfig.app.json'), 'utf-8')
+    const config = JSON.parse(content)
+    expect(config.compilerOptions.target).toBe('ES2022')
+    expect(config.compilerOptions.module).toBe('ESNext')
+    expect(config.compilerOptions.moduleResolution).toMatch(/^[Bb]undler$/)
+    expect(config.compilerOptions.jsx).toBe('react-jsx')
+    expect(config.compilerOptions.strict).toBe(true)
+  })
+
+  it('client tsconfig.app.json has @/* path alias', async () => {
+    const content = await readFile(join(clientDir, 'tsconfig.app.json'), 'utf-8')
+    const config = JSON.parse(content)
+    expect(config.compilerOptions.paths['@/*']).toEqual(['./src/*'])
+  })
+
+  it('client tsconfig.node.json includes vite.config.ts', async () => {
+    const content = await readFile(join(clientDir, 'tsconfig.node.json'), 'utf-8')
+    const config = JSON.parse(content)
+    expect(config.include).toContain('vite.config.ts')
+    expect(config.compilerOptions.target).toBe('ES2022')
+  })
+
+  it('server tsconfig.json uses NodeNext module resolution', async () => {
+    const content = await readFile(join(serverDir, 'tsconfig.json'), 'utf-8')
+    const config = JSON.parse(content)
+    expect(config.compilerOptions.module).toBe('NodeNext')
+    expect(config.compilerOptions.moduleResolution).toBe('NodeNext')
+    expect(config.compilerOptions.strict).toBe(true)
+    expect(config.compilerOptions.outDir).toBe('dist')
+    expect(config.compilerOptions.rootDir).toBe('src')
+    expect(config.compilerOptions.declaration).toBe(true)
+  })
+})
+
 describe('webapp template client package.json', () => {
   let pkg: Record<string, unknown>
   let deps: Record<string, string>

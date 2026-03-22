@@ -182,3 +182,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-23 — Add webapp template: vite.config.ts
 - **Outcome:** pass
 - **Summary:** Verified existing vite.config.ts has React plugin, @/* path alias, and jsdom vitest config. Created templates/webapp/client/src/test/setup.ts with @testing-library/jest-dom import. Added 7 unit tests covering all acceptance criteria. All 111 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-24
+- **Time:** 2026-03-22T14:14:00.000Z
+- **Task:** TASK-24 — Add webapp template: composite tsconfig files
+- **Outcome:** pass
+- **Summary:** All 4 tsconfig files already existed. Fixed server tsconfig.json module resolution from Node16 to NodeNext per spec. Added 5 unit tests verifying composite references, compiler options, @/* path alias, vite.config.ts inclusion, and NodeNext resolution. All 116 tests pass, tsc clean.
