@@ -59,4 +59,16 @@ describe('src/cli.ts Commander program', () => {
     expect(newCmd!.description()).toBe('Scaffold a new project from a template')
     expect(newCmd!.usage()).toContain('[project-name]')
   })
+
+  it("'loop' command has --claude and --docker flags", async () => {
+    const { program } = await import('./cli.js')
+    const loopCmd = program.commands.find((c) => c.name() === 'loop')
+    expect(loopCmd).toBeDefined()
+    expect(loopCmd!.description()).toBe('Run the Rocket AI development loop')
+    const helpText = loopCmd!.helpInformation()
+    expect(helpText).toContain('--claude')
+    expect(helpText).toContain('--docker')
+    expect(helpText).toContain('Use Claude CLI directly')
+    expect(helpText).toContain('Use Claude in Docker sandbox')
+  })
 })

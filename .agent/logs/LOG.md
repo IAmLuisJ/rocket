@@ -111,6 +111,12 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Outcome:** pass
 - **Summary:** Verified tsx already installed as devDependency (v4.21.0) and dev script already configured as `tsx watch bin/rocket.ts`. Fixed esbuild ARM64 compatibility by patching native binary with esbuild-wasm. `npx tsx bin/rocket.ts --help` prints CLI usage correctly. All 55 tests pass, tsc clean.
 
+## Session 2026-03-22 · TASK-13
+- **Time:** 2026-03-22T04:28:00.000Z
+- **Task:** TASK-13 — Register 'rocket loop' command in Commander
+- **Outcome:** pass
+- **Summary:** Loop command already fully wired in cli.ts with --claude and --docker flags. Added unit test verifying loop command description and flags in help output. All 58 tests pass, tsc clean.
+
 ## Session 2026-03-22 · TASK-12
 - **Time:** 2026-03-22T04:26:00.000Z
 - **Task:** TASK-12 — Register 'rocket new' command in Commander

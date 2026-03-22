@@ -113,7 +113,7 @@
       "title": "Register 'rocket loop' command in Commander",
       "description": "Add 'loop' command with flags: --claude (use Claude direct backend), --docker (use Claude docker backend). Default backend is Copilot CLI. Wire to src/commands/loop.ts.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket loop --help shows --claude and --docker flags with descriptions",
       "specFilePath": ".agent/tasks/TASK-13.json"
     },
