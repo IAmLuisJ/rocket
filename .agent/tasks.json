@@ -167,7 +167,7 @@
       "title": "Create src/templates/webapp/ directory structure",
       "description": "Create the webapp template skeleton: src/templates/webapp/ with subdirectories client/, server/, and root config files (.gitignore.tmpl, package.json.tmpl, README.md.tmpl). This is the container — actual files added in subsequent tasks.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Directory src/templates/webapp/ exists with client/ and server/ subdirs",
       "specFilePath": ".agent/tasks/TASK-19.json"
     },
