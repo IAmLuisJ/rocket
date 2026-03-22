@@ -436,11 +436,62 @@ describe('website template: index.php entry point', () => {
   })
 })
 
+describe('website template: layout.php with Tailwind CSS via CDN', () => {
+  let content: string
+
+  beforeAll(async () => {
+    content = await readFile(join(TEMPLATES_DIR, 'website', 'templates', 'layout.php'), 'utf-8')
+  })
+
+  it('layout.php exists', () => {
+    expect(content).toBeDefined()
+    expect(content.length).toBeGreaterThan(0)
+  })
+
+  it('has HTML5 DOCTYPE', () => {
+    expect(content).toContain('<!DOCTYPE html>')
+  })
+
+  it('has meta viewport tag', () => {
+    expect(content).toContain('meta name="viewport"')
+    expect(content).toContain('width=device-width')
+  })
+
+  it('includes Tailwind CSS CDN script tag', () => {
+    expect(content).toContain('https://cdn.tailwindcss.com')
+  })
+
+  it('has {{PROJECT_NAME}} placeholder in title', () => {
+    expect(content).toContain('{{PROJECT_NAME}}')
+  })
+
+  it('has PHP content placeholder', () => {
+    expect(content).toContain('$content')
+  })
+})
+
 describe('website template: home.php', () => {
-  it('templates/home.php exists', async () => {
-    const content = await readFile(join(TEMPLATES_DIR, 'website', 'templates', 'home.php'), 'utf-8')
+  let content: string
+
+  beforeAll(async () => {
+    content = await readFile(join(TEMPLATES_DIR, 'website', 'templates', 'home.php'), 'utf-8')
+  })
+
+  it('templates/home.php exists', () => {
     expect(content).toBeDefined()
     expect(content).toContain('{{PROJECT_NAME}}')
+  })
+
+  it('uses layout.php', () => {
+    expect(content).toContain('layout.php')
+  })
+
+  it('sets $title variable', () => {
+    expect(content).toContain('$title')
+  })
+
+  it('sets $content variable', () => {
+    expect(content).toContain('$content')
   })
 })
 

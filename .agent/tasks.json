@@ -311,7 +311,7 @@
       "title": "Add website template: Tailwind CSS via CDN",
       "description": "Create src/templates/website/templates/layout.php with an HTML5 base layout including Tailwind CSS CDN script tag, meta viewport, and {{CONTENT}} placeholder block.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "layout.php template exists with Tailwind CDN and content placeholder",
       "specFilePath": ".agent/tasks/TASK-35.json"
     },

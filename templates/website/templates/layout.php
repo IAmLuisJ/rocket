@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{PROJECT_NAME}}</title>
+    <title><?= $title ?? '{{PROJECT_NAME}}' ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen">
@@ -13,7 +13,7 @@
         </nav>
     </header>
     <main class="max-w-7xl mx-auto px-4 py-8">
-        {{CONTENT}}
+        <?php if (isset($content)) echo $content; ?>
     </main>
 </body>
 </html>

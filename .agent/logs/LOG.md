@@ -248,3 +248,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-34 — Add website template: .env.example for PHP project
 - **Outcome:** pass
 - **Summary:** Updated templates/website/.env.example with proper placeholder values (your_database_name, your_database_user, your_database_password) replacing real-looking defaults (app, root, empty). Added APP_DEBUG=true. Added 8 unit tests verifying all required keys and no real credential values. All 207 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-35
+- **Time:** 2026-03-22T19:05:00.000Z
+- **Task:** TASK-35 — Add website template: Tailwind CSS via CDN
+- **Outcome:** pass
+- **Summary:** Updated layout.php to use PHP variables ($title with {{PROJECT_NAME}} fallback, $content echo). Updated home.php to set $title/$content variables and require layout.php instead of string replacement. Added 10 unit tests verifying HTML5 DOCTYPE, meta viewport, Tailwind CDN, PHP content placeholder, and home.php layout integration. All 216 tests pass, tsc clean.
