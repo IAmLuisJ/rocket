@@ -128,3 +128,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-14 — Register 'rocket init' command in Commander
 - **Outcome:** pass
 - **Summary:** Init command already registered in cli.ts with correct description ('Initialize .agent/ structure in an existing project'), wired to src/commands/init.ts handler via lazy import. `rocket init --help` prints correctly. All 58 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-15
+- **Time:** 2026-03-22T04:30:00.000Z
+- **Task:** TASK-15 — Register 'rocket tasks' command in Commander
+- **Outcome:** pass
+- **Summary:** Tasks command already registered in cli.ts with --filter flag. Fixed description from 'Browse and manage tasks' to 'View and manage tasks' to match spec. Added unit test verifying description and --filter flag with accepted values. All 59 tests pass, tsc clean.

@@ -60,6 +60,18 @@ describe('src/cli.ts Commander program', () => {
     expect(newCmd!.usage()).toContain('[project-name]')
   })
 
+  it("'tasks' command has correct description and --filter flag", async () => {
+    const { program } = await import('./cli.js')
+    const tasksCmd = program.commands.find((c) => c.name() === 'tasks')
+    expect(tasksCmd).toBeDefined()
+    expect(tasksCmd!.description()).toBe('View and manage tasks')
+    const helpText = tasksCmd!.helpInformation()
+    expect(helpText).toContain('--filter <status>')
+    expect(helpText).toContain('incomplete')
+    expect(helpText).toContain('complete')
+    expect(helpText).toContain('blocked')
+  })
+
   it("'loop' command has --claude and --docker flags", async () => {
     const { program } = await import('./cli.js')
     const loopCmd = program.commands.find((c) => c.name() === 'loop')

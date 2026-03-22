@@ -81,7 +81,7 @@ program
 
 program
   .command('tasks')
-  .description('Browse and manage tasks')
+  .description('View and manage tasks')
   .option('--filter <status>', 'Filter: incomplete | complete | blocked')
   .action(async (opts: { filter?: string }) => {
     const { runTasks } = await import('./commands/tasks.js')

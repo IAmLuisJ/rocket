@@ -131,7 +131,7 @@
       "title": "Register 'rocket tasks' command in Commander",
       "description": "Add 'tasks' command wired to src/commands/tasks.ts. Add optional --filter flag accepting 'incomplete', 'complete', or 'blocked'. Description: 'View and manage tasks'.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket tasks --help shows --filter flag with accepted values",
       "specFilePath": ".agent/tasks/TASK-15.json"
     },
