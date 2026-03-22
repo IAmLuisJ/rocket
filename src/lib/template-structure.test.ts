@@ -340,6 +340,28 @@ describe('webapp template .env.example files', () => {
   })
 })
 
+describe('website template directory structure', () => {
+  it('has templates/website/ directory', async () => {
+    await expect(access(join(TEMPLATES_DIR, 'website'))).resolves.toBeUndefined()
+  })
+
+  it('has templates/website/public/ subdirectory', async () => {
+    await expect(access(join(TEMPLATES_DIR, 'website', 'public'))).resolves.toBeUndefined()
+  })
+
+  it('has templates/website/src/ subdirectory', async () => {
+    await expect(access(join(TEMPLATES_DIR, 'website', 'src'))).resolves.toBeUndefined()
+  })
+
+  it('has templates/website/templates/ subdirectory', async () => {
+    await expect(access(join(TEMPLATES_DIR, 'website', 'templates'))).resolves.toBeUndefined()
+  })
+
+  it('has templates/website/config/ subdirectory', async () => {
+    await expect(access(join(TEMPLATES_DIR, 'website', 'config'))).resolves.toBeUndefined()
+  })
+})
+
 describe('webapp template .gitignore', () => {
   let content: string
 

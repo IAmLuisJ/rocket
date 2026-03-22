@@ -275,7 +275,7 @@
       "title": "Create src/templates/website/ directory structure",
       "description": "Create the website template skeleton with subdirectories: public/, src/, templates/, config/. This is the PHP+MySQL template container.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Directory src/templates/website/ exists with all four subdirs",
       "specFilePath": ".agent/tasks/TASK-31.json"
     },

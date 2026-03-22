@@ -224,3 +224,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-30 — Add webapp template: ESLint flat config
 - **Outcome:** pass
 - **Summary:** Rewrote templates/webapp/client/eslint.config.js to use typescript-eslint unified config with tseslint.config(), @eslint/js recommended, globals.browser, react-hooks and react-refresh plugins. Added 6 ESLint devDependencies to client package.json.tmpl (eslint, @eslint/js, globals, eslint-plugin-react-hooks, eslint-plugin-react-refresh, typescript-eslint). Created template-eslint.test.ts with 16 tests. All 176 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-31
+- **Time:** 2026-03-22T18:55:00.000Z
+- **Task:** TASK-31 — Create website template directory structure
+- **Outcome:** pass
+- **Summary:** Verified templates/website/ directory structure already exists with all 4 subdirectories (public/, src/, templates/, config/) containing template files. Added 5 unit tests to template-structure.test.ts verifying all directories. All 181 tests pass, tsc clean.
