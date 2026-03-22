@@ -122,7 +122,7 @@
       "title": "Register 'rocket init' command in Commander",
       "description": "Add 'init' command wired to src/commands/init.ts. Description: 'Initialize .agent/ structure in an existing project'. No flags needed for v1.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket init --help prints description correctly",
       "specFilePath": ".agent/tasks/TASK-14.json"
     },

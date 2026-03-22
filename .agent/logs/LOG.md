@@ -122,3 +122,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-12 — Register 'rocket new' command in Commander
 - **Outcome:** pass
 - **Summary:** Command already wired in cli.ts. Fixed description to match spec exactly ('Scaffold a new project from a template'). Added unit test verifying description and [project-name] argument. All 57 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-14
+- **Time:** 2026-03-22T04:30:00.000Z
+- **Task:** TASK-14 — Register 'rocket init' command in Commander
+- **Outcome:** pass
+- **Summary:** Init command already registered in cli.ts with correct description ('Initialize .agent/ structure in an existing project'), wired to src/commands/init.ts handler via lazy import. `rocket init --help` prints correctly. All 58 tests pass, tsc clean.
