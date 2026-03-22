@@ -293,7 +293,7 @@
       "title": "Add website template: database config",
       "description": "Create src/templates/website/config/database.php with a PDO connection function using env vars DB_HOST, DB_NAME, DB_USER, DB_PASS. Use DSN: mysql:host=..., charset=utf8mb4. Throw on connection error.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "config/database.php uses env vars (not hardcoded credentials) and PDO",
       "specFilePath": ".agent/tasks/TASK-33.json"
     },

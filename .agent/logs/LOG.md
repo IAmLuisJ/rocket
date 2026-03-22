@@ -236,3 +236,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-32 — Add website template: index.php entry point
 - **Outcome:** pass
 - **Summary:** Updated public/index.php with simple router using parse_url and rtrim, routing root path to templates/home.php and unknown paths to templates/404.php with http_response_code(404). Created home.php and 404.php template views using layout.php. Added 7 unit tests. All 188 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-33
+- **Time:** 2026-03-22T19:00:00.000Z
+- **Task:** TASK-33 — Add website template: database config
+- **Outcome:** pass
+- **Summary:** Updated config/database.php: renamed function from getConnection() to getDB() per spec, added static singleton pattern for connection reuse. Uses getenv() for DB_HOST/DB_NAME/DB_USER/DB_PASS with safe defaults, mysql DSN with charset=utf8mb4, PDO::ERRMODE_EXCEPTION. Added 11 unit tests. All 199 tests pass, tsc clean.
