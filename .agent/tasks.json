@@ -140,7 +140,7 @@
       "title": "Add global error handler and graceful exit to CLI",
       "description": "Wrap program.parseAsync in a try/catch. On unhandled errors, print a styled error message using chalk or Ink and exit with code 1. Handle SIGINT (Ctrl+C) to exit cleanly without a stack trace.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Pressing Ctrl+C during any command exits cleanly; unhandled errors show a user-friendly message",
       "specFilePath": ".agent/tasks/TASK-16.json"
     },

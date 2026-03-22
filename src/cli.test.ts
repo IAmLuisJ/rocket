@@ -20,6 +20,28 @@ describe('bin/rocket.ts entry point', () => {
     const content = readFileSync(join(__dirname, '../bin/rocket.ts'), 'utf-8')
     expect(content).toContain('program.parseAsync(process.argv)')
   })
+
+  it('registers SIGINT handler before parseAsync', () => {
+    const content = readFileSync(join(__dirname, '../bin/rocket.ts'), 'utf-8')
+    const sigintPos = content.indexOf("process.on('SIGINT'")
+    const parsePos = content.indexOf('program.parseAsync')
+    expect(sigintPos).toBeGreaterThan(-1)
+    expect(parsePos).toBeGreaterThan(-1)
+    expect(sigintPos).toBeLessThan(parsePos)
+  })
+
+  it('registers unhandledRejection handler', () => {
+    const content = readFileSync(join(__dirname, '../bin/rocket.ts'), 'utf-8')
+    expect(content).toContain("process.on('unhandledRejection'")
+  })
+
+  it('wraps parseAsync in try/catch with error formatting', () => {
+    const content = readFileSync(join(__dirname, '../bin/rocket.ts'), 'utf-8')
+    expect(content).toContain('try {')
+    expect(content).toContain('catch (err)')
+    expect(content).toContain('process.exit(1)')
+    expect(content).toContain('\\x1b[31mError:\\x1b[0m')
+  })
 })
 
 describe('src/cli.ts Commander program', () => {

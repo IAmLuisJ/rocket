@@ -134,3 +134,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-15 — Register 'rocket tasks' command in Commander
 - **Outcome:** pass
 - **Summary:** Tasks command already registered in cli.ts with --filter flag. Fixed description from 'Browse and manage tasks' to 'View and manage tasks' to match spec. Added unit test verifying description and --filter flag with accepted values. All 59 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-16
+- **Time:** 2026-03-22T04:33:00.000Z
+- **Task:** TASK-16 — Add global error handler and graceful exit to CLI
+- **Outcome:** pass
+- **Summary:** Added unhandledRejection handler and stdout.write('\n') to SIGINT handler in bin/rocket.ts. try/catch and SIGINT handler were already in place. Added 3 unit tests verifying SIGINT handler registration before parseAsync, unhandledRejection handler presence, and try/catch with error formatting. All 62 tests pass, tsc clean.
