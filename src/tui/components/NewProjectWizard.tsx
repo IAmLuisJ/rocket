@@ -32,7 +32,11 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
   const [name, setName] = useState(initialName ?? '')
   const [nameInput, setNameInput] = useState('')
   const [projectType, setProjectType] = useState(initialType ?? '')
-  const [features, setFeatures] = useState<ScaffoldOptions>({ auth: true, email: false, pdf: false })
+  const [features, setFeatures] = useState<ScaffoldOptions>({
+    auth: true,
+    email: false,
+    pdf: false,
+  })
   const [scaffoldStep, setScaffoldStep] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -73,7 +77,9 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
   if (step === 'name') {
     return (
       <Box flexDirection="column" padding={1}>
-        <Text bold color="cyan">Rocket — New Project</Text>
+        <Text bold color="cyan">
+          Rocket — New Project
+        </Text>
         <Box marginTop={1}>
           <Text>Project name: </Text>
           <TextInput value={nameInput} onChange={setNameInput} onSubmit={handleNameSubmit} />
@@ -85,7 +91,9 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
   if (step === 'type') {
     return (
       <Box flexDirection="column" padding={1}>
-        <Text bold color="cyan">Rocket — New Project</Text>
+        <Text bold color="cyan">
+          Rocket — New Project
+        </Text>
         <Text dimColor>Project: {name}</Text>
         <Box marginTop={1} flexDirection="column">
           <Text>Select project type:</Text>
@@ -98,8 +106,12 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
   if (step === 'features') {
     return (
       <Box flexDirection="column" padding={1}>
-        <Text bold color="cyan">Rocket — New Project</Text>
-        <Text dimColor>Project: {name} ({projectType})</Text>
+        <Text bold color="cyan">
+          Rocket — New Project
+        </Text>
+        <Text dimColor>
+          Project: {name} ({projectType})
+        </Text>
         <Box marginTop={1} flexDirection="column">
           <Text>Feature toggles:</Text>
           {FEATURE_TOGGLES.map((f) => {
@@ -135,7 +147,9 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
   if (step === 'scaffolding') {
     return (
       <Box flexDirection="column" padding={1}>
-        <Text bold color="cyan">Rocket — New Project</Text>
+        <Text bold color="cyan">
+          Rocket — New Project
+        </Text>
         <Box marginTop={1}>
           <Text color="yellow">
             <Spinner type="dots" />
@@ -150,7 +164,9 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
     setTimeout(() => exit(), 100)
     return (
       <Box flexDirection="column" padding={1}>
-        <Text bold color="red">Error</Text>
+        <Text bold color="red">
+          Error
+        </Text>
         <Text>{errorMsg}</Text>
       </Box>
     )
@@ -160,15 +176,17 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
   setTimeout(() => exit(), 100)
   return (
     <Box flexDirection="column" padding={1}>
-      <Text bold color="green">✓ Project created!</Text>
+      <Text bold color="green">
+        ✓ Project created!
+      </Text>
       <Box marginTop={1} flexDirection="column">
-        <Text>  Name:     {name}</Text>
-        <Text>  Template: {projectType}</Text>
+        <Text> Name: {name}</Text>
+        <Text> Template: {projectType}</Text>
       </Box>
       <Box marginTop={1} flexDirection="column">
         <Text bold>Next steps:</Text>
-        <Text>  cd {name}</Text>
-        <Text>  rocket loop</Text>
+        <Text> cd {name}</Text>
+        <Text> rocket loop</Text>
       </Box>
     </Box>
   )

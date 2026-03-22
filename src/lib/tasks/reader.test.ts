@@ -55,8 +55,22 @@ describe('task reader', () => {
 
   it('getIncompleteTasks filters by passes:false', () => {
     const tasks = [
-      { id: 1, title: 'Done', description: '', category: 'functional' as const, passes: true, passCondition: '' },
-      { id: 2, title: 'Todo', description: '', category: 'functional' as const, passes: false, passCondition: '' },
+      {
+        id: 1,
+        title: 'Done',
+        description: '',
+        category: 'functional' as const,
+        passes: true,
+        passCondition: '',
+      },
+      {
+        id: 2,
+        title: 'Todo',
+        description: '',
+        category: 'functional' as const,
+        passes: false,
+        passCondition: '',
+      },
     ]
     const incomplete = getIncompleteTasks(tasks)
     expect(incomplete).toHaveLength(1)
@@ -65,8 +79,22 @@ describe('task reader', () => {
 
   it('getMaxTaskId returns highest id', () => {
     const tasks = [
-      { id: 3, title: 'A', description: '', category: 'functional' as const, passes: false, passCondition: '' },
-      { id: 7, title: 'B', description: '', category: 'functional' as const, passes: false, passCondition: '' },
+      {
+        id: 3,
+        title: 'A',
+        description: '',
+        category: 'functional' as const,
+        passes: false,
+        passCondition: '',
+      },
+      {
+        id: 7,
+        title: 'B',
+        description: '',
+        category: 'functional' as const,
+        passes: false,
+        passCondition: '',
+      },
     ]
     expect(getMaxTaskId(tasks)).toBe(7)
   })

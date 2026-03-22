@@ -43,7 +43,7 @@ export function RocketLoop({
 }: Props) {
   const { exit } = useApp()
 
-  const autoTask = auto ? getIncompleteTasks(tasks)[0] ?? null : null
+  const autoTask = auto ? (getIncompleteTasks(tasks)[0] ?? null) : null
   const [phase, setPhase] = useState<Phase>(auto ? 'running' : 'selecting')
   const [focusTask, setFocusTask] = useState<Task | null>(autoTask)
   const [iteration, setIteration] = useState(1)

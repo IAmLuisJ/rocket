@@ -32,7 +32,7 @@
       "title": "Install and configure Prettier",
       "description": "Install prettier. Create .prettierrc with singleQuote:true, semi:false, trailingComma:all, printWidth:100. Add format script to package.json.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": ".prettierrc exists with correct settings; npm run format exits 0",
       "specFilePath": ".agent/tasks/TASK-4.json"
     },

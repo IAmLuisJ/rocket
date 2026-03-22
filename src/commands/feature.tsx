@@ -116,7 +116,11 @@ function FeatureApp({ projectRoot, description, backend, noQuestions, dryRun }: 
         </Text>
         <Box marginTop={1}>
           <Text>Describe the feature: </Text>
-          <TextInput value={inputValue} onChange={setInputValue} onSubmit={handleDescriptionSubmit} />
+          <TextInput
+            value={inputValue}
+            onChange={setInputValue}
+            onSubmit={handleDescriptionSubmit}
+          />
         </Box>
       </Box>
     )
@@ -171,9 +175,7 @@ export async function runFeature(
   const tasksPath = join(projectRoot, '.agent', 'tasks.json')
 
   if (!existsSync(prdPath) || !existsSync(tasksPath)) {
-    console.error(
-      '\n  ❌ Missing .agent/prd/PRD.md or .agent/tasks.json. Run rocket init first.\n',
-    )
+    console.error('\n  ❌ Missing .agent/prd/PRD.md or .agent/tasks.json. Run rocket init first.\n')
     process.exit(1)
   }
 

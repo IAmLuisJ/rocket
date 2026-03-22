@@ -59,8 +59,5 @@ Read \`.agent/tasks.json\`, find the current focus task, and implement it comple
 `,
   )
 
-  await writeFile(
-    join(agentDir, 'tasks.json'),
-    JSON.stringify({ tasks: [] }, null, 2) + '\n',
-  )
+  await writeFile(join(agentDir, 'tasks.json'), JSON.stringify({ tasks: [] }, null, 2) + '\n')
 }

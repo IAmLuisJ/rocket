@@ -28,11 +28,14 @@ export function FeatureDiffPreview({ specMarkdown, tasks, onConfirm }: Props) {
 
       <Box flexDirection="column" marginBottom={1}>
         <Text bold>PRD Changes:</Text>
-        {specMarkdown.split('\n').slice(0, 10).map((line, i) => (
-          <Box key={i} marginLeft={2}>
-            <Text color="green">+ {line}</Text>
-          </Box>
-        ))}
+        {specMarkdown
+          .split('\n')
+          .slice(0, 10)
+          .map((line, i) => (
+            <Box key={i} marginLeft={2}>
+              <Text color="green">+ {line}</Text>
+            </Box>
+          ))}
         {specMarkdown.split('\n').length > 10 && (
           <Box marginLeft={2}>
             <Text dimColor>... and more</Text>

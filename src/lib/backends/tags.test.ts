@@ -60,9 +60,7 @@ describe('extractBlockedReason', () => {
   })
 
   it('returns default when no closing tag', () => {
-    expect(extractBlockedReason('<blocked>no end')).toBe(
-      'Agent is blocked and needs human input.',
-    )
+    expect(extractBlockedReason('<blocked>no end')).toBe('Agent is blocked and needs human input.')
   })
 })
 

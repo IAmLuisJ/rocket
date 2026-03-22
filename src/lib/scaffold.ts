@@ -23,7 +23,9 @@ export function sanitizeProjectName(name: string): string {
     .replace(/\s+/g, '-')
     .replace(/[^a-z0-9\-_]/g, '')
   if (!sanitized) {
-    throw new Error('Project name is empty after sanitization. Use letters, numbers, hyphens, or underscores.')
+    throw new Error(
+      'Project name is empty after sanitization. Use letters, numbers, hyphens, or underscores.',
+    )
   }
   return sanitized
 }
@@ -53,7 +55,13 @@ export async function scaffold(
   execSync('git commit -m "Initial scaffold from rocket new"', {
     cwd: destPath,
     stdio: 'pipe',
-    env: { ...process.env, GIT_AUTHOR_NAME: 'Rocket', GIT_COMMITTER_NAME: 'Rocket', GIT_AUTHOR_EMAIL: 'rocket@localhost', GIT_COMMITTER_EMAIL: 'rocket@localhost' },
+    env: {
+      ...process.env,
+      GIT_AUTHOR_NAME: 'Rocket',
+      GIT_COMMITTER_NAME: 'Rocket',
+      GIT_AUTHOR_EMAIL: 'rocket@localhost',
+      GIT_COMMITTER_EMAIL: 'rocket@localhost',
+    },
   })
 }
 
@@ -107,8 +115,5 @@ Read \`.agent/tasks.json\`, find the current focus task (specified below), and i
 `,
   )
 
-  await writeFile(
-    join(agentDir, 'tasks.json'),
-    JSON.stringify({ tasks: [] }, null, 2) + '\n',
-  )
+  await writeFile(join(agentDir, 'tasks.json'), JSON.stringify({ tasks: [] }, null, 2) + '\n')
 }

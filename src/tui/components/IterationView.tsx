@@ -41,8 +41,16 @@ export function IterationView({
     <Box flexDirection="column">
       <Text>
         {'  '}
-        <Text color="cyan" bold>Rocket Loop</Text>
-        <Text dimColor>{' | Project: '}{projectName}{' | Backend: '}{backendName}{sessionId ? ` | Session: ${sessionId.slice(0, 8)}` : ''}</Text>
+        <Text color="cyan" bold>
+          Rocket Loop
+        </Text>
+        <Text dimColor>
+          {' | Project: '}
+          {projectName}
+          {' | Backend: '}
+          {backendName}
+          {sessionId ? ` | Session: ${sessionId.slice(0, 8)}` : ''}
+        </Text>
       </Text>
       <Text color="blue">{BORDER}</Text>
       <Text>
@@ -55,7 +63,10 @@ export function IterationView({
         {'  ·  '}
         <Text dimColor>{elapsed}</Text>
       </Text>
-      <Text color="yellow">{'  ⏱ '}{iterTime}</Text>
+      <Text color="yellow">
+        {'  ⏱ '}
+        {iterTime}
+      </Text>
       <Text color="blue">{BORDER}</Text>
       <Box marginTop={1} marginLeft={2}>
         <Text color="green">

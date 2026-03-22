@@ -15,7 +15,12 @@ interface Props {
   categoryFilter?: string
 }
 
-export function StatusApp({ tasks: initialTasks, progress: initialProgress, watch, categoryFilter }: Props) {
+export function StatusApp({
+  tasks: initialTasks,
+  progress: initialProgress,
+  watch,
+  categoryFilter,
+}: Props) {
   const { exit } = useApp()
   const [, setTasks] = useState(initialTasks)
   const [progress, setProgress] = useState(initialProgress)
