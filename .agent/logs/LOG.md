@@ -242,3 +242,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-33 — Add website template: database config
 - **Outcome:** pass
 - **Summary:** Updated config/database.php: renamed function from getConnection() to getDB() per spec, added static singleton pattern for connection reuse. Uses getenv() for DB_HOST/DB_NAME/DB_USER/DB_PASS with safe defaults, mysql DSN with charset=utf8mb4, PDO::ERRMODE_EXCEPTION. Added 11 unit tests. All 199 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-34
+- **Time:** 2026-03-22T19:01:00.000Z
+- **Task:** TASK-34 — Add website template: .env.example for PHP project
+- **Outcome:** pass
+- **Summary:** Updated templates/website/.env.example with proper placeholder values (your_database_name, your_database_user, your_database_password) replacing real-looking defaults (app, root, empty). Added APP_DEBUG=true. Added 8 unit tests verifying all required keys and no real credential values. All 207 tests pass, tsc clean.

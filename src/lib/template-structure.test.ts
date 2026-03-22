@@ -452,3 +452,46 @@ describe('website template: 404.php', () => {
     expect(content).toContain('Page not found')
   })
 })
+
+describe('website template: .env.example', () => {
+  let content: string
+
+  beforeAll(async () => {
+    content = await readFile(join(TEMPLATES_DIR, 'website', '.env.example'), 'utf-8')
+  })
+
+  it('.env.example exists', () => {
+    expect(content).toBeDefined()
+    expect(content.length).toBeGreaterThan(0)
+  })
+
+  it('contains DB_HOST placeholder', () => {
+    expect(content).toContain('DB_HOST=')
+  })
+
+  it('contains DB_NAME placeholder', () => {
+    expect(content).toContain('DB_NAME=your_database_name')
+  })
+
+  it('contains DB_USER placeholder', () => {
+    expect(content).toContain('DB_USER=your_database_user')
+  })
+
+  it('contains DB_PASS placeholder', () => {
+    expect(content).toContain('DB_PASS=your_database_password')
+  })
+
+  it('contains APP_ENV placeholder', () => {
+    expect(content).toContain('APP_ENV=')
+  })
+
+  it('contains APP_URL placeholder', () => {
+    expect(content).toContain('APP_URL=')
+  })
+
+  it('does not contain real credential values', () => {
+    expect(content).not.toMatch(/DB_USER=root/)
+    expect(content).not.toMatch(/DB_PASS=\s*$/)
+    expect(content).not.toMatch(/password123/)
+  })
+})

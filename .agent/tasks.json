@@ -302,7 +302,7 @@
       "title": "Add website template: .env.example for PHP project",
       "description": "Create src/templates/website/.env.example with DB_HOST, DB_NAME, DB_USER, DB_PASS, APP_ENV, APP_URL as placeholder keys. No real values.",
       "category": "security",
-      "passes": false,
+      "passes": true,
       "passCondition": ".env.example exists with all required keys and no real values",
       "specFilePath": ".agent/tasks/TASK-34.json"
     },
