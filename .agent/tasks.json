@@ -68,7 +68,7 @@
       "title": "Configure build script with tsc",
       "description": "Add build script to package.json: 'tsc -p tsconfig.json'. Ensure dist/ is the output directory and .gitignore excludes dist/. Verify clean build produces bin/rocket.js and src/**/*.js outputs.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm run build exits 0 and dist/ contains compiled files",
       "specFilePath": ".agent/tasks/TASK-8.json"
     },

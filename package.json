@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && cp package.json dist/package.json",
+    "clean": "rm -rf dist/",
     "dev": "tsx watch bin/rocket.ts",
     "start": "node dist/bin/rocket.js",
     "test": "vitest run",

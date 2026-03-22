@@ -86,3 +86,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-7 — Install and configure Vitest for unit testing
 - **Outcome:** pass
 - **Summary:** Vitest already installed (v2.0.5) with vitest.config.ts configured for src/**/*.test.ts. Updated test script from "vitest" to "vitest run" for CI-friendly exit behavior. All 55 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-8
+- **Time:** 2026-03-22T04:16:00.000Z
+- **Task:** TASK-8 — Configure build script with tsc
+- **Outcome:** pass
+- **Summary:** Build script already configured as `tsc -p tsconfig.build.json`. Added `clean` script (`rm -rf dist/`). Verified clean+build cycle works, dist/ contains compiled .js files for src/ and bin/, `node dist/bin/rocket.js --help` works. .gitignore already excludes dist/. All 55 tests pass.
