@@ -1,0 +1,54 @@
+{
+  "id": "TASK-54",
+  "title": "Write unit tests for tags.ts",
+  "category": "testing",
+  "description": "Create comprehensive Vitest unit tests for the exit tag detection functions in tags.ts. Cover all three functions with positive and negative test cases.",
+  "acceptanceCriteria": [
+    "src/lib/parser/tags.test.ts exists",
+    "detectComplete tests: returns true with <complete> tag, returns false without",
+    "detectComplete tests: detects tag in mid-text, not just at start/end",
+    "detectBlocked tests: extracts reason text correctly",
+    "detectBlocked tests: returns null for missing tag",
+    "detectBlocked tests: handles multi-line reason",
+    "detectDecide tests: extracts question text",
+    "detectDecide tests: returns null for missing tag",
+    "npm test passes all tags.test.ts cases"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/parser/tags.test.ts",
+      "details": "Create the test file. Import { describe, it, expect } from 'vitest'. Import the three functions from tags.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Write detectComplete tests",
+      "details": "describe('detectComplete', () => { it('returns true for text containing <complete>', ...) it('returns false for text without tag', ...) it('detects tag in mid-sentence', ...) it('is case-sensitive', ...) // <Complete> should NOT match })",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Write detectBlocked tests",
+      "details": "describe('detectBlocked', () => { it('extracts single-line reason', ...) it('extracts multi-line reason', ...) it('returns null when tag absent', ...) it('handles empty reason', ...) })",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Write detectDecide tests",
+      "details": "describe('detectDecide', () => { it('extracts question text', ...) it('returns null when tag absent', ...) it('handles multi-line question', ...) })",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Run tests and verify all pass",
+      "details": "Run `npm test`. All tests should pass. Fix any failures.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-53", "TASK-7"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Vitest uses the same describe/it/expect API as Jest — test patterns are identical"
+  ]
+}

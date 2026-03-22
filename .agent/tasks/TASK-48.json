@@ -1,0 +1,45 @@
+{
+  "id": "TASK-48",
+  "title": "Create src/lib/backends/types.ts — AgentBackend interface",
+  "category": "functional",
+  "description": "Define the TypeScript interface for AI agent backends. All backends must implement this interface. Also defines BackendOptions and ParsedOutput types.",
+  "acceptanceCriteria": [
+    "src/lib/backends/types.ts exists",
+    "AgentBackend interface is exported with name, spawn, and parseOutput members",
+    "BackendOptions type is exported",
+    "ParsedOutput type is exported",
+    "types.ts compiles without TypeScript errors"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/backends/types.ts",
+      "details": "Create the file. Define: export type BackendOptions = { prompt: string; maxIterations?: number; cwd?: string }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Define ParsedOutput type",
+      "details": "Define: export type ParsedOutput = | { type: 'text'; content: string } | { type: 'json'; data: unknown } | { type: 'complete' } | { type: 'blocked'; reason: string } | { type: 'decide'; question: string }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Define AgentBackend interface",
+      "details": "Define: export interface AgentBackend { name: string; spawn(prompt: string, options: BackendOptions): import('child_process').ChildProcess; parseOutput(line: string): ParsedOutput | null; }",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Verify types compile",
+      "details": "Run `npx tsc --noEmit` and confirm types.ts compiles without errors.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-2"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Using a discriminated union for ParsedOutput allows exhaustive type checking in switch statements",
+    "The import('child_process').ChildProcess pattern avoids a top-level import that might not be needed in all contexts"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "TASK-29",
+  "title": "Add webapp template: tailwind.config.js",
+  "category": "functional",
+  "description": "Create the Tailwind CSS v4 configuration for the client template. Content paths should target all TypeScript/TSX files in src/. Include shadcn/ui CSS variable theme setup.",
+  "acceptanceCriteria": [
+    "src/templates/webapp/client/tailwind.config.js exists",
+    "Content paths include src/**/*.{tsx,ts}",
+    "CSS variable theme configuration is included",
+    "Template file exists with content paths and CSS variable theme"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create tailwind.config.js template",
+      "details": "Create src/templates/webapp/client/tailwind.config.js: /** @type {import('tailwindcss').Config} */ export default { content: ['./index.html', './src/**/*.{ts,tsx}'], theme: { extend: { colors: { background: 'hsl(var(--background))', foreground: 'hsl(var(--foreground))', primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' } } } }, plugins: [] }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add CSS variable definitions to index.css",
+      "details": "Update src/templates/webapp/client/src/index.css (from TASK-25) to include the base CSS variable definitions: :root { --background: 0 0% 100%; --foreground: 222.2 84% 4.9%; --primary: 222.2 47.4% 11.2%; --primary-foreground: 210 40% 98%; } .dark { --background: 222.2 84% 4.9%; --foreground: 210 40% 98%; }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-19", "TASK-25"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Tailwind v4 may use a different config format — check the Tailwind v4 migration guide if the config format changes",
+    "CSS variables enable shadcn/ui components to work with both light and dark themes"
+  ]
+}

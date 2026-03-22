@@ -1,0 +1,45 @@
+{
+  "id": "TASK-111",
+  "title": "Create src/commands/feature.ts with Commander subcommand",
+  "category": "functional",
+  "description": "Register the 'feature' subcommand with Commander. Accept optional positional description argument. Register --no-questions, --dry-run, and --backend flags. If no description, show interactive text input prompt.",
+  "acceptanceCriteria": [
+    "rocket feature --help prints usage with all three flags",
+    "rocket feature 'test' runs without crashing",
+    "rocket feature (no args) shows an interactive prompt for the description",
+    "--no-questions flag is registered",
+    "--dry-run flag is registered",
+    "--backend <name> flag is registered"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/commands/feature.ts",
+      "details": "Create src/commands/feature.ts. Export: async function featureCommand(description: string | undefined, options: { questions?: boolean; dryRun?: boolean; backend?: string }): Promise<void> { console.log('feature command', description, options) }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Register feature command in Commander",
+      "details": "In src/cli.ts, add: program.command('feature [description]').description('Generate a feature spec and tasks from a natural language description').option('--no-questions', 'Skip clarification questions').option('--dry-run', 'Preview changes without writing files').option('--backend <name>', 'AI backend to use (copilot | claude | docker)').action(featureCommand)",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Add interactive prompt when description is not provided",
+      "details": "In featureCommand, if description is undefined: render an Ink TextInput prompt to collect the feature description. Only proceed after the user submits.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Verify command registration",
+      "details": "Run `npm run dev -- feature --help` and confirm all three flags are shown. Run `npm run dev -- feature 'test feature'` and confirm it doesn't crash.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-11"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Commander's --no-questions uses the negated flag pattern — options.questions is true by default, false when --no-questions is passed"
+  ]
+}

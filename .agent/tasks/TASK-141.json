@@ -1,0 +1,29 @@
+{
+  "id": "TASK-141",
+  "title": "Detect current focus task from LOG.md",
+  "category": "functional",
+  "description": "Read the last in-progress entry from LOG.md and cross-reference with tasks.json to return the full Task object as the current focus task. Returns null if no active task.",
+  "acceptanceCriteria": [
+    "Returns correct Task object when LOG.md has an active 'in-progress' entry",
+    "Returns null when LOG.md is empty",
+    "Returns null when all tasks in LOG.md are complete",
+    "Cross-references task ID from LOG.md with tasks.json for full task data"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add getCurrentTask to logReader.ts",
+      "details": "export async function getCurrentTask(agentDir: string, tasks: Task[]): Promise<Task | null> { const activity = await readRecentActivity(agentDir, 10); const inProgress = activity.filter(a => a.outcome === 'in-progress'); if (inProgress.length === 0) return null; const lastActive = inProgress[inProgress.length - 1]; return tasks.find(t => t.id === lastActive.taskId) || null }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Use getCurrentTask in StatusDashboard",
+      "details": "In status.ts, call getCurrentTask(agentDir, tasks) and pass result to StatusDashboard as currentTask prop.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-133"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

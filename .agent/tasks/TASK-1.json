@@ -1,0 +1,53 @@
+{
+  "id": "TASK-1",
+  "title": "Initialize package.json for rocket CLI",
+  "category": "config",
+  "description": "Create the root package.json for the rocket-cli npm package. It must declare the package name, version, ESM module type, bin entry pointing to the compiled CLI entry point, Node.js engine requirement, and placeholder scripts for all development tasks.",
+  "acceptanceCriteria": [
+    "package.json exists at project root",
+    "name field is 'rocket-cli'",
+    "version field is '0.1.0'",
+    "type field is 'module'",
+    "bin field contains entry 'rocket' pointing to 'bin/rocket.js'",
+    "engines.node is '>=22'",
+    "scripts object contains placeholder entries for build, dev, test, and lint"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create the package.json file at project root",
+      "details": "Create package.json manually (do not use `npm init -y` as defaults won't match). Set: name='rocket-cli', version='0.1.0', description='AI-powered project scaffolding and development loop', type='module'.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add bin field pointing to CLI entry point",
+      "details": "Add 'bin': { 'rocket': 'bin/rocket.js' } to package.json. This tells npm to create a global 'rocket' symlink when the package is installed globally.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Add engines and scripts fields",
+      "details": "Add 'engines': { 'node': '>=22' }. Add 'scripts': { 'build': 'tsc -p tsconfig.json', 'dev': 'tsx watch bin/rocket.ts', 'test': 'vitest run', 'lint': 'eslint src/' }. These are placeholders — the actual tools will be installed in later tasks.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Add author, license, and repository fields",
+      "details": "Add 'license': 'MIT', 'author': 'Luis Juarez', 'private': false. These are required for npm publish later.",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Verify package.json is valid JSON",
+      "details": "Run `node -e \"require('./package.json')\"` (or `node --input-type=module -e \"import './package.json' assert { type: 'json' }\"`) to confirm valid JSON. Fix any syntax errors.",
+      "pass": false
+    }
+  ],
+  "dependencies": [],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "type: 'module' is required for ESM — all .js files in the project will be treated as ES modules",
+    "The bin entry points to bin/rocket.js (compiled output), not bin/rocket.ts (source)"
+  ]
+}

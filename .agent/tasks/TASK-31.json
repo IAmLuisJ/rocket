@@ -1,0 +1,38 @@
+{
+  "id": "TASK-31",
+  "title": "Create src/templates/website/ directory structure",
+  "category": "functional",
+  "description": "Create the skeleton directory structure for the website (PHP + MySQL) project template. This is the container for the PHP website template files.",
+  "acceptanceCriteria": [
+    "src/templates/website/ directory exists",
+    "src/templates/website/public/ subdirectory exists",
+    "src/templates/website/src/ subdirectory exists",
+    "src/templates/website/templates/ subdirectory exists",
+    "src/templates/website/config/ subdirectory exists"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create the website template directory tree",
+      "details": "Create all four subdirectories: src/templates/website/public/, src/templates/website/src/, src/templates/website/templates/, src/templates/website/config/",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add .gitkeep to empty directories",
+      "details": "Add empty .gitkeep files to any directories that don't yet contain files to ensure they are tracked by git.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify directory structure",
+      "details": "Run `find src/templates/website -type d` and confirm all four subdirectories exist.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The PHP template follows a simple MVC-like structure: public/ for web root, src/ for PHP classes/controllers, templates/ for PHP view files, config/ for configuration"
+  ]
+}

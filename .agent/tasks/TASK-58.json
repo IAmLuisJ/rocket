@@ -1,0 +1,32 @@
+{
+  "id": "TASK-58",
+  "title": "Create src/lib/history.ts — iteration history writer",
+  "category": "functional",
+  "description": "Create a module that saves each loop iteration's raw AI output to a file. Strips ANSI color codes before saving to keep history files human-readable.",
+  "acceptanceCriteria": [
+    "saveIteration(agentDir, sessionId, iteration, rawOutput) is exported",
+    "File is written to .agent/history/ITERATION-{sessionId}-{iteration}.txt",
+    "ANSI escape codes are stripped from rawOutput before writing",
+    "History directory is created if it doesn't exist"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/history.ts",
+      "details": "Create the file. Import fs-extra, path. Import stripAnsi from 'strip-ansi'.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement saveIteration function",
+      "details": "export async function saveIteration(agentDir: string, sessionId: string, iteration: number, rawOutput: string): Promise<void> { const historyDir = path.join(agentDir, 'history'); await fs.ensureDir(historyDir); const filename = `ITERATION-${sessionId}-${iteration}.txt`; const clean = stripAnsi(rawOutput); await fs.writeFile(path.join(historyDir, filename), clean, 'utf-8') }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-6"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "strip-ansi is a pure ESM package — import it as a default import: `import stripAnsi from 'strip-ansi'`",
+    "The session ID is generated once per loop session (using Date.now().toString()) and used for all iterations in that session"
+  ]
+}

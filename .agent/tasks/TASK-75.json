@@ -1,0 +1,44 @@
+{
+  "id": "TASK-75",
+  "title": "Add keyboard shortcut handler to RocketLoopApp",
+  "category": "ui-ux",
+  "description": "Add keyboard shortcuts to the running loop TUI: 'q' for graceful quit, 'p' for pause, 's' to skip current iteration.",
+  "acceptanceCriteria": [
+    "Pressing 'q' exits cleanly (stops loop, cleans up caffeinate, exits process)",
+    "Pressing 'p' pauses the loop and shows 'Paused' indicator",
+    "Pressing 's' skips to the next iteration",
+    "Keyboard shortcuts only work when in 'running' state"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Import and use useInput hook",
+      "details": "In RocketLoopApp.tsx, import useInput from ink. Add: useInput((input, key) => { if (state !== 'running') return; if (input === 'q') handleQuit(); if (input === 'p') handlePause(); if (input === 's') handleSkip() })",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement handleQuit",
+      "details": "async function handleQuit() { abortLoop(); // signal generator to stop; caffeinate.stop(caffProc); await writePartialLog(); process.exit(0) }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement handlePause",
+      "details": "Add a paused state. When paused: set a pause flag that prevents the generator from advancing. Show a 'Paused — press p to resume' indicator overlay. Pressing p again clears the flag.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Implement handleSkip",
+      "details": "Implement skip by killing the current AI process (child process). The loop runner detects process exit and advances to the next iteration.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-73", "TASK-74"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "useInput from ink captures all keyboard input in raw mode — ensure it's only active during the running state",
+    "For skip: store a reference to the current child process and call proc.kill() when s is pressed"
+  ]
+}

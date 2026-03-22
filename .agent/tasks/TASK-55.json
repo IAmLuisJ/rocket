@@ -1,0 +1,38 @@
+{
+  "id": "TASK-55",
+  "title": "Create src/lib/parser/jsonStream.ts — output stream parser",
+  "category": "functional",
+  "description": "Create a parser that processes stdout lines from AI backends. Tries to parse each line as JSON, returning the parsed object if successful or a text object if not. Handles partial JSON buffered across multiple lines.",
+  "acceptanceCriteria": [
+    "Valid JSON lines are parsed and returned as parsed objects",
+    "Non-JSON lines are returned as { type: 'text', content: line }",
+    "Partial JSON split across multiple lines is buffered and assembled",
+    "Empty lines are handled gracefully (return null)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/parser/jsonStream.ts",
+      "details": "Create the file. Define types: export type ParsedLine = { type: 'json'; data: unknown } | { type: 'text'; content: string }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement createJsonStreamParser factory",
+      "details": "Export: function createJsonStreamParser(): { process(line: string): ParsedLine | null } { let buffer = ''; return { process(line: string): ParsedLine | null { if (!line.trim()) return null; buffer += line; try { const data = JSON.parse(buffer); buffer = ''; return { type: 'json', data }; } catch { if (buffer.startsWith('{') || buffer.startsWith('[')) return null; // partial JSON, keep buffering buffer = ''; return { type: 'text', content: line }; } } } }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Handle buffer reset on non-JSON text",
+      "details": "Ensure that if a line cannot be the start of JSON (doesn't start with { or [), the buffer is cleared and the line is returned as text immediately. This prevents the buffer from growing indefinitely.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-2"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "JSON.parse throws SyntaxError on invalid JSON — catch it and determine if we're in mid-stream or have a non-JSON line",
+    "The factory pattern allows multiple independent parsers to coexist (e.g., one per backend stream)"
+  ]
+}

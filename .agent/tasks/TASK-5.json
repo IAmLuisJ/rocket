@@ -1,0 +1,59 @@
+{
+  "id": "TASK-5",
+  "title": "Create bin/rocket.ts entry point",
+  "category": "config",
+  "description": "Create the CLI entry point file at bin/rocket.ts. This file is the executable that npm installs globally as the 'rocket' command. It must have the correct Unix shebang, import the Commander program from src/cli.ts, and invoke it with process.argv.",
+  "acceptanceCriteria": [
+    "bin/rocket.ts exists",
+    "First line is '#!/usr/bin/env node'",
+    "File imports the program from src/cli.ts",
+    "File calls program.parseAsync(process.argv)",
+    "Compiled to bin/rocket.js by the TypeScript build",
+    "node bin/rocket.js --help prints usage without errors"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create bin/ directory and bin/rocket.ts file",
+      "details": "Create the bin/ directory at project root. Create bin/rocket.ts with the shebang as the very first line: #!/usr/bin/env node. This must be the first line with no blank lines before it.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Import the CLI program",
+      "details": "Add the import statement: `import { program } from '../src/cli.js'`. Note the .js extension is required for NodeNext module resolution even though the source file is .ts.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Call parseAsync with process.argv",
+      "details": "Add: `await program.parseAsync(process.argv)`. Wrap in an async IIFE if needed: `(async () => { await program.parseAsync(process.argv) })()`",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Update tsconfig to include bin/ directory",
+      "details": "Ensure tsconfig.json (or tsconfig.bin.json) includes the bin/ directory in compilation. The compiled output bin/rocket.js must have the shebang line preserved. Check that tsc preserves the shebang comment.",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Make compiled file executable",
+      "details": "After build, run `chmod +x bin/rocket.js` or add a postbuild script to package.json that does this. Alternatively, npm handles this automatically when bin entries are used.",
+      "pass": false
+    },
+    {
+      "step": 6,
+      "description": "Verify the entry point works",
+      "details": "Run `node bin/rocket.js --help` (or `npx tsx bin/rocket.ts --help` before building). Should print the CLI help text without errors. If src/cli.ts doesn't exist yet, create a minimal stub that exports an empty Commander program.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1", "TASK-2"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The shebang line (#!/usr/bin/env node) must be the VERY first line — TypeScript compilers sometimes add a newline before it which breaks the shebang",
+    "NodeNext resolution requires .js extensions in imports even for .ts source files",
+    "The bin/rocket.js file needs execute permissions (chmod +x) to run as a global command"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "TASK-65",
+  "title": "Integrate log writing into loop runner",
+  "category": "functional",
+  "description": "After the loop exits for any reason, call appendSessionLog() with a summary of the session including task info, backend, iterations completed, outcome, and total elapsed time.",
+  "acceptanceCriteria": [
+    "appendSessionLog() is called when loop exits via <complete>",
+    "appendSessionLog() is called when loop exits via <blocked>",
+    "appendSessionLog() is called when loop exits via max-iterations",
+    "Session log contains correct task ID, title, backend name, iteration count, outcome, and elapsed time",
+    ".agent/logs/LOG.md is updated after every loop session"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Record loop start time",
+      "details": "At the start of runLoop: `const loopStartMs = Date.now()`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Track outcome and iteration count",
+      "details": "Maintain variables: `let outcome: SessionLog['outcome'] = 'max-iterations'; let completedIterations = 0`. Update these as the loop progresses.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Call appendSessionLog in finally block",
+      "details": "In the finally block (alongside caffeinate cleanup): `await appendSessionLog(options.agentDir, { taskId: options.task.id, taskTitle: options.task.title, backend: options.backend.name, iterations: completedIterations, outcome, elapsedMs: Date.now() - loopStartMs, timestamp: new Date() })`",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-59", "TASK-61"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The finally block is the right place for cleanup — it runs regardless of how the generator exits"
+  ]
+}

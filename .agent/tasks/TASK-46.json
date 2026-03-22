@@ -1,0 +1,47 @@
+{
+  "id": "TASK-46",
+  "title": "Create src/lib/tasks/schema.ts with Zod validation",
+  "category": "functional",
+  "description": "Create a Zod schema for the tasks.json format. The schema validates an array of task objects with all required fields. Export both the schema and the inferred TypeScript type.",
+  "acceptanceCriteria": [
+    "src/lib/tasks/schema.ts exists",
+    "TaskSchema is exported",
+    "Task type is exported",
+    "Schema validates: id (number), title (string), description (string), category (string), passes (boolean), passCondition (string)",
+    "blockedReason is optional string",
+    "TaskSchema.parse() accepts valid tasks",
+    "TaskSchema.parse() throws ZodError on invalid input (missing required fields)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/tasks/schema.ts",
+      "details": "Create the file with: import { z } from 'zod'. Define the category enum: const CategoryEnum = z.enum(['config', 'functional', 'ui-ux', 'data-model', 'api-endpoint', 'integration', 'security', 'testing', 'docs'])",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Define the Task schema",
+      "details": "Create: export const TaskSchema = z.object({ id: z.number().int().positive(), title: z.string().min(1), description: z.string().min(1), category: CategoryEnum, passes: z.boolean(), passCondition: z.string().min(1), blockedReason: z.string().optional() })",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Define TasksFileSchema for the full file",
+      "details": "Create: export const TasksFileSchema = z.object({ tasks: z.array(TaskSchema) }). Export the Task type: export type Task = z.infer<typeof TaskSchema>. Export TasksFile type.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Test schema validation works",
+      "details": "In a temporary test script or test file, call TaskSchema.parse() with a valid task object and confirm it returns the parsed value. Then call it with an object missing 'title' and confirm it throws.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-6"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "z.enum() creates a union of string literals — add new categories here if the list expands",
+    "The TypeScript type is inferred automatically from the Zod schema — no need to define it manually"
+  ]
+}

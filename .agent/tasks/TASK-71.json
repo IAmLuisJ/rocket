@@ -1,0 +1,38 @@
+{
+  "id": "TASK-71",
+  "title": "Create src/tui/components/DecideScreen.tsx",
+  "category": "ui-ux",
+  "description": "Create the Ink component shown when the AI outputs a <decide> tag. Shows the question, accepts user input, and writes the answer to .agent/decisions.md.",
+  "acceptanceCriteria": [
+    "DecideScreen renders a yellow 'Decision Needed' header",
+    "The decision question is displayed",
+    "TextInput accepts the user's answer",
+    "Submitting writes the answer to .agent/decisions.md",
+    "After submission, calls onDecide(answer) callback to resume or exit loop"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/components/DecideScreen.tsx",
+      "details": "Create the file. Import React, useState, Box, Text from ink. Import TextInput from ink-text-input. Import fs-extra and path for file writing.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement state and input handling",
+      "details": "const [answer, setAnswer] = useState(''); async function handleSubmit(value: string) { const decisionsPath = path.join(agentDir, 'decisions.md'); await fs.appendFile(decisionsPath, `## ${question}\\n\\n${value}\\n\\n`, 'utf-8'); onDecide(value) }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render the decide screen",
+      "details": "Return: <Box flexDirection='column' marginTop={1}><Text bold color='yellow'>🤔 Decision Needed</Text><Text marginTop={1}>{question}</Text><Box marginTop={1}><Text>Your answer: </Text><TextInput value={answer} onChange={setAnswer} onSubmit={handleSubmit} /></Box></Box>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-6", "TASK-72"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "decisions.md accumulates all decisions made during the project — it's a useful reference for the AI in future iterations"
+  ]
+}

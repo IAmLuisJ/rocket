@@ -1,0 +1,34 @@
+{
+  "id": "TASK-131",
+  "title": "Create src/commands/status.ts — register Commander subcommand",
+  "category": "functional",
+  "description": "Register the 'rocket status' subcommand in Commander with all four flags: --watch, --json, --category, --incomplete. Wire to StatusDashboard Ink component or JSON output.",
+  "acceptanceCriteria": [
+    "rocket status --help shows all four flags",
+    "Command resolves without errors when .agent/tasks.json is present",
+    "--watch, --json, --category, --incomplete flags are registered"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/commands/status.ts",
+      "details": "Create stub: export async function statusCommand(options: { watch?: boolean; json?: boolean; category?: string; incomplete?: boolean }): Promise<void> { console.log('status', options) }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Register status command in Commander",
+      "details": "In src/cli.ts: program.command('status').description('Show project progress dashboard').option('--watch', 'Auto-refresh every 5 seconds').option('--json', 'Output JSON instead of TUI').option('--category <name>', 'Filter to a specific category').option('--incomplete', 'List all incomplete tasks').action(statusCommand)",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify command registration",
+      "details": "Run `npm run dev -- status --help` and confirm all four flags appear.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-11"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

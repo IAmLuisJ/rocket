@@ -1,0 +1,37 @@
+{
+  "id": "TASK-89",
+  "title": "Validate tasks.json on loop startup",
+  "category": "functional",
+  "description": "Before starting the loop, validate tasks.json against the TaskSchema. If validation fails, print a detailed Zod error message showing which task and field is invalid, then exit.",
+  "acceptanceCriteria": [
+    "A tasks.json with a missing 'title' field causes a clear validation error before the loop starts",
+    "Error message shows which task ID and field are invalid",
+    "Process exits with non-zero code on validation failure",
+    "Valid tasks.json passes without error"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add Zod validation in readTasks",
+      "details": "In reader.ts, the TasksFileSchema.parse() call already throws a ZodError on invalid input. Ensure this error is properly caught and re-thrown with a user-friendly message.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Format ZodError for user display in preflight",
+      "details": "In preflight.ts, catch ZodError from readTasks: `try { tasks = await readTasks(agentDir) } catch (e) { if (e instanceof z.ZodError) { console.error('Invalid tasks.json:'); e.errors.forEach(err => console.error(` Path: ${err.path.join('.')}, Error: ${err.message}`)); process.exit(1) } throw e }`",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Test with an invalid tasks.json",
+      "details": "Create a test tasks.json with a task missing the 'title' field. Run rocket loop and verify the error message clearly identifies the missing field.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-60", "TASK-46"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "ZodError.errors is an array of ZodIssue objects — each has path, message, and code fields"
+  ]
+}

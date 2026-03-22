@@ -1,0 +1,47 @@
+{
+  "id": "TASK-11",
+  "title": "Create src/cli.ts and wire Commander.js program",
+  "category": "functional",
+  "description": "Create the main CLI program file using Commander.js. Instantiate a program with the correct name, description, and version (read dynamically from package.json). Export the program for use by bin/rocket.ts.",
+  "acceptanceCriteria": [
+    "src/cli.ts exists",
+    "Commander program is instantiated with name 'rocket'",
+    "Program description is 'AI-powered project scaffolding and development loop'",
+    "Program version is read dynamically from package.json",
+    "Program is exported as a named export",
+    "rocket --version prints the version from package.json",
+    "rocket --help prints all registered commands"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/cli.ts and import Commander",
+      "details": "Create src/cli.ts. Import Command from commander: `import { Command } from 'commander'`. Also import createRequire to read package.json: `import { createRequire } from 'module'`.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Read version from package.json",
+      "details": "Use createRequire to load package.json: `const require = createRequire(import.meta.url); const pkg = require('../package.json')`. This works in ESM context to read the package version dynamically.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Instantiate Commander program",
+      "details": "Create the program: `export const program = new Command(); program.name('rocket').description('AI-powered project scaffolding and development loop').version(pkg.version)`",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Verify help and version output",
+      "details": "Run `npm run dev -- --help` and `npm run dev -- --version`. Help should show 'rocket' as the command name. Version should match the version in package.json (0.1.0).",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1", "TASK-5", "TASK-6"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "In ESM modules, __dirname and require() are not available — use createRequire(import.meta.url) to load JSON files",
+    "Alternatively, use `import pkg from '../package.json' assert { type: 'json' }` with TypeScript resolveJsonModule enabled"
+  ]
+}

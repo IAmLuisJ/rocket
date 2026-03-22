@@ -1,0 +1,29 @@
+{
+  "id": "TASK-100",
+  "title": "Add CHANGELOG.md",
+  "category": "docs",
+  "description": "Create CHANGELOG.md following the Keep a Changelog format. Document all v0.1.0 features in an [Unreleased] section.",
+  "acceptanceCriteria": [
+    "CHANGELOG.md exists at project root",
+    "[Unreleased] section documents all v0.1.0 features",
+    "Follows Keep a Changelog format (keepachangelog.com)",
+    "Lists rocket new, rocket loop (copilot backend), rocket init, rocket tasks as added features"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create CHANGELOG.md",
+      "details": "Create CHANGELOG.md with header: # Changelog. All notable changes to rocket-cli are documented here. Format follows [Keep a Changelog](https://keepachangelog.com).",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add [Unreleased] section with v0.1.0 features",
+      "details": "Add: ## [Unreleased]. ### Added. List all features: - `rocket new` command for scaffolding projects (webapp and website templates), - `rocket loop` command for AI-powered development loop (Copilot CLI, Claude, Docker backends), - `rocket init` for initializing .agent/ structure in existing projects, - `rocket tasks` TUI for viewing and managing tasks, - `rocket feature` for AI-powered feature spec generation, - `rocket status` for project progress dashboard.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-97"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

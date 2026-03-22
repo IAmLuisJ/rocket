@@ -1,0 +1,38 @@
+{
+  "id": "TASK-109",
+  "title": "Write CONTRIBUTING.md",
+  "category": "docs",
+  "description": "Create CONTRIBUTING.md with instructions for local development, testing, adding templates, adding backends, PR guidelines, and code style.",
+  "acceptanceCriteria": [
+    "CONTRIBUTING.md exists",
+    "How to clone and build locally section is present",
+    "How to run tests section is present",
+    "How to add a new template section is present",
+    "How to add a new backend section is present",
+    "PR guidelines are documented",
+    "Code style notes are included"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create CONTRIBUTING.md",
+      "details": "Create CONTRIBUTING.md with sections: # Contributing to Rocket CLI, ## Development Setup (clone, npm install, npm run dev), ## Running Tests (npm test), ## Adding a New Template, ## Adding a New Backend, ## Pull Request Guidelines, ## Code Style.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Document adding a new template",
+      "details": "Explain: create src/templates/<name>/ directory, add template files with {{PLACEHOLDER}} tokens, update the scaffold.ts templateName union type, update NewProjectWizard TUI options.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Document adding a new backend",
+      "details": "Explain: implement AgentBackend interface in src/lib/backends/<name>.ts, add to getBackend() selector in index.ts, add CLI flag in Commander registration, update docs.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-97"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

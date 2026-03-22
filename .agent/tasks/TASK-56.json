@@ -1,0 +1,43 @@
+{
+  "id": "TASK-56",
+  "title": "Write unit tests for jsonStream.ts",
+  "category": "testing",
+  "description": "Create Vitest unit tests for the JSON stream parser. Test valid JSON lines, non-JSON lines, partial JSON buffering, and empty line handling.",
+  "acceptanceCriteria": [
+    "src/lib/parser/jsonStream.test.ts exists",
+    "Valid JSON line test passes",
+    "Non-JSON line returned as text test passes",
+    "Partial JSON buffering test passes",
+    "Empty line returns null test passes",
+    "npm test passes all jsonStream.test.ts cases"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/parser/jsonStream.test.ts",
+      "details": "Create test file. Import describe, it, expect from vitest. Import createJsonStreamParser.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Write tests for JSON parsing",
+      "details": "Test that '{\"type\":\"text\",\"content\":\"hello\"}' as a single line returns { type: 'json', data: {...} }. Test that a plain text line returns { type: 'text', content: line }.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Write tests for partial JSON buffering",
+      "details": "Create a parser. Call process('{\"incomplete') — should return null (buffering). Then call process(':\"data\"}') — should return the assembled JSON object.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Write tests for edge cases",
+      "details": "Test empty string returns null. Test that non-JSON lines after a JSON line are handled correctly (buffer resets). Run all tests.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-55", "TASK-7"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

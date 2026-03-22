@@ -1,0 +1,42 @@
+{
+  "id": "TASK-22",
+  "title": "Add webapp template: server package.json",
+  "category": "functional",
+  "description": "Create the server package.json template for the Express backend. Lists Express v5, better-sqlite3, jsonwebtoken, bcryptjs, nodemailer, and zod as runtime dependencies.",
+  "acceptanceCriteria": [
+    "src/templates/webapp/server/package.json.tmpl exists",
+    "express at version ^5 is listed",
+    "better-sqlite3 is listed",
+    "jsonwebtoken is listed",
+    "bcryptjs is listed",
+    "nodemailer is listed",
+    "zod is listed",
+    "tsx and vitest are in devDependencies"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create the server package.json.tmpl",
+      "details": "Create src/templates/webapp/server/package.json.tmpl with name '{{PROJECT_NAME}}-server', version '0.0.1', type 'module'. Runtime dependencies: express, better-sqlite3, jsonwebtoken, bcryptjs, nodemailer, zod, cors. DevDependencies: tsx, typescript, vitest, @types/express, @types/better-sqlite3, @types/jsonwebtoken, @types/bcryptjs, @types/nodemailer, @types/cors.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add scripts to server package.json.tmpl",
+      "details": "Add scripts: { 'dev': 'tsx watch src/index.ts', 'build': 'tsc -p tsconfig.json', 'start': 'node dist/index.js', 'test': 'vitest run' }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify all server dependencies are listed",
+      "details": "Review the template and confirm all packages from the PRD Section 5.1 Type A server stack are present.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-19"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "better-sqlite3 is a native addon — it requires a rebuild when the Node.js version changes. This is why the template pins it rather than a peer dep",
+    "bcryptjs (pure JS) is used instead of bcrypt (native) to avoid native compilation issues"
+  ]
+}

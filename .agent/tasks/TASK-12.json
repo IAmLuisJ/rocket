@@ -1,0 +1,44 @@
+{
+  "id": "TASK-12",
+  "title": "Register 'rocket new' command in Commander",
+  "category": "functional",
+  "description": "Add the 'new' subcommand to the Commander program. Wire it to the handler in src/commands/new.ts. The command accepts an optional project name argument and has a description explaining its purpose.",
+  "acceptanceCriteria": [
+    "'new [project-name]' command is registered in Commander",
+    "Command description is 'Scaffold a new project from a template'",
+    "Command is wired to src/commands/new.ts handler",
+    "rocket new --help prints command description and [project-name] argument"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Import the new command handler in src/cli.ts",
+      "details": "Add import at top of src/cli.ts: `import { newCommand } from './commands/new.js'`. Create a stub src/commands/new.ts if it doesn't exist yet.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Register the command with Commander",
+      "details": "In src/cli.ts, after program setup: `program.command('new [project-name]').description('Scaffold a new project from a template').action(newCommand)`",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Create stub src/commands/new.ts",
+      "details": "Create src/commands/new.ts exporting: `export async function newCommand(projectName: string | undefined): Promise<void> { console.log('new command', projectName) }`. This is a stub — full implementation in later tasks.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Verify command registration",
+      "details": "Run `npm run dev -- new --help`. Should print 'Scaffold a new project from a template' and show [project-name] as an argument.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-11"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Commander's action() callback receives arguments in the order they are defined in the command string",
+    "[project-name] is optional (square brackets) vs <project-name> which is required (angle brackets)"
+  ]
+}

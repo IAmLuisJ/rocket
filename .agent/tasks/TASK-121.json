@@ -1,0 +1,28 @@
+{
+  "id": "TASK-121",
+  "title": "Implement --backend flag override for feature command",
+  "category": "functional",
+  "description": "When --backend <name> is provided to rocket feature, use the specified backend instead of the default. Validate the backend name and show a helpful error for invalid values.",
+  "acceptanceCriteria": [
+    "rocket feature 'test' --backend claude uses Claude backend for AI calls",
+    "rocket feature 'test' --backend invalid prints an error and exits non-zero",
+    "Valid backend names: copilot, claude, docker"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Validate --backend value in featureCommand",
+      "details": "const VALID_BACKENDS = ['copilot', 'claude', 'docker']; if (options.backend && !VALID_BACKENDS.includes(options.backend)) { console.error(`Invalid backend: ${options.backend}. Valid options: ${VALID_BACKENDS.join(', ')}`); process.exit(1) }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Select backend based on --backend flag",
+      "details": "const backend = options.backend === 'claude' ? claudeBackend : options.backend === 'docker' ? dockerBackend : copilotBackend. Pass this backend to clarifier.ts and specGenerator.ts.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-111", "TASK-52"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

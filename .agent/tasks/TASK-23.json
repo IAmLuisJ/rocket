@@ -1,0 +1,39 @@
+{
+  "id": "TASK-23",
+  "title": "Add webapp template: vite.config.ts",
+  "category": "functional",
+  "description": "Create the Vite configuration template for the React client. Must include the React plugin, @/* path alias pointing to src/, and Vitest test configuration with jsdom environment.",
+  "acceptanceCriteria": [
+    "src/templates/webapp/client/vite.config.ts exists (not .tmpl since no placeholders needed)",
+    "React plugin is configured",
+    "@/* path alias points to src/",
+    "Vitest test config uses jsdom environment",
+    "Template file exists with path alias and vitest config"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create vite.config.ts template",
+      "details": "Create src/templates/webapp/client/vite.config.ts with: import { defineConfig } from 'vite'; import react from '@vitejs/plugin-react'; import path from 'path'; export default defineConfig({ plugins: [react()], resolve: { alias: { '@': path.resolve(__dirname, './src') } }, test: { environment: 'jsdom', globals: true, setupFiles: './src/test/setup.ts' } })",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Create test setup file template",
+      "details": "Create src/templates/webapp/client/src/test/setup.ts with: `import '@testing-library/jest-dom'`. This sets up DOM matchers for Vitest.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify the config is syntactically correct",
+      "details": "Open the template file and verify it is valid TypeScript. The __dirname usage requires the tsconfig to include 'types': ['vite/client'].",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-19", "TASK-21"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "In Vite, the test config is inlined into vite.config.ts — no separate vitest.config.ts needed",
+    "The @/* path alias must also be configured in tsconfig.app.json paths for TypeScript to resolve it"
+  ]
+}

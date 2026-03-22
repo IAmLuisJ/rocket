@@ -1,0 +1,34 @@
+{
+  "id": "TASK-33",
+  "title": "Add website template: database config",
+  "category": "functional",
+  "description": "Create a PHP database configuration file that establishes a PDO connection using environment variables. Connection errors should be thrown, not silently ignored.",
+  "acceptanceCriteria": [
+    "src/templates/website/config/database.php exists",
+    "Uses PDO for database connection",
+    "Connection uses DB_HOST, DB_NAME, DB_USER, DB_PASS environment variables",
+    "DSN uses mysql:host=..., charset=utf8mb4",
+    "Throws an exception on connection error (does not suppress errors)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create config/database.php template",
+      "details": "Create src/templates/website/config/database.php: <?php function getDB(): PDO { static $pdo = null; if ($pdo !== null) return $pdo; $host = getenv('DB_HOST') ?: 'localhost'; $name = getenv('DB_NAME') ?: 'app'; $user = getenv('DB_USER') ?: 'root'; $pass = getenv('DB_PASS') ?: ''; $dsn = \"mysql:host={$host};dbname={$name};charset=utf8mb4\"; $pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]); return $pdo; }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify no hardcoded credentials",
+      "details": "Review the file and confirm all credentials come from getenv() calls. No hardcoded passwords, usernames, or database names except default fallbacks like 'localhost' and 'app'.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-31"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "PDO::ERRMODE_EXCEPTION causes PDO to throw PDOException on errors instead of returning false",
+    "The static $pdo pattern implements a simple singleton connection pool to avoid reconnecting on every request",
+    "charset=utf8mb4 is required for full Unicode support (including emojis) — do not use utf8"
+  ]
+}

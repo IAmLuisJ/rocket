@@ -1,0 +1,55 @@
+{
+  "id": "TASK-61",
+  "title": "Create src/lib/loop-runner.ts — core loop execution logic",
+  "category": "functional",
+  "description": "Create the core loop runner as an async generator function. It drives the AI backend through iterations, yields typed events for the TUI to consume, and handles all exit conditions.",
+  "acceptanceCriteria": [
+    "runLoop(options) is exported as an AsyncGenerator function",
+    "Yields { type: 'iteration-start', n } at the start of each iteration",
+    "Yields { type: 'output', line } for each line of AI output",
+    "Yields { type: 'complete' } when <complete> tag is detected",
+    "Yields { type: 'blocked', reason } when <blocked> tag is detected",
+    "Yields { type: 'decide', question } when <decide> tag is detected",
+    "Yields { type: 'max-reached' } when maxIterations is reached",
+    "Generator terminates (return) after any exit condition"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Define LoopOptions and LoopEvent types",
+      "details": "In loop-runner.ts: export type LoopOptions = { task: Task; backend: AgentBackend; maxIterations: number; agentDir: string }. export type LoopEvent = { type: 'iteration-start'; n: number } | { type: 'output'; line: string } | { type: 'complete' } | { type: 'blocked'; reason: string } | { type: 'decide'; question: string } | { type: 'max-reached' } | { type: 'timing'; iterationN: number; elapsedMs: number }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement the runLoop async generator",
+      "details": "export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> { const { task, backend, maxIterations, agentDir } = options; for (let i = 1; i <= maxIterations; i++) { yield { type: 'iteration-start', n: i }; const prompt = await buildPrompt(task, agentDir); const startMs = Date.now(); // spawn AI process and collect output... }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Collect AI output line by line and yield events",
+      "details": "After spawning the backend process, read stdout line by line. For each line: yield { type: 'output', line }. Accumulate all output in a string. After process exits, check for exit tags using detectComplete/detectBlocked/detectDecide.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Handle exit conditions and terminate generator",
+      "details": "After each iteration's output is accumulated: if (detectComplete(output)) { yield { type: 'complete' }; return } if (detectBlocked(output)) { yield { type: 'blocked', reason }; return } if (detectDecide(output)) { yield { type: 'decide', question }; return }. After the for loop: yield { type: 'max-reached' }",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Yield timing event after each iteration",
+      "details": "After each iteration's output is processed (before checking exit conditions): const elapsedMs = Date.now() - startMs; yield { type: 'timing', iterationN: i, elapsedMs }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-48", "TASK-53", "TASK-62"],
+  "estimatedComplexity": "high",
+  "technicalNotes": [
+    "AsyncGenerator is the correct TypeScript type for async generator functions — function* with yield",
+    "Reading stdout line by line: use readline.createInterface({ input: process.stdout }) on the child process",
+    "The generator pattern allows the TUI to consume events incrementally without callbacks"
+  ]
+}

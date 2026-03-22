@@ -1,0 +1,31 @@
+{
+  "id": "TASK-105",
+  "title": "Add 'check backend in PATH' helper to preflight",
+  "category": "functional",
+  "description": "Implement checkBinaryInPath() in preflight.ts using 'which' on Linux/macOS. Use this in runPreflight to validate the selected backend binary before starting the loop.",
+  "acceptanceCriteria": [
+    "checkBinaryInPath('node') returns true",
+    "checkBinaryInPath('nonexistent-binary-xyz') returns false",
+    "Function is exported from preflight.ts",
+    "runPreflight uses this function to validate the backend binary"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Implement checkBinaryInPath in preflight.ts",
+      "details": "export function checkBinaryInPath(binary: string): boolean { try { execSync(`which ${binary}`, { stdio: 'ignore' }); return true } catch { return false } }. Note: use spawn(['which', binary]) instead of execSync for shell injection safety.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Use checkBinaryInPath in runPreflight",
+      "details": "In runPreflight, determine the backend binary name from backend.name and call checkBinaryInPath(). If false, throw with install instructions.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-60"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "On Windows (not supported), 'where' is the equivalent of 'which'. This project is macOS/Linux only (per PRD) so which is correct"
+  ]
+}

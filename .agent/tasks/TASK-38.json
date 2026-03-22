@@ -1,0 +1,43 @@
+{
+  "id": "TASK-38",
+  "title": "Create src/commands/new.ts handler skeleton",
+  "category": "functional",
+  "description": "Implement the 'rocket new' command handler. If no project name is provided, render an Ink TextInput to prompt for one. Then pass control to the NewProjectWizard TUI component.",
+  "acceptanceCriteria": [
+    "rocket new (no args) prompts user for project name via TextInput",
+    "rocket new my-app skips the name prompt and proceeds to project type selection",
+    "Handler correctly passes projectName to the wizard TUI"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Update src/commands/new.ts handler",
+      "details": "Import render from ink and NewProjectWizard TUI (stub or real). If projectName is undefined, render a TextInput prompt. On input submit, proceed to NewProjectWizard with the name.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Handle the name prompt flow",
+      "details": "Create a simple Ink component for the name prompt: `function NamePrompt({ onSubmit }: { onSubmit: (name: string) => void }) { const [name, setName] = useState(''); return (<Box><Text>Project name: </Text><TextInput value={name} onChange={setName} onSubmit={onSubmit} /></Box>) }`. Render this before the wizard.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Transition to NewProjectWizard after name input",
+      "details": "After the name is provided (either from args or from the prompt), render NewProjectWizard with { projectName }. The wizard handles the rest of the scaffolding flow.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Test both code paths",
+      "details": "Run `npm run dev -- new` and verify a name prompt appears. Run `npm run dev -- new my-test-app` and verify the wizard starts directly with 'my-test-app' as the project name.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-12", "TASK-6"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "Ink components render in the terminal using React — import { render } from 'ink' and render(<Component />)",
+    "TextInput from ink-text-input calls onSubmit when the user presses Enter"
+  ]
+}

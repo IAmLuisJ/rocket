@@ -1,0 +1,28 @@
+{
+  "id": "TASK-140",
+  "title": "Implement --category flag — filter dashboard to single category",
+  "category": "functional",
+  "description": "When --category <name> is provided, filter all dashboard stats to only tasks matching that category. Show an error for unrecognized category names.",
+  "acceptanceCriteria": [
+    "rocket status --category ui-ux shows only ui-ux tasks in progress sections",
+    "Unknown category name prints a helpful error and exits non-zero",
+    "Category filter applies to the full dashboard and incomplete listing"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Apply category filter to tasks before computing stats",
+      "details": "In statusCommand: if (options.category) { const allCategories = [...new Set(allTasks.map(t => t.category))]; if (!allCategories.includes(options.category)) { console.error(`Unknown category: ${options.category}. Valid: ${allCategories.join(', ')}`); process.exit(1) }; tasks = tasks.filter(t => t.category === options.category) }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify category filtering works",
+      "details": "Run `npm run dev -- status --category config` in a project with mixed categories. Verify only config tasks appear in the output.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-131"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

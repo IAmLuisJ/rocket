@@ -1,0 +1,44 @@
+{
+  "id": "TASK-51",
+  "title": "Create src/lib/backends/docker.ts — Docker sandbox backend",
+  "category": "functional",
+  "description": "Implement the AgentBackend interface for Claude running in a Docker sandbox. Spawns the docker sandbox run command. Validates that docker is in PATH.",
+  "acceptanceCriteria": [
+    "src/lib/backends/docker.ts exists and exports a DockerBackend implementing AgentBackend",
+    "spawn() runs 'docker sandbox run claude . -- --model opus -p <prompt>'",
+    "Missing docker binary throws a descriptive error",
+    "docker.spawn() returns a valid ChildProcess"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/backends/docker.ts",
+      "details": "Create the file. Import spawn from child_process, execSync. Import types from types.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement binary check for 'docker'",
+      "details": "Check for 'docker' in PATH: `try { execSync('which docker', { stdio: 'ignore' }) } catch { throw new Error('docker not found in PATH. Install Docker from https://docker.com') }`",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement spawn method",
+      "details": "spawn(prompt: string, options: BackendOptions): ChildProcess { // check binary; return spawn('docker', ['sandbox', 'run', 'claude', '.', '--', '--model', 'opus', '-p', prompt], { cwd: options.cwd || process.cwd(), stdio: ['ignore', 'pipe', 'pipe'] }) }",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Implement parseOutput and export",
+      "details": "Same parseOutput as claude backend. Export: export const dockerBackend: AgentBackend = { name: 'Claude (Docker sandbox)', spawn, parseOutput }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-48"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The 'docker sandbox' subcommand is part of Claude Code's Docker integration — not standard Docker",
+    "The '.' argument tells Docker to mount the current directory as the workspace"
+  ]
+}

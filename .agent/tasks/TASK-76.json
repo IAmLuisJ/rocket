@@ -1,0 +1,38 @@
+{
+  "id": "TASK-76",
+  "title": "Create src/commands/loop.ts and wire RocketLoopApp",
+  "category": "functional",
+  "description": "Implement the full loop command handler. Runs preflight checks, reads tasks, selects the backend, then renders the RocketLoopApp TUI via Ink.",
+  "acceptanceCriteria": [
+    "rocket loop renders the TUI",
+    "TUI enters task selection state",
+    "Preflight checks run before TUI is shown",
+    "Backend is selected based on CLI flags",
+    "tasks, backend, and maxIterations are passed to RocketLoopApp as props"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Replace stub in src/commands/loop.ts with full implementation",
+      "details": "Import render from ink. Import RocketLoopApp. Import runPreflight from preflight.ts. Import getBackend from backends/index.ts. Import readTasks from tasks/reader.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement loopCommand handler",
+      "details": "export async function loopCommand(options: { claude?: boolean; docker?: boolean; maxIterations: string }): Promise<void> { const agentDir = path.join(process.cwd(), '.agent'); const backend = getBackend(options); await runPreflight(agentDir, backend); const tasks = await readTasks(agentDir); const maxIter = parseInt(options.maxIterations, 10) || 10; render(<RocketLoopApp tasks={tasks} backend={backend} maxIterations={maxIter} agentDir={agentDir} />) }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify end-to-end loop rendering",
+      "details": "Run `npm run dev -- loop` in a directory with a valid .agent/tasks.json. The TUI should render the task selection screen.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-13", "TASK-60", "TASK-52", "TASK-47", "TASK-73"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "render() from ink must be called once and returns { unmount, waitUntilExit } — await waitUntilExit() to keep the process alive until the TUI exits"
+  ]
+}

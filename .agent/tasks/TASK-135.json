@@ -1,0 +1,37 @@
+{
+  "id": "TASK-135",
+  "title": "Create src/tui/components/ProgressBar.tsx — Unicode block progress bar",
+  "category": "ui-ux",
+  "description": "Create a reusable Ink component that renders a Unicode block progress bar. Bar width scales to terminal width. Accepts percent, complete, and total props.",
+  "acceptanceCriteria": [
+    "ProgressBar renders correct fill ratio for 0%, 50%, 100% inputs",
+    "Does not throw when terminal width is undefined",
+    "Shows '74/120 62%' format alongside the bar",
+    "Bar uses █ for filled and ░ for empty"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/components/ProgressBar.tsx",
+      "details": "Create the file. Define props: { percent: number; complete: number; total: number; width?: number }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Compute bar dimensions",
+      "details": "const termWidth = process.stdout.columns || 80; const barWidth = (props.width || Math.min(termWidth - 20, 40)); const filled = Math.round(barWidth * props.percent / 100); const empty = barWidth - filled.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render the bar",
+      "details": "Return: <Text>{'█'.repeat(filled)}{'░'.repeat(empty)} {props.percent}%  {props.complete}/{props.total}</Text>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-72"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "process.stdout.columns can be undefined in non-TTY contexts (pipes, CI) — always provide a fallback value"
+  ]
+}

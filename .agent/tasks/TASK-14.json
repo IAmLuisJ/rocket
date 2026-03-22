@@ -1,0 +1,35 @@
+{
+  "id": "TASK-14",
+  "title": "Register 'rocket init' command in Commander",
+  "category": "functional",
+  "description": "Add the 'init' subcommand to the Commander program. This command initializes the .agent/ directory structure in an existing project. No flags needed for v1.",
+  "acceptanceCriteria": [
+    "'init' command is registered in Commander",
+    "Command description is 'Initialize .agent/ structure in an existing project'",
+    "Command is wired to src/commands/init.ts handler",
+    "rocket init --help prints description correctly"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create stub src/commands/init.ts",
+      "details": "Create src/commands/init.ts exporting: `export async function initCommand(): Promise<void> { console.log('init command') }`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Register the init command in src/cli.ts",
+      "details": "Add to program: `program.command('init').description('Initialize .agent/ structure in an existing project').action(initCommand)`. Import initCommand at the top of src/cli.ts.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify command help",
+      "details": "Run `npm run dev -- init --help`. Should print the description 'Initialize .agent/ structure in an existing project'.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-11"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

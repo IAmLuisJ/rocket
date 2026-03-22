@@ -1,0 +1,31 @@
+{
+  "id": "TASK-44",
+  "title": "Write placeholder content for .agent/prd/PRD.md",
+  "category": "functional",
+  "description": "The PRD.md created by scaffold should contain a helpful placeholder with section headers and instructional comments. It should guide the user to fill in their project requirements.",
+  "acceptanceCriteria": [
+    ".agent/prd/PRD.md in scaffolded project has placeholder sections",
+    "File contains Overview section header",
+    "File contains Features section header",
+    "File contains Technical Requirements section header",
+    "File is not empty",
+    "File contains instructional comments guiding the user"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Define the PRD placeholder content in agent-init.ts",
+      "details": "In src/lib/agent-init.ts (TASK-83), set the PRD.md content to a multi-line string with markdown headers: # Project Name PRD, ## Overview (with placeholder text), ## Core Features (with bullet list placeholder), ## Technical Requirements (with placeholder). Include a comment at the top: <!-- Edit this file with your project requirements. rocket loop reads this to understand what to build. -->",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify PRD placeholder is written correctly",
+      "details": "After scaffolding a test project, open .agent/prd/PRD.md and confirm it has all required sections and is not empty.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-43", "TASK-83"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

@@ -1,0 +1,38 @@
+{
+  "id": "TASK-59",
+  "title": "Create src/lib/log.ts — progress log writer",
+  "category": "functional",
+  "description": "Create a module that appends session summaries to .agent/logs/LOG.md after each loop session. Records timestamp, task info, backend, iteration count, outcome, and elapsed time.",
+  "acceptanceCriteria": [
+    "appendSessionLog(agentDir, sessionLog) is exported",
+    "Creates LOG.md if it doesn't exist",
+    "Appends a markdown section with timestamp, task title, backend name, iteration count, outcome, and elapsed time",
+    "Existing LOG.md content is preserved (append, not overwrite)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/log.ts",
+      "details": "Create the file. Import fs-extra and path. Define: export type SessionLog = { taskId: number; taskTitle: string; backend: string; iterations: number; outcome: 'complete' | 'blocked' | 'max-iterations' | 'error'; elapsedMs: number; timestamp: Date }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement appendSessionLog function",
+      "details": "export async function appendSessionLog(agentDir: string, log: SessionLog): Promise<void> { const logPath = path.join(agentDir, 'logs', 'LOG.md'); await fs.ensureDir(path.dirname(logPath)); const section = formatLogSection(log); await fs.appendFile(logPath, section + '\\n', 'utf-8') }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement formatLogSection helper",
+      "details": "function formatLogSection(log: SessionLog): string { const elapsed = `${Math.floor(log.elapsedMs / 60000)}m ${Math.floor((log.elapsedMs % 60000) / 1000)}s`; return `## Session ${log.timestamp.toISOString()}\\n- **Task**: #${log.taskId} ${log.taskTitle}\\n- **Backend**: ${log.backend}\\n- **Iterations**: ${log.iterations}\\n- **Outcome**: ${log.outcome}\\n- **Elapsed**: ${elapsed}\\n` }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-6"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Use fs.appendFile (not writeFile) to ensure existing log entries are preserved",
+    "LOG.md format must be parseable by logReader.ts (TASK-133) — keep the format consistent"
+  ]
+}

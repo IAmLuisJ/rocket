@@ -1,0 +1,35 @@
+{
+  "id": "TASK-142",
+  "title": "Handle missing .agent/ files gracefully in rocket status",
+  "category": "functional",
+  "description": "If tasks.json doesn't exist, show a helpful message instead of the dashboard. If LOG.md or history/ are missing, show N/A for those sections. No unhandled exceptions.",
+  "acceptanceCriteria": [
+    "rocket status in a directory without .agent/ shows 'No tasks found — run rocket init' and exits 0",
+    "Missing LOG.md shows 'N/A' for recent activity and current focus task",
+    "Missing history/ shows 0 sessions",
+    "No stack traces visible to user"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add graceful fallback in statusCommand",
+      "details": "In statusCommand: if (!await fs.pathExists(path.join(process.cwd(), '.agent', 'tasks.json'))) { console.log('No tasks found — run `rocket init` to set up your project.'); return }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Use empty fallbacks for missing LOG.md and history/",
+      "details": "readRecentActivity and readHistoryStats already return empty values for missing files (from their implementations in TASK-133 and TASK-134). Verify this is actually the case.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Wrap top-level statusCommand in try/catch",
+      "details": "Wrap the entire statusCommand body in try/catch: catch (err) { console.error('Status error:', err instanceof Error ? err.message : String(err)); process.exit(1) }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-131", "TASK-133", "TASK-134"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

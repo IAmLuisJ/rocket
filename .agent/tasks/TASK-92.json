@@ -1,0 +1,55 @@
+{
+  "id": "TASK-92",
+  "title": "Write unit tests for task reader.ts",
+  "category": "testing",
+  "description": "Create comprehensive Vitest unit tests for the task reader module. Cover reading valid files, missing files, invalid JSON, schema validation failures, writing, and task status functions.",
+  "acceptanceCriteria": [
+    "src/lib/tasks/reader.test.ts exists",
+    "readTasks: valid file returns Task[] test passes",
+    "readTasks: missing file throws descriptive error test passes",
+    "readTasks: invalid JSON throws error test passes",
+    "readTasks: invalid schema throws ZodError test passes",
+    "writeTasks: writes correctly and can be re-read test passes",
+    "getIncompleteTasks: filters by passes:false test passes",
+    "markTaskComplete: sets passes:true for correct task test passes",
+    "npm test passes all reader.test.ts cases"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/tasks/reader.test.ts with temp dir setup",
+      "details": "Create the test file. Use Vitest's beforeEach/afterEach hooks with a temp directory: import { mkdtemp, rm } from 'fs/promises'; import { tmpdir } from 'os'. Create a fresh temp dir for each test to isolate file operations.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Write readTasks tests",
+      "details": "Test: (1) create valid tasks.json → readTasks returns array; (2) no tasks.json → throws with 'not found' message; (3) invalid JSON → throws; (4) wrong schema → throws ZodError.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Write writeTasks tests",
+      "details": "Test: write a task array, then readTasks returns the same array. Verify the file has 2-space indentation.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Write filter and mutation tests",
+      "details": "Test: getIncompleteTasks with mixed tasks → only returns passes:false. markTaskComplete with valid ID → returns array with that task's passes set to true.",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Run all tests",
+      "details": "Run `npm test` and verify all reader.test.ts tests pass.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-47", "TASK-7"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "Use tmp dirs for all file I/O tests — never write to the project's actual .agent/ during testing",
+    "Vitest supports afterEach for cleanup: await rm(tmpDir, { recursive: true })"
+  ]
+}

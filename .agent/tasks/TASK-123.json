@@ -1,0 +1,34 @@
+{
+  "id": "TASK-123",
+  "title": "Handle streaming AI response parsing in specGenerator.ts",
+  "category": "functional",
+  "description": "Update specGenerator.ts to robustly collect streamed AI output and extract JSON from it. Handle markdown code fences and log raw output on failure.",
+  "acceptanceCriteria": [
+    "Correctly parses JSON wrapped in markdown code fences (```json ... ```)",
+    "On malformed JSON, throws a descriptive error",
+    "Raw output is logged to .agent/logs/LOG.md on JSON parse failure for debugging"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Strip markdown code fences from AI output",
+      "details": "In parseSpecResponse: const stripped = output.replace(/```json\\s*/g, '').replace(/```\\s*/g, '').trim(). Then extract the JSON object.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Log raw output on failure",
+      "details": "In the catch block: if (agentDir) { await fs.appendFile(path.join(agentDir, 'logs', 'LOG.md'), `\\n## Feature Generation Error\\n\\`\\`\\`\\n${output}\\n\\`\\`\\`\\n`); } throw new Error(`Could not parse AI response. See .agent/logs/LOG.md for raw output.`)",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Test with code-fenced JSON",
+      "details": "Create a test that simulates AI output with JSON wrapped in ```json ... ```. Verify parseSpecResponse correctly extracts and parses the JSON.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-114"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

@@ -1,0 +1,37 @@
+{
+  "id": "TASK-91",
+  "title": "Add shell injection protection to backend spawn calls",
+  "category": "security",
+  "description": "Verify and enforce that all AI backend spawn calls use child_process.spawn() with an args array rather than exec() with a shell string. This prevents shell injection through AI prompts.",
+  "acceptanceCriteria": [
+    "All three backends use spawn(cmd, [args]) not exec('cmd string')",
+    "A prompt containing shell metacharacters does not cause injection",
+    "No use of exec(), execFile(), or shell:true in backend spawners"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Audit all backend spawn calls",
+      "details": "Open copilot.ts, claude.ts, and docker.ts. Confirm each uses: `spawn('binary', ['arg1', 'arg2', prompt])` where the prompt is a separate array element — NOT: `exec(`copilot --prompt ${prompt}`)`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Test with a malicious prompt",
+      "details": "Create a test prompt containing: `test; rm -rf /tmp/test-injection`. Call the backend spawn with this prompt. Verify the spawn args array contains the literal string (including semicolons) without shell interpretation.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Add a code comment explaining the security rationale",
+      "details": "In each backend file, add a comment near the spawn call: `// SECURITY: prompt passed as separate arg to prevent shell injection. Do not switch to exec() or shell:true.`",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-49", "TASK-50", "TASK-51"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "spawn() with an args array does NOT invoke a shell — the OS directly executes the binary with the args",
+    "exec() and shell:true BOTH invoke /bin/sh which is vulnerable to shell injection"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "TASK-35",
+  "title": "Add website template: Tailwind CSS via CDN",
+  "category": "functional",
+  "description": "Create a base HTML layout PHP template that includes Tailwind CSS via CDN script tag and a content placeholder block.",
+  "acceptanceCriteria": [
+    "src/templates/website/templates/layout.php exists",
+    "HTML5 DOCTYPE is present",
+    "meta viewport tag is included",
+    "Tailwind CSS CDN script tag is included",
+    "{{CONTENT}} or PHP include placeholder is present for page content"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create layout.php base template",
+      "details": "Create src/templates/website/templates/layout.php: <!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title><?= $title ?? '{{PROJECT_NAME}}' ?></title><script src='https://cdn.tailwindcss.com'></script></head><body class='bg-gray-50 text-gray-900'><?php if (isset($content)) echo $content; ?></body></html>",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Update home.php to use layout",
+      "details": "Update src/templates/website/templates/home.php to use the layout. Set $title and $content variables, then include layout.php.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-31", "TASK-32"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "CDN Tailwind is fine for prototypes but should be replaced with a build step for production",
+    "{{PROJECT_NAME}} in the title tag will be replaced by the template engine during scaffolding"
+  ]
+}

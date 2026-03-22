@@ -1,0 +1,29 @@
+{
+  "id": "TASK-138",
+  "title": "Implement --json flag — structured JSON output",
+  "category": "functional",
+  "description": "When --json flag is set, skip the TUI entirely. Compute all stats and output a structured JSON object to stdout. Exit 0.",
+  "acceptanceCriteria": [
+    "rocket status --json outputs valid JSON",
+    "JSON matches the documented schema (overall, currentTask, byCategory, loopSessions, totalRuntimeSeconds)",
+    "jq .overall.percent returns a number",
+    "No Ink rendering occurs when --json is set"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add JSON output path to statusCommand",
+      "details": "In statusCommand: if (options.json) { const tasks = await readTasks(agentDir); const stats = calculateProgress(tasks); const history = await readHistoryStats(agentDir); const activity = await readRecentActivity(agentDir); const currentTask = activity[activity.length-1]?.taskId ? ... : null; console.log(JSON.stringify({ overall: stats.overall, currentTask, byCategory: stats.byCategory, loopSessions: history.sessionCount, totalRuntimeSeconds: history.totalRuntimeSeconds }, null, 2)); return }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify JSON output with jq",
+      "details": "Run `npm run dev -- status --json | jq .overall.percent`. Should return a number. Run `npm run dev -- status --json | jq .` and verify the full structure.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-131", "TASK-132", "TASK-133", "TASK-134"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

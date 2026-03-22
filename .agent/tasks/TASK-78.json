@@ -1,0 +1,39 @@
+{
+  "id": "TASK-78",
+  "title": "Add task detail panel to TasksApp",
+  "category": "ui-ux",
+  "description": "When a task is selected in TasksApp, show a detail panel with the full task information including title, description, passCondition, and optional blockedReason.",
+  "acceptanceCriteria": [
+    "Selecting a task shows its full details in the detail panel",
+    "Detail panel shows task title",
+    "Detail panel shows full description",
+    "Detail panel shows passCondition",
+    "Detail panel shows blockedReason if present",
+    "Panel uses a Box border for visual separation"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add detail panel to TasksApp layout",
+      "details": "In TasksApp, use a horizontal layout: <Box><Box width='40%'>{task list}</Box><Box width='60%' borderStyle='round' padding={1}>{detail panel}</Box></Box>",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Create TaskDetail component",
+      "details": "Create inline component: function TaskDetail({ task }: { task: Task | null }). If task is null, render 'Select a task to view details'. Otherwise render all task fields.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render task fields in detail panel",
+      "details": "Render: <Box flexDirection='column'><Text bold>#{task.id} {task.title}</Text><Text marginTop={1}>{task.description}</Text><Text marginTop={1} color='cyan'>Pass condition: {task.passCondition}</Text>{task.blockedReason && <Text color='red'>Blocked: {task.blockedReason}</Text>}</Box>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-77"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Ink Box component supports borderStyle: 'single', 'double', 'round', 'bold', 'singleDouble', 'doubleSingle', 'classic'"
+  ]
+}

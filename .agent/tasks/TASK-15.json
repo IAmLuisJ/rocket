@@ -1,0 +1,38 @@
+{
+  "id": "TASK-15",
+  "title": "Register 'rocket tasks' command in Commander",
+  "category": "functional",
+  "description": "Add the 'tasks' subcommand to the Commander program with an optional --filter flag for filtering tasks by status.",
+  "acceptanceCriteria": [
+    "'tasks' command is registered in Commander",
+    "Command description is 'View and manage tasks'",
+    "--filter flag is registered accepting 'incomplete', 'complete', or 'blocked'",
+    "Command is wired to src/commands/tasks.ts handler",
+    "rocket tasks --help shows --filter flag with accepted values"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create stub src/commands/tasks.ts",
+      "details": "Create src/commands/tasks.ts exporting: `export async function tasksCommand(options: { filter?: string }): Promise<void> { console.log('tasks command', options) }`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Register the tasks command in src/cli.ts",
+      "details": "Add to program: `program.command('tasks').description('View and manage tasks').option('--filter <status>', 'Filter tasks by status (incomplete | complete | blocked)').action(tasksCommand)`. Import tasksCommand.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify command help output",
+      "details": "Run `npm run dev -- tasks --help`. Should show the --filter flag with its description and accepted values.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-11"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Commander's option('<arg>') means the flag requires a value, while option('[arg]') makes the value optional"
+  ]
+}

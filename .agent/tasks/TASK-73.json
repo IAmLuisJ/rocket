@@ -1,0 +1,46 @@
+{
+  "id": "TASK-73",
+  "title": "Create src/tui/RocketLoopApp.tsx — main loop TUI orchestrator",
+  "category": "ui-ux",
+  "description": "Create the root Ink component for the rocket loop TUI. Manages a state machine that transitions through: task selection, running, complete, blocked, and decide states.",
+  "acceptanceCriteria": [
+    "RocketLoopApp starts in 'selecting' state showing TaskSelector",
+    "Transitions to 'running' state when a task is selected",
+    "Transitions to 'complete' state when loop emits complete event",
+    "Transitions to 'blocked' state when loop emits blocked event",
+    "Transitions to 'decide' state when loop emits decide event",
+    "Running state shows IterationHeader and SpinnerPreview"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/RocketLoopApp.tsx with state machine",
+      "details": "Create the file. Define state type: type AppState = 'selecting' | 'running' | 'complete' | 'blocked' | 'decide'. Use useState for state management.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Render TaskSelector in 'selecting' state",
+      "details": "When state === 'selecting': render <TaskSelector tasks={tasks} onSelect={handleTaskSelect} />. handleTaskSelect sets the selected task and transitions to 'running'.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render running state with IterationHeader and SpinnerPreview",
+      "details": "When state === 'running': render <Box flexDirection='column'><IterationHeader n={currentIteration} max={maxIterations} taskId={selectedTask.id} /><SpinnerPreview lines={outputLines} /></Box>",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Render terminal states",
+      "details": "When state === 'complete': render <CompletionReport />. When state === 'blocked': render <BlockedScreen />. When state === 'decide': render <DecideScreen />.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-66", "TASK-67", "TASK-68", "TASK-69", "TASK-70", "TASK-71"],
+  "estimatedComplexity": "high",
+  "technicalNotes": [
+    "This is the top-level React component rendered by Ink — it owns all the state for the loop session",
+    "State machine pattern prevents invalid state combinations (e.g., showing completion report while still running)"
+  ]
+}

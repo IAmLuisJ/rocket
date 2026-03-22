@@ -1,0 +1,37 @@
+{
+  "id": "TASK-63",
+  "title": "Integrate caffeinate into loop runner",
+  "category": "functional",
+  "description": "Call caffeinate.start() before the first loop iteration and caffeinate.stop() in a finally block to ensure it's always cleaned up, regardless of how the loop exits.",
+  "acceptanceCriteria": [
+    "caffeinate process starts when loop starts (on macOS)",
+    "caffeinate process is terminated when loop exits (any exit condition)",
+    "caffeinate is terminated even if the loop throws an error",
+    "No orphan caffeinate processes remain after loop exits"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Import caffeinate module in loop-runner.ts",
+      "details": "Add to loop-runner.ts: `import * as caffeinate from './caffeinate.js'`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Start caffeinate before the loop and stop in finally",
+      "details": "In runLoop, wrap the for loop: `const caffProc = caffeinate.start(); try { for (let i = 1; ...) { ... } } finally { caffeinate.stop(caffProc) }`",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify caffeinate starts and stops correctly",
+      "details": "On macOS: run rocket loop on a project, then run `pgrep caffeinate` during the loop — should show a process. After the loop exits, run `pgrep caffeinate` again — should return nothing.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-57", "TASK-61"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The finally block in an async generator runs when the generator is done OR when the caller breaks out of the for-await-of loop"
+  ]
+}

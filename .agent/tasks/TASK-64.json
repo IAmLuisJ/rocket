@@ -1,0 +1,35 @@
+{
+  "id": "TASK-64",
+  "title": "Integrate history saving into loop runner",
+  "category": "functional",
+  "description": "After each iteration completes, save the accumulated output to a history file. Generate a sessionId at the start of the loop using Date.now().",
+  "acceptanceCriteria": [
+    "sessionId is generated at loop start using Date.now()",
+    "After each iteration, saveIteration() is called with the iteration output",
+    "History file exists at .agent/history/ITERATION-{sessionId}-{n}.txt after each iteration",
+    "History files contain the iteration output with ANSI codes stripped"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Generate sessionId at start of runLoop",
+      "details": "At the top of runLoop: `const sessionId = Date.now().toString()`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Accumulate output per iteration",
+      "details": "Inside the iteration for loop, maintain a local variable: `let iterationOutput = ''`. Append each output line: iterationOutput += line + '\\n'",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Call saveIteration after each iteration",
+      "details": "After the AI process completes for an iteration: `await saveIteration(options.agentDir, sessionId, i, iterationOutput)`. This runs before checking exit conditions.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-58", "TASK-61"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

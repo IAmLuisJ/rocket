@@ -1,0 +1,39 @@
+{
+  "id": "TASK-45",
+  "title": "Write default .agent/PROMPT.md loop instructions",
+  "category": "functional",
+  "description": "Create the default PROMPT.md template that instructs the AI agent on how to behave during rocket loop sessions. Must define the exit tag protocol (<complete>, <blocked>, <decide>).",
+  "acceptanceCriteria": [
+    ".agent/PROMPT.md is created with default content",
+    "Instructions for <complete> tag are present",
+    "Instructions for <blocked> tag with reason are present",
+    "Instructions for <decide> tag with question are present",
+    "File instructs the AI to read the PRD and focus on the current task"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Define PROMPT.md content in agent-init.ts",
+      "details": "In src/lib/agent-init.ts, set the PROMPT.md content. The prompt should instruct the AI to: (1) Read .agent/prd/PRD.md for project context, (2) Focus on implementing the current task completely, (3) Output <complete> when the task is done, (4) Output <blocked>reason for blockage</blocked> if stuck and need human help, (5) Output <decide>question requiring decision</decide> if a design choice is needed.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Include code quality guidelines in PROMPT.md",
+      "details": "Add instructions: write tests, avoid over-engineering, handle errors gracefully, commit changes when a logical unit of work is complete.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify PROMPT.md is written correctly",
+      "details": "After scaffolding a test project, open .agent/PROMPT.md and confirm it contains all three exit tag instructions.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-43", "TASK-83"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The PROMPT.md is prepended to the AI prompt in each loop iteration — keep it concise but comprehensive",
+    "The <complete>, <blocked>, and <decide> tags must be detectable by the tags.ts parser (TASK-53)"
+  ]
+}

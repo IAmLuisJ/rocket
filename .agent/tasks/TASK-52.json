@@ -1,0 +1,38 @@
+{
+  "id": "TASK-52",
+  "title": "Create src/lib/backends/index.ts — backend selector",
+  "category": "functional",
+  "description": "Create a selector module that returns the appropriate AgentBackend based on CLI flags. Default is Copilot, with Claude and Docker as optional overrides. Throws if conflicting flags are passed.",
+  "acceptanceCriteria": [
+    "getBackend(options) is exported from index.ts",
+    "getBackend({}) returns the copilot backend",
+    "getBackend({claude: true}) returns the claude backend",
+    "getBackend({docker: true}) returns the docker backend",
+    "getBackend({claude: true, docker: true}) throws with a descriptive error"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/backends/index.ts",
+      "details": "Create the file. Import copilotBackend, claudeBackend, dockerBackend from their respective modules. Import AgentBackend from types.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement getBackend selector",
+      "details": "Export: function getBackend(options: { claude?: boolean; docker?: boolean }): AgentBackend { if (options.claude && options.docker) { throw new Error('Cannot use --claude and --docker simultaneously. Choose one.') } if (options.docker) return dockerBackend; if (options.claude) return claudeBackend; return copilotBackend; }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Re-export types for convenience",
+      "details": "Re-export the AgentBackend interface: export type { AgentBackend, BackendOptions, ParsedOutput } from './types.js'",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-49", "TASK-50", "TASK-51"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "This is a simple factory pattern — the selector doesn't know anything about what the backends do"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "TASK-136",
+  "title": "Create src/tui/components/StatusDashboard.tsx — full dashboard layout",
+  "category": "ui-ux",
+  "description": "Create the full status dashboard Ink component. Composes all status sections: header, overall progress bar, focus task, category breakdown, recent activity, and session stats footer.",
+  "acceptanceCriteria": [
+    "StatusDashboard renders without errors given valid props",
+    "Header shows project name and current timestamp",
+    "Overall progress bar is rendered using ProgressBar component",
+    "Current focus task panel is shown",
+    "By-category breakdown table is rendered",
+    "Recent activity list is shown",
+    "Loop session stats footer is present"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/components/StatusDashboard.tsx",
+      "details": "Create the file. Import React, Box, Text from ink. Import ProgressBar. Define props: { stats: ProgressStats; activity: ActivityEntry[]; history: HistoryStats; currentTask: Task | null }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Render header section",
+      "details": "Render: <Box><Text bold color='cyan'>🚀 Rocket Status</Text><Text dimColor> · {path.basename(process.cwd())}  {new Date().toLocaleString()}</Text></Box>",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render overall progress and category breakdown",
+      "details": "Render ProgressBar with overall stats. Render per-category rows: {Object.entries(stats.byCategory).map(([cat, s]) => <Text>{cat.padEnd(14)} <ProgressBar percent={s.percent} complete={s.complete} total={s.total} width={20} /></Text>)}",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Render focus task, activity, and footer",
+      "details": "Show currentTask info. Show last 5 activity entries from logReader. Show loop session count and total runtime from historyReader.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-132", "TASK-133", "TASK-134", "TASK-135"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": []
+}

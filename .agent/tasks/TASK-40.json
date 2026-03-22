@@ -1,0 +1,45 @@
+{
+  "id": "TASK-40",
+  "title": "Add scaffolding progress display to NewProjectWizard",
+  "category": "ui-ux",
+  "description": "After the user completes wizard selections, show a sequential progress screen: spinner while scaffolding, then installing dependencies, then initializing git. Each step shows a checkmark when done.",
+  "acceptanceCriteria": [
+    "Progress screen shows 'Scaffolding <name>...' with spinner",
+    "After scaffolding: shows 'Installing dependencies...' with spinner",
+    "After npm install: shows 'Initializing git...' with spinner",
+    "Each completed step shows a green checkmark instead of spinner",
+    "All three steps appear sequentially (not simultaneously)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add progress state to NewProjectWizard",
+      "details": "Add state: { progressStep: 'scaffolding' | 'installing' | 'git' | 'done' | null }. When onComplete is called, set progressStep to 'scaffolding' and start the scaffold process.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Create ProgressStep component",
+      "details": "Create a local ProgressStep component that accepts { label, done }: renders <Spinner> if not done, <Text color='green'>✓</Text> if done, followed by the label text.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render sequential progress steps",
+      "details": "When progressStep is set, render: <Box flexDirection='column'><ProgressStep label={`Scaffolding ${projectName}...`} done={progressStep !== 'scaffolding'} />{progressStep !== 'scaffolding' && <ProgressStep label='Installing dependencies...' done={['git','done'].includes(progressStep)} />}</Box>",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Run scaffold steps asynchronously and update progress",
+      "details": "Use useEffect to run the scaffold steps after the wizard completes. After each step (scaffold, npm install, git init), update progressStep state to advance the UI. Pass onStepComplete callbacks to the scaffold function.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-39", "TASK-37"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "Ink Spinner is imported from 'ink-spinner' — it provides a built-in terminal spinner animation",
+    "Use useEffect with an async IIFE to run async operations inside React components"
+  ]
+}

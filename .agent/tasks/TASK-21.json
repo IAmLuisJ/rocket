@@ -1,0 +1,44 @@
+{
+  "id": "TASK-21",
+  "title": "Add webapp template: client package.json",
+  "category": "functional",
+  "description": "Create the client package.json template for the React frontend. Lists all required dependencies including React 19, TypeScript, Vite, TanStack Query, React Router, React Hook Form, Zod, and Tailwind. Dev dependencies include testing tools.",
+  "acceptanceCriteria": [
+    "src/templates/webapp/client/package.json.tmpl exists",
+    "react and react-dom at version ^19 are listed",
+    "typescript at version ^5.9 is listed",
+    "vite at version ^7 is listed",
+    "@tanstack/react-query at version ^5 is listed",
+    "react-router-dom at version ^7 is listed",
+    "react-hook-form is listed",
+    "zod is listed",
+    "tailwindcss at version ^4 is listed",
+    "vitest and @testing-library/react are in devDependencies"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create the client package.json.tmpl",
+      "details": "Create src/templates/webapp/client/package.json.tmpl with name '{{PROJECT_NAME}}-client', version '0.0.1', private true. Add all runtime dependencies: react, react-dom, @tanstack/react-query, react-router-dom, react-hook-form, zod. Add all devDependencies: typescript, vite, @vitejs/plugin-react, tailwindcss, vitest, @testing-library/react, @testing-library/user-event, @types/react, @types/react-dom.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add scripts to client package.json.tmpl",
+      "details": "Add scripts: { 'dev': 'vite', 'build': 'tsc -b && vite build', 'preview': 'vite preview', 'test': 'vitest run', 'lint': 'eslint src/' }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify all required dependencies are present",
+      "details": "Review the file and confirm all packages from the PRD Section 5.1 are listed with appropriate version ranges (use ^ prefix for minor version compatibility).",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-19"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Use ^19, ^7, ^5 etc. for version ranges to allow patch updates while locking major versions",
+    "shadcn/ui components are added per-project basis (not in base template) since they're installed via CLI"
+  ]
+}

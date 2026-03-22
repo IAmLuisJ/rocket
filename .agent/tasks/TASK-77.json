@@ -1,0 +1,38 @@
+{
+  "id": "TASK-77",
+  "title": "Create src/tui/TasksApp.tsx — rocket tasks TUI",
+  "category": "ui-ux",
+  "description": "Create the root Ink component for the rocket tasks command. Shows a paginated list of tasks with status icons. Supports keyboard navigation.",
+  "acceptanceCriteria": [
+    "TasksApp renders a task list",
+    "✓ icon shown for complete tasks (passes: true)",
+    "○ icon shown for incomplete tasks (passes: false)",
+    "Selected task is highlighted in cyan",
+    "Arrow keys navigate the list"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/TasksApp.tsx",
+      "details": "Create the file. Define props: { tasks: Task[]; initialFilter?: string }. Import React, useState, Box, Text, useInput from ink. Import Task from tasks/schema.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement task list with selection state",
+      "details": "const [selectedIndex, setSelectedIndex] = useState(0). useInput((input, key) => { if (key.upArrow) setSelectedIndex(i => Math.max(0, i-1)); if (key.downArrow) setSelectedIndex(i => Math.min(filteredTasks.length-1, i+1)) })",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render task list with status icons",
+      "details": "Render each task: const icon = task.passes ? '✓' : '○'; const isSelected = index === selectedIndex. Return: <Text color={isSelected ? 'cyan' : undefined}>{icon} #{task.id} {task.title}</Text>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-46", "TASK-72"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "For large task lists, implement virtual scrolling by only rendering a window of tasks around the selected index"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "TASK-143",
+  "title": "Write unit tests for calculator.ts",
+  "category": "testing",
+  "description": "Create Vitest unit tests for calculateProgress. Test percent calculation, per-category grouping, empty list, and all-complete scenarios.",
+  "acceptanceCriteria": [
+    "Empty task list returns 0% overall and empty categories test passes",
+    "Mixed tasks return correct percent and category counts test passes",
+    "All-complete tasks returns 100% overall test passes",
+    "Per-category calculation is correct for multi-category task list test passes",
+    "All tests pass with npm test"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/progress/__tests__/calculator.test.ts",
+      "details": "Create test file. Import calculateProgress. Create fixture task arrays.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Write test cases",
+      "details": "Test 1: empty array → 0% overall. Test 2: [1 complete, 1 incomplete] → 50%. Test 3: all complete → 100%. Test 4: 2 config (1 done) + 2 functional (2 done) → config 50%, functional 100%, overall 75%.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Run tests",
+      "details": "Run `npm test` and verify all calculator tests pass.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-132", "TASK-7"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "calculateProgress is a pure function — no mocking needed, just fixture data"
+  ]
+}

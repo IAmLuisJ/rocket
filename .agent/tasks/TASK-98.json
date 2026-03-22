@@ -1,0 +1,38 @@
+{
+  "id": "TASK-98",
+  "title": "Configure npm publish settings in package.json",
+  "category": "config",
+  "description": "Configure the files field and publishConfig in package.json for npm publishing. Add a prepublishOnly script that runs the build before publishing.",
+  "acceptanceCriteria": [
+    "'files' field in package.json includes dist/, bin/, src/templates/, README.md",
+    "publishConfig has access: 'public'",
+    "prepublishOnly script runs the build",
+    "npm pack --dry-run shows only the expected files"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add 'files' field to package.json",
+      "details": "Add: \"files\": [\"dist/\", \"bin/\", \"src/templates/\", \"README.md\", \"CHANGELOG.md\"]",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add publishConfig and prepublishOnly",
+      "details": "Add: \"publishConfig\": { \"access\": \"public\" }. Add to scripts: \"prepublishOnly\": \"npm run build\"",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify with npm pack --dry-run",
+      "details": "Run `npm pack --dry-run` and review the file list. Confirm it includes template files and dist/ but NOT test files, .agent/, or source .ts files (except templates).",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1", "TASK-8"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "access: 'public' is required for scoped packages (@org/package-name) but good practice for all npm packages",
+    "The 'files' field is a whitelist — only listed files are included in the published package"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "TASK-88",
+  "title": "Add process cleanup on SIGINT/SIGTERM in loop runner",
+  "category": "security",
+  "description": "Register SIGINT and SIGTERM handlers in the loop runner to ensure clean process termination. Kill the AI backend child process, stop caffeinate, and write a partial session log before exiting.",
+  "acceptanceCriteria": [
+    "Pressing Ctrl+C (SIGINT) during loop kills the AI child process",
+    "Ctrl+C stops caffeinate process",
+    "Partial session log is written on SIGINT",
+    "No orphan AI processes remain after Ctrl+C",
+    "SIGTERM behaves the same as SIGINT"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Store reference to current child process in loop runner",
+      "details": "In runLoop, maintain a variable: `let currentProc: ChildProcess | null = null`. Set it when spawning: `currentProc = backend.spawn(...)`. Clear it when done.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Register SIGINT/SIGTERM handlers",
+      "details": "In loop-runner.ts or in the command handler: `const handleSignal = async () => { if (currentProc) currentProc.kill('SIGTERM'); caffeinate.stop(caffProc); await appendSessionLog(...); process.exit(0) }; process.on('SIGINT', handleSignal); process.on('SIGTERM', handleSignal)`",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Test SIGINT cleanup",
+      "details": "Run rocket loop on a real project. Press Ctrl+C during an AI iteration. Verify: (1) no hanging processes with `ps aux | grep copilot`, (2) LOG.md is updated with partial session, (3) process exits cleanly.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-57", "TASK-61", "TASK-65"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "Signal handlers must be synchronous or use process.exit() — you can't reliably await async operations in signal handlers",
+    "Use process.exitCode = 0 and let the finally block run instead of process.exit() for cleaner cleanup"
+  ]
+}

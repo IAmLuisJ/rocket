@@ -1,0 +1,56 @@
+{
+  "id": "TASK-2",
+  "title": "Configure tsconfig.json for ESM + Node.js 22",
+  "category": "config",
+  "description": "Create the TypeScript compiler configuration for the project. The config must support ESM (NodeNext module system), Node.js 22 runtime targets, strict type checking, and a separate tsconfig for the bin/ entry point. Use composite builds to support both src/ and bin/ outputs.",
+  "acceptanceCriteria": [
+    "tsconfig.json exists at project root",
+    "module is set to 'NodeNext'",
+    "moduleResolution is set to 'NodeNext'",
+    "target is set to 'ES2022'",
+    "strict is true",
+    "outDir is 'dist'",
+    "rootDir is 'src'",
+    "A separate tsconfig for bin/ exists or bin/ is included in the root tsconfig",
+    "tsc --noEmit passes with no errors on a minimal src/index.ts file"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create root tsconfig.json",
+      "details": "Create tsconfig.json at project root with compilerOptions: { module: 'NodeNext', moduleResolution: 'NodeNext', target: 'ES2022', strict: true, outDir: 'dist', rootDir: 'src', declaration: true, declarationMap: true, sourceMap: true, esModuleInterop: true, skipLibCheck: true }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Configure include/exclude patterns",
+      "details": "Add 'include': ['src/**/*'] and 'exclude': ['node_modules', 'dist', '**/*.test.ts'] to the root tsconfig.json.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Create tsconfig for bin/ directory",
+      "details": "Create tsconfig.bin.json at project root that extends the root tsconfig but overrides rootDir to cover both src/ and bin/. Set 'rootDir': '.' and include both 'src/**/*' and 'bin/**/*'. Or alternatively, include bin/ in the root tsconfig by setting rootDir to '.'.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Install TypeScript as devDependency",
+      "details": "Run `npm install --save-dev typescript @types/node`. This is needed before tsc can run. Use TypeScript 5.x.",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Create a minimal src/index.ts to verify compilation",
+      "details": "Create src/index.ts with a single export: `export const version = '0.1.0'`. Run `npx tsc --noEmit` to verify zero TypeScript errors. The noEmit flag checks types without writing output files.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "NodeNext module resolution requires .js extensions in import statements even for .ts source files — this is a common gotcha",
+    "composite: true enables project references which speeds up incremental builds",
+    "skipLibCheck: true is recommended to avoid errors in third-party type definitions"
+  ]
+}

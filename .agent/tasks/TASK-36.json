@@ -1,0 +1,53 @@
+{
+  "id": "TASK-36",
+  "title": "Create src/lib/template-engine.ts",
+  "category": "functional",
+  "description": "Create a template processing module that reads template files, replaces {{PLACEHOLDER}} tokens with provided values, and writes output files to a destination directory. Binary files must be copied without token replacement.",
+  "acceptanceCriteria": [
+    "processTemplate(src, dest, vars) function is exported",
+    "{{TOKEN}} placeholders are replaced with corresponding values from vars map",
+    "Multiple occurrences of the same token are all replaced",
+    "Binary files (images, fonts) are copied without modification",
+    ".tmpl extension is stripped from output filenames",
+    ".gitignore.tmpl becomes .gitignore in the output"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/template-engine.ts with file detection",
+      "details": "Create src/lib/template-engine.ts. Define a binary file extension list: ['.png', '.jpg', '.jpeg', '.gif', '.ico', '.woff', '.woff2', '.ttf', '.eot', '.pdf']. Create isBinaryFile(filePath: string): boolean that checks the extension.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement replaceTokens function",
+      "details": "Add: function replaceTokens(content: string, vars: Record<string, string>): string. Use a regex replacement: for each key in vars, replace all occurrences of `{{KEY}}` in the content. Use a global regex: `new RegExp('\\\\{\\\\{' + key + '\\\\}\\\\}', 'g')`.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement processTemplate function",
+      "details": "Add: export async function processTemplate(srcDir: string, destDir: string, vars: Record<string, string>): Promise<void>. Walk srcDir recursively (use fs-extra's walk or recursive readdir). For each file: compute dest path (strip .tmpl ext, replace .gitignore.tmpl -> .gitignore). If binary: fs.copy(). Otherwise: read as utf-8, replaceTokens, write to dest.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Handle .gitignore.tmpl renaming",
+      "details": "Special case: files named '.gitignore.tmpl' must become '.gitignore' in the output. This is needed because git ignores .gitignore files in template directories. Handle this in the destination path computation.",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Ensure destination directories are created",
+      "details": "Before writing each output file, call fs.ensureDir(path.dirname(destPath)) to create any missing parent directories. fs-extra's ensureDir is idempotent.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-6"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "Use fs-extra (not native fs) for copy, ensureDir, and readdir operations",
+    "The token format {{KEY}} uses curly braces — escape them properly in RegExp: '\\\\{\\\\{' + key + '\\\\}\\\\}'",
+    "Test with both text and binary files to verify binary files are not corrupted"
+  ]
+}

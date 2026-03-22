@@ -1,0 +1,35 @@
+{
+  "id": "TASK-34",
+  "title": "Add website template: .env.example for PHP project",
+  "category": "security",
+  "description": "Create a .env.example file for the website template documenting all required environment variable keys with placeholder values.",
+  "acceptanceCriteria": [
+    "src/templates/website/.env.example exists",
+    "DB_HOST placeholder is present",
+    "DB_NAME placeholder is present",
+    "DB_USER placeholder is present",
+    "DB_PASS placeholder is present",
+    "APP_ENV placeholder is present",
+    "APP_URL placeholder is present",
+    "No real values are present"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create .env.example for website template",
+      "details": "Create src/templates/website/.env.example with:\nDB_HOST=localhost\nDB_NAME=your_database_name\nDB_USER=your_database_user\nDB_PASS=your_database_password\nAPP_ENV=development\nAPP_URL=http://localhost:8080\nAPP_DEBUG=true",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify all credential fields use placeholder values",
+      "details": "Confirm DB_PASS, DB_USER, and DB_NAME all have descriptive placeholder text (not real values like 'password123' or 'root').",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-31"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "PHP projects typically load .env using a library like vlucas/phpdotenv — add it to a README note about setup"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "TASK-101",
+  "title": "Handle missing .agent/ directory gracefully in rocket loop",
+  "category": "functional",
+  "description": "In the loop command handler, check for the existence of .agent/ before running preflight checks. Show a friendly error message if it's missing.",
+  "acceptanceCriteria": [
+    "Running rocket loop in a directory without .agent/ shows a friendly error",
+    "Error message mentions 'Run rocket init first'",
+    "Process exits with code 1"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add .agent/ existence check in loop.ts",
+      "details": "At the top of loopCommand, before calling runPreflight: if (!await fs.pathExists(agentDir)) { console.error('No .agent/ directory found. Run rocket init first.'); process.exit(1) }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Test in a directory without .agent/",
+      "details": "Create a temp empty directory. Run `rocket loop` in it. Verify the error message appears and process exits with code 1.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-76"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

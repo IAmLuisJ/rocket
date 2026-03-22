@@ -1,0 +1,29 @@
+{
+  "id": "TASK-119",
+  "title": "Implement --no-questions flag: skip clarification loop",
+  "category": "functional",
+  "description": "When --no-questions is passed to rocket feature, skip the FeatureWizard TUI entirely. Call specGenerator directly with an empty Q&A array. The rest of the flow (preview, confirm, apply) remains unchanged.",
+  "acceptanceCriteria": [
+    "rocket feature 'test feature' --no-questions runs without showing clarification questions",
+    "Spec and tasks are generated with empty Q&A",
+    "Preview is shown after generation",
+    "Apply/Edit/Cancel flow works normally"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Check --no-questions in featureCommand",
+      "details": "In src/commands/feature.ts: if (options.questions === false) { // skip wizard; directly call generateSpec with empty qa array const result = await generateSpec({ prdContent, featureDescription: description, qa: [] }, backend) }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Ensure preview flow is unchanged",
+      "details": "After generateSpec returns, proceed to FeatureDiffPreview regardless of whether questions were asked. The preview and confirmation flow is the same either way.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-111", "TASK-114"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

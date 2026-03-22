@@ -1,0 +1,45 @@
+{
+  "id": "TASK-13",
+  "title": "Register 'rocket loop' command in Commander",
+  "category": "functional",
+  "description": "Add the 'loop' subcommand to the Commander program with flags for selecting the AI backend. The default backend is Copilot CLI, with optional --claude and --docker flags to switch backends.",
+  "acceptanceCriteria": [
+    "'loop' command is registered in Commander",
+    "--claude flag is registered with a description",
+    "--docker flag is registered with a description",
+    "Command is wired to src/commands/loop.ts handler",
+    "rocket loop --help shows --claude and --docker flags with descriptions"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create stub src/commands/loop.ts",
+      "details": "Create src/commands/loop.ts exporting: `export async function loopCommand(options: { claude?: boolean; docker?: boolean }): Promise<void> { console.log('loop command', options) }`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Register the loop command in src/cli.ts",
+      "details": "Add to program in src/cli.ts: `program.command('loop').description('Run the AI development loop').option('--claude', 'Use Claude CLI as the AI backend (direct, no docker)').option('--docker', 'Use Claude in a Docker sandbox as the AI backend').action(loopCommand)`",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Import loop command in src/cli.ts",
+      "details": "Add import: `import { loopCommand } from './commands/loop.js'` at top of src/cli.ts.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Verify command help output",
+      "details": "Run `npm run dev -- loop --help`. Should show both --claude and --docker flags with their descriptions.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-11"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Commander's option() method with boolean flags (no argument) stores true/false in the options object",
+    "The loop command will later also receive --max-iterations flag (TASK-18) and --no-caffeinate flag (TASK-106)"
+  ]
+}

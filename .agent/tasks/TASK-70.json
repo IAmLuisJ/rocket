@@ -1,0 +1,37 @@
+{
+  "id": "TASK-70",
+  "title": "Create src/tui/components/BlockedScreen.tsx",
+  "category": "ui-ux",
+  "description": "Create the Ink component shown when the AI outputs a <blocked> tag. Displays the blocked reason and instructions for the user to fix the issue and restart the loop.",
+  "acceptanceCriteria": [
+    "BlockedScreen renders a red 'Loop Blocked' header",
+    "The blocked reason text is displayed",
+    "Instructions 'Fix the issue and run rocket loop again' are shown",
+    "Screen exits on any keypress"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/components/BlockedScreen.tsx",
+      "details": "Create the file. Import React, Box, Text, useInput, useApp from ink.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement keypress exit",
+      "details": "const { exit } = useApp(); useInput(() => { exit() }). This exits the Ink app on any keypress.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render blocked screen",
+      "details": "Return: <Box flexDirection='column' marginTop={1}><Text bold color='red'>⛔ Loop Blocked</Text><Text marginTop={1}>{reason}</Text><Text marginTop={1} dimColor>Fix the issue and run rocket loop again. Press any key to exit.</Text></Box>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-72"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "useApp() from ink provides the exit() function to terminate the Ink render cleanly"
+  ]
+}

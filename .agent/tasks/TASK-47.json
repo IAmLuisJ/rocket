@@ -1,0 +1,46 @@
+{
+  "id": "TASK-47",
+  "title": "Create src/lib/tasks/reader.ts — read/write tasks.json",
+  "category": "functional",
+  "description": "Create a module for reading and writing tasks.json. Provides functions to read validated tasks, write updated tasks back, filter incomplete tasks, and mark tasks as complete.",
+  "acceptanceCriteria": [
+    "readTasks(agentDir) returns validated Task[] from tasks.json",
+    "writeTasks(agentDir, tasks) writes the array back to tasks.json",
+    "getIncompleteTasks(tasks) returns only tasks where passes is false",
+    "markTaskComplete(tasks, id) returns a new array with the matching task's passes set to true",
+    "readTasks throws a descriptive error if tasks.json is missing or invalid"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/tasks/reader.ts",
+      "details": "Create the file. Import fs-extra, path, and TasksFileSchema from schema.ts. Define the tasks.json path helper: `function tasksPath(agentDir: string): string { return path.join(agentDir, 'tasks.json') }`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement readTasks function",
+      "details": "Export: async function readTasks(agentDir: string): Promise<Task[]> { const raw = await fs.readJson(tasksPath(agentDir)); const parsed = TasksFileSchema.parse(raw); return parsed.tasks; }. If file not found, throw: new Error('tasks.json not found. Run rocket init to create it.')",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement writeTasks function",
+      "details": "Export: async function writeTasks(agentDir: string, tasks: Task[]): Promise<void> { await fs.writeJson(tasksPath(agentDir), { tasks }, { spaces: 2 }); }",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Implement getIncompleteTasks and markTaskComplete",
+      "details": "Export: function getIncompleteTasks(tasks: Task[]): Task[] { return tasks.filter(t => !t.passes) }. Export: function markTaskComplete(tasks: Task[], id: number): Task[] { return tasks.map(t => t.id === id ? { ...t, passes: true } : t) }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-46"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "fs.readJson from fs-extra automatically parses JSON — no need for JSON.parse(await fs.readFile(...))",
+    "writeTasks uses { spaces: 2 } for human-readable output",
+    "markTaskComplete returns a new array (immutable update) — do not mutate the input"
+  ]
+}

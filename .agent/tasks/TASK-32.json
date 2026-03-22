@@ -1,0 +1,38 @@
+{
+  "id": "TASK-32",
+  "title": "Add website template: index.php entry point",
+  "category": "functional",
+  "description": "Create the PHP entry point for the website template. This is a basic router that loads database configuration and dispatches requests to controllers.",
+  "acceptanceCriteria": [
+    "src/templates/website/public/index.php exists",
+    "File requires config/database.php",
+    "File contains basic routing logic",
+    "File returns a simple homepage response for the root path"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create public/index.php template",
+      "details": "Create src/templates/website/public/index.php with: <?php require_once __DIR__ . '/../config/database.php'; $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); $uri = rtrim($uri, '/'); if ($uri === '' || $uri === '/') { require __DIR__ . '/../templates/home.php'; } else { http_response_code(404); require __DIR__ . '/../templates/404.php'; }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Create basic home.php template view",
+      "details": "Create src/templates/website/templates/home.php with a simple HTML page using the layout: <?php require_once __DIR__ . '/layout.php'; ?> (or inline the layout if not using includes).",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Create basic 404.php template",
+      "details": "Create src/templates/website/templates/404.php with a 404 Not Found response page.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-31"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "parse_url is used instead of direct $_SERVER['REQUEST_URI'] access to strip query strings from routing",
+    "The router pattern here is the simplest possible — more complex routing can be added as the project grows"
+  ]
+}

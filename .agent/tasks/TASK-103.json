@@ -1,0 +1,33 @@
+{
+  "id": "TASK-103",
+  "title": "Display per-step timing in iteration header",
+  "category": "ui-ux",
+  "description": "Track start time at the beginning of each iteration and display elapsed time when the iteration ends. Show timing in yellow below or beside the iteration header.",
+  "acceptanceCriteria": [
+    "Each completed iteration shows elapsed time (e.g., '⏱ 45s') in yellow",
+    "Timing appears after the iteration header bar"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Yield timing events from loop runner",
+      "details": "Already handled in TASK-61. Ensure timing events include iteration number and elapsed milliseconds.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Display timing in IterationHeader or below it",
+      "details": "Update IterationHeader or add a TimingLine component below it: <Text color='yellow'>⏱ {formatTime(elapsedMs)}</Text>. Only show when elapsed time is available (after iteration completes).",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Track timing in RocketLoopApp state",
+      "details": "In RocketLoopApp, store iterationTimings as an array. Update it when timing events are received from the loop runner.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-61", "TASK-67", "TASK-74"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

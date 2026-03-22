@@ -1,0 +1,43 @@
+{
+  "id": "TASK-117",
+  "title": "Create src/tui/components/FeatureDiffPreview.tsx — diff preview TUI",
+  "category": "ui-ux",
+  "description": "Create an Ink component that shows a preview of PRD changes and new tasks before applying them. Provides Yes/Edit/Cancel selection prompt.",
+  "acceptanceCriteria": [
+    "FeatureDiffPreview renders specMarkdown lines with green '+' prefix",
+    "New tasks list shows all tasks with IDs and titles",
+    "Select prompt shows 'Yes — apply changes', 'Edit', 'Cancel'",
+    "Selecting Yes calls onApply callback",
+    "Selecting Edit calls onEdit callback",
+    "Selecting Cancel calls onCancel callback"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/components/FeatureDiffPreview.tsx",
+      "details": "Create the file. Import React, Box, Text from ink. Import SelectInput. Define props: { specMarkdown: string; tasks: Task[]; onApply: () => void; onEdit: () => void; onCancel: () => void }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Render PRD diff panel",
+      "details": "Show spec lines with green '+' prefix: {specMarkdown.split('\\n').slice(0, 20).map((line, i) => <Text key={i} color='green'>+ {line}</Text>)}. Truncate to 20 lines if too long, show '...' indicator.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render new tasks panel",
+      "details": "Below the diff: <Text bold>New Tasks ({tasks.length}):</Text>{tasks.map((t, i) => <Text key={i}>  #{i+1} {t.title}</Text>)}",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Render the action prompt",
+      "details": "Add SelectInput with three items: [{ label: 'Yes — apply changes', value: 'apply' }, { label: 'Edit — open in $EDITOR', value: 'edit' }, { label: 'Cancel', value: 'cancel' }]. Call the appropriate callback based on selection.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-6", "TASK-72"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": []
+}

@@ -1,0 +1,34 @@
+{
+  "id": "TASK-99",
+  "title": "Create .npmignore",
+  "category": "config",
+  "description": "Create .npmignore to exclude development files, source files (except templates), test files, and project-specific directories from the published npm package.",
+  "acceptanceCriteria": [
+    ".npmignore exists at project root",
+    "src/ directory is excluded (except src/templates/ which is allowed by 'files' field)",
+    "*.test.ts files are excluded",
+    ".agent/ directory is excluded",
+    ".github/ is excluded",
+    "npm pack --dry-run does not include .test.ts files or .agent/ directory"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create .npmignore",
+      "details": "Create .npmignore with: .agent/ .github/ coverage/ docs/ *.test.ts tsconfig*.json eslint.config.js vitest.config.ts .prettierrc .prettierignore",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify with npm pack --dry-run",
+      "details": "Run `npm pack --dry-run` and confirm no .test.ts files or .agent/ directory appear in the file list.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1", "TASK-98"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Note: when both 'files' field and .npmignore exist, 'files' takes precedence for inclusion. .npmignore is used to exclude files within included directories.",
+    "The src/templates/ directory is included via 'files' field even though src/ might be in .npmignore"
+  ]
+}

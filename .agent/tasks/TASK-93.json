@@ -1,0 +1,46 @@
+{
+  "id": "TASK-93",
+  "title": "Write unit tests for caffeinate.ts",
+  "category": "testing",
+  "description": "Create Vitest unit tests for the caffeinate module using platform and child_process mocking.",
+  "acceptanceCriteria": [
+    "src/lib/caffeinate.test.ts exists",
+    "start() on darwin spawns caffeinate -i test passes",
+    "start() on linux returns null test passes",
+    "stop() with a process calls kill() test passes",
+    "stop(null) is a no-op test passes",
+    "npm test passes all caffeinate.test.ts cases"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/caffeinate.test.ts",
+      "details": "Create the test file. Import vi from vitest for mocking. Import start, stop from caffeinate.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Mock process.platform for cross-platform tests",
+      "details": "Use vi.stubGlobal('process', { ...process, platform: 'darwin' }) for macOS tests. Restore after each test with vi.unstubAllGlobals().",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Mock child_process.spawn",
+      "details": "Use vi.mock('child_process', () => ({ spawn: vi.fn().mockReturnValue({ kill: vi.fn(), on: vi.fn() }) })). Verify spawn is called with ('caffeinate', ['-i']) on darwin.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Write all test cases and run",
+      "details": "Write all 4 test cases. Run `npm test` and verify all pass.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-57", "TASK-7"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "Vitest's vi.mock() must be called at the top level of the test file, not inside describe blocks",
+    "vi.stubGlobal is the correct way to mock process.platform in Vitest"
+  ]
+}

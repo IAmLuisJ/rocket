@@ -1,0 +1,35 @@
+{
+  "id": "TASK-79",
+  "title": "Add filter toggle to TasksApp",
+  "category": "ui-ux",
+  "description": "Add a keyboard shortcut 'f' to cycle through task filters in TasksApp. Filters: All → Incomplete → Complete → Blocked → All. Show current filter in the header.",
+  "acceptanceCriteria": [
+    "Pressing 'f' cycles through All, Incomplete, Complete, Blocked filters",
+    "Current filter label shown in the header",
+    "Task list updates to show only matching tasks when filter is active",
+    "Filter cycles back to All after Blocked"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add filter state to TasksApp",
+      "details": "const [filter, setFilter] = useState<'all' | 'incomplete' | 'complete' | 'blocked'>('all'). Add to useInput: if (input === 'f') { setFilter(f => { const filters = ['all','incomplete','complete','blocked'] as const; return filters[(filters.indexOf(f)+1) % 4] }) }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement filtered task list",
+      "details": "const filteredTasks = tasks.filter(t => { if (filter === 'all') return true; if (filter === 'incomplete') return !t.passes; if (filter === 'complete') return t.passes; if (filter === 'blocked') return !!t.blockedReason; return true })",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Show filter in header",
+      "details": "Add to header: <Text>Filter: <Text color='cyan'>{filter.toUpperCase()}</Text> (press f to cycle)</Text>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-77"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

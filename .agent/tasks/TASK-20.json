@@ -1,0 +1,34 @@
+{
+  "id": "TASK-20",
+  "title": "Add webapp template: root package.json",
+  "category": "functional",
+  "description": "Create the root package.json template for the scaffolded webapp project. This is a monorepo root that uses npm workspaces to manage both the client and server packages. Uses {{PROJECT_NAME}} as a placeholder substituted at scaffold time.",
+  "acceptanceCriteria": [
+    "src/templates/webapp/package.json.tmpl exists",
+    "{{PROJECT_NAME}} placeholder is present for the name field",
+    "workspaces field includes ['client', 'server']",
+    "dev script runs both client and server",
+    "build script builds both workspaces",
+    "test script runs tests in all workspaces"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create package.json.tmpl for the webapp root",
+      "details": "Create src/templates/webapp/package.json.tmpl with content: { \"name\": \"{{PROJECT_NAME}}\", \"version\": \"0.1.0\", \"private\": true, \"workspaces\": [\"client\", \"server\"], \"scripts\": { \"dev\": \"npm run dev --workspace=client & npm run dev --workspace=server\", \"build\": \"npm run build --workspace=client && npm run build --workspace=server\", \"test\": \"npm test --workspaces\" } }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify placeholder is present",
+      "details": "Open the file and confirm {{PROJECT_NAME}} is present in the name field. This will be replaced by the actual project name during scaffolding.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-19"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The file extension .tmpl differentiates templates from regular files in the template-engine",
+    "npm workspaces require npm 7+ — this is guaranteed by the Node.js >=22 requirement"
+  ]
+}

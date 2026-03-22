@@ -1,0 +1,24 @@
+{
+  "id": "TASK-125",
+  "title": "Print summary output after applying feature changes",
+  "category": "ui-ux",
+  "description": "After successfully writing PRD.md and tasks.json, print a formatted summary showing the feature name, number of tasks added, PRD section updated, and a suggestion to run rocket loop.",
+  "acceptanceCriteria": [
+    "Feature name is printed after applying changes",
+    "Number of tasks added is shown",
+    "PRD section name that was updated is shown",
+    "'rocket loop' suggestion is printed in cyan",
+    "Summary uses green for success, cyan for suggested command"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Print summary after successful apply",
+      "details": "After writeFeatureSpec and mergeTasks complete: console.log(`\\n\\x1b[32m✅ Feature '${featureDescription}' added!\\x1b[0m`); console.log(`   ${result.added} tasks added to tasks.json`); console.log(`   PRD updated: ${sectionName}`); console.log(`\\n   Run \\x1b[36mrocket loop\\x1b[0m to start working on the new tasks.`)",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-115", "TASK-116"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

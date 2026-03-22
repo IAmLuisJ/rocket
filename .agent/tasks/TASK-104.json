@@ -1,0 +1,29 @@
+{
+  "id": "TASK-104",
+  "title": "Add loop backend name to TUI header",
+  "category": "ui-ux",
+  "description": "Render a persistent header bar in the RocketLoopApp showing the project name and backend name. Use cyan for the Rocket Loop label and dim for the rest.",
+  "acceptanceCriteria": [
+    "TUI header shows 'Rocket Loop | Project: <cwd basename> | Backend: <backend.name>'",
+    "'Rocket Loop' label is shown in cyan",
+    "Project name and backend name are dimmed",
+    "Header appears at the top of the TUI at all times"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add header bar to RocketLoopApp",
+      "details": "At the top of the RocketLoopApp render: <Box><Text color='cyan' bold>Rocket Loop</Text><Text dimColor> | Project: {path.basename(process.cwd())} | Backend: {backend.name}</Text></Box>",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify header appears in all states",
+      "details": "Confirm the header is rendered in all states (selecting, running, complete, blocked, decide) — it should always be visible.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-73"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

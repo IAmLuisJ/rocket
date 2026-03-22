@@ -1,0 +1,52 @@
+{
+  "id": "TASK-37",
+  "title": "Create src/lib/scaffold.ts — project scaffolding logic",
+  "category": "functional",
+  "description": "Create the core scaffolding module that orchestrates copying a template, substituting project name tokens, running npm install, and initializing git. This is the main business logic for 'rocket new'.",
+  "acceptanceCriteria": [
+    "scaffold(templateName, projectName, destPath, options) function is exported",
+    "Template directory is copied to destPath with PROJECT_NAME substitution",
+    "npm install is run in the new project directory",
+    "git init is run in the new project directory",
+    "scaffold('webapp', 'my-app', '/tmp/my-app', {}) creates the directory correctly"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/scaffold.ts with type definitions",
+      "details": "Create src/lib/scaffold.ts. Define types: ScaffoldOptions { auth?: boolean; email?: boolean; pdf?: boolean }. Import processTemplate from template-engine.ts. Import path, child_process (execSync).",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement the main scaffold function",
+      "details": "Export: async function scaffold(templateName: 'webapp' | 'website', projectName: string, destPath: string, options: ScaffoldOptions): Promise<void>. Compute srcDir = path.join(import.meta.dirname, '../../templates', templateName). Call processTemplate(srcDir, destPath, { PROJECT_NAME: projectName }).",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Run npm install in the scaffolded directory",
+      "details": "After processTemplate completes: execSync('npm install', { cwd: destPath, stdio: 'inherit' }). Using stdio: 'inherit' shows npm output to the user. Wrap in try/catch to handle npm install failures gracefully.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Run git init in the scaffolded directory",
+      "details": "After npm install: execSync('git init', { cwd: destPath, stdio: 'inherit' }). Also run `git add -A` and `git commit -m 'Initial commit from Rocket'` for an initial commit.",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Handle feature toggle options",
+      "details": "If options.auth is false, delete auth-related files from destPath after copying (e.g., delete server/src/middleware/auth.ts if it exists). Implement this as a post-copy cleanup step.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-36"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "import.meta.dirname is the ESM equivalent of __dirname — requires Node.js 21.2+",
+    "Use execSync for npm install and git init since they're blocking operations and progress output is desirable",
+    "Consider adding a timeout to execSync for npm install in case of network issues"
+  ]
+}

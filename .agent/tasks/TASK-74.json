@@ -1,0 +1,46 @@
+{
+  "id": "TASK-74",
+  "title": "Wire loop-runner events to RocketLoopApp state",
+  "category": "functional",
+  "description": "In RocketLoopApp, consume the AsyncGenerator from loop-runner.ts via useEffect or a custom hook. Map each LoopEvent type to the corresponding state transition.",
+  "acceptanceCriteria": [
+    "iteration-start events update the current iteration counter",
+    "output events append lines to the output preview",
+    "complete event transitions to 'complete' state",
+    "blocked event transitions to 'blocked' state with the reason",
+    "decide event transitions to 'decide' state with the question",
+    "timing events update per-iteration timing data"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create a custom hook for consuming the loop generator",
+      "details": "Create src/tui/hooks/useLoopRunner.ts. The hook takes LoopOptions and returns { events, state }. Inside, uses useEffect to iterate the generator and dispatch state updates.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Handle async generator in useEffect",
+      "details": "In useEffect: `(async () => { for await (const event of runLoop(options)) { dispatch(event) } })(). Return cleanup function that breaks the generator: set an abort flag checked in the loop.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Map events to state transitions in reducer",
+      "details": "Create a reducer function that handles each event type and returns the new state: iteration-start → { currentIteration: n }, output → { outputLines: [...prev, line] }, complete → { appState: 'complete' }, etc.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Use the hook in RocketLoopApp",
+      "details": "In RocketLoopApp, call useLoopRunner(options) when a task is selected. Use the returned state to drive the rendering.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-61", "TASK-73"],
+  "estimatedComplexity": "high",
+  "technicalNotes": [
+    "Cannot use async/await directly in useEffect — wrap in an IIFE: (async () => { ... })()",
+    "The generator cleanup on component unmount is important to prevent memory leaks and orphan AI processes"
+  ]
+}

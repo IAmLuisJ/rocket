@@ -1,0 +1,36 @@
+{
+  "id": "TASK-106",
+  "title": "Add --no-caffeinate flag to rocket loop",
+  "category": "functional",
+  "description": "Add an optional --no-caffeinate flag to the loop command. When passed, skip the caffeinate.start() call even on macOS. Useful for CI environments.",
+  "acceptanceCriteria": [
+    "--no-caffeinate flag is registered on the loop command",
+    "rocket loop --no-caffeinate runs without starting caffeinate",
+    "caffeinate is not listed as a running process when --no-caffeinate is used"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Register --no-caffeinate flag in Commander",
+      "details": "In src/cli.ts loop command registration, add: .option('--no-caffeinate', 'Skip caffeinate sleep prevention (useful for CI)')",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Pass caffeinate flag to loop runner",
+      "details": "In loop.ts, extract: const noCaffeinate = options.caffeinate === false (Commander uses 'caffeinate' for --no-caffeinate negation). Pass to loop runner options: noCaffeinate: !options.caffeinate",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Conditionally skip caffeinate in loop runner",
+      "details": "In runLoop: const caffProc = options.noCaffeinate ? null : caffeinate.start(). The existing stop(null) call is already a no-op.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-13", "TASK-63"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Commander's --no-X flag pattern: .option('--no-X', '...') makes options.x be true by default and false when --no-x is passed"
+  ]
+}

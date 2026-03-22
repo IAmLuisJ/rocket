@@ -1,0 +1,38 @@
+{
+  "id": "TASK-124",
+  "title": "Implement 'Edit' option in confirmation prompt",
+  "category": "ui-ux",
+  "description": "When user selects 'Edit' in the FeatureDiffPreview, write the spec to a temp file and open it in $EDITOR. After the editor exits, re-read and re-parse the updated content, then re-render the preview.",
+  "acceptanceCriteria": [
+    "Selecting 'Edit' opens $EDITOR (or 'vi' as fallback) with spec content",
+    "Saving and exiting editor updates the preview with edited content",
+    "If user exits editor without changes, preview remains unchanged",
+    "Re-rendered preview shows the edited spec before applying"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Write spec to temp file on Edit selection",
+      "details": "In the onEdit callback: import { tmpfile } from 'os' (or use path.join(os.tmpdir(), 'rocket-spec.json')). Write the spec content. Open in editor: execSync(`${process.env.EDITOR || 'vi'} ${tmpFile}`, { stdio: 'inherit' })",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Read edited content and update preview state",
+      "details": "After execSync returns: const edited = await fs.readFile(tmpFile, 'utf-8'). Parse the edited JSON. If parsing fails, show an error and keep the preview open. If successful, update the spec/tasks state and re-render the preview.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Clean up temp file",
+      "details": "After applying or canceling, delete the temp file: await fs.remove(tmpFile)",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-117"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "execSync with stdio: 'inherit' allows the editor to take over the terminal and return control when done",
+    "This must temporarily unmount or pause the Ink TUI while the editor is open"
+  ]
+}

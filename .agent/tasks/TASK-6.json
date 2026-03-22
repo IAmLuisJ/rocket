@@ -1,0 +1,53 @@
+{
+  "id": "TASK-6",
+  "title": "Install core runtime dependencies",
+  "category": "config",
+  "description": "Install all runtime and dev dependencies required for the Rocket CLI. This includes the CLI framework, TUI library, UI components, file utilities, validation library, and terminal utilities.",
+  "acceptanceCriteria": [
+    "commander is installed as a runtime dependency",
+    "ink is installed as a runtime dependency",
+    "react is installed as a runtime dependency",
+    "ink-select-input is installed as a runtime dependency",
+    "ink-spinner is installed as a runtime dependency",
+    "ink-text-input is installed as a runtime dependency",
+    "fs-extra is installed as a runtime dependency",
+    "zod is installed as a runtime dependency",
+    "strip-ansi is installed as a runtime dependency",
+    "@types/* packages are installed for all packages that need them",
+    "npm install exits 0",
+    "All packages present in node_modules"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Install runtime dependencies",
+      "details": "Run: `npm install commander ink react ink-select-input ink-spinner ink-text-input fs-extra zod strip-ansi`. These are all needed at runtime.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Install TypeScript type definitions",
+      "details": "Run: `npm install --save-dev @types/react @types/fs-extra`. Note: commander, zod, and strip-ansi include their own types. ink and its plugins include their own types as well.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify all packages are present",
+      "details": "Run `node -e \"import('commander').then(() => console.log('commander ok'))\"` to spot-check. Alternatively, verify that node_modules/ contains directories for all installed packages.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Check for peer dependency warnings",
+      "details": "Review npm install output for peer dependency warnings. Ink requires a specific React version — ensure they are compatible. Fix any critical peer dependency issues.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1", "TASK-2"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Ink v5 requires React 18+. Check ink's peerDependencies before installing",
+    "strip-ansi v7+ is ESM-only — ensure package.json has type: 'module' (already set in TASK-1)",
+    "fs-extra is a drop-in replacement for Node's fs module with additional utilities like ensureDir, copy, etc."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "TASK-57",
+  "title": "Create src/lib/caffeinate.ts — macOS sleep prevention",
+  "category": "functional",
+  "description": "Create a module that prevents macOS from sleeping during long AI loop sessions by running caffeinate -i. On Linux, returns null without error. Provides start and stop functions.",
+  "acceptanceCriteria": [
+    "start() spawns 'caffeinate -i' on macOS (process.platform === 'darwin')",
+    "start() returns null on Linux without throwing an error",
+    "stop(proc) kills the caffeinate process",
+    "stop(null) is a no-op",
+    "On macOS, start() returns a running ChildProcess"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/caffeinate.ts",
+      "details": "Create the file. Import spawn from child_process. Import ChildProcess type.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement start function",
+      "details": "export function start(): ChildProcess | null { if (process.platform !== 'darwin') return null; return spawn('caffeinate', ['-i'], { stdio: 'ignore', detached: false }) }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement stop function",
+      "details": "export function stop(proc: ChildProcess | null): void { if (proc === null) return; try { proc.kill('SIGTERM') } catch { /* process already exited */ } }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-2"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "caffeinate -i prevents sleep while the caffeinate process is running — it exits automatically when its parent process dies",
+    "Use stdio: 'ignore' to prevent caffeinate from inheriting the CLI's stdio streams",
+    "On CI/Linux environments, this gracefully returns null — no code changes needed for portability"
+  ]
+}

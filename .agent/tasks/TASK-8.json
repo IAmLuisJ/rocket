@@ -1,0 +1,45 @@
+{
+  "id": "TASK-8",
+  "title": "Configure build script with tsc",
+  "category": "config",
+  "description": "Configure the TypeScript build process using tsc. Ensure the build script compiles the full project, outputs to dist/, and that compiled files are correct. Add dist/ to .gitignore.",
+  "acceptanceCriteria": [
+    "build script in package.json runs 'tsc -p tsconfig.json'",
+    "dist/ directory is excluded from git via .gitignore",
+    "npm run build exits 0",
+    "dist/ contains compiled .js files corresponding to src/ sources",
+    "bin/rocket.js is produced or accessible after build"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Set build script in package.json",
+      "details": "Ensure scripts.build in package.json is set to: 'tsc -p tsconfig.json'. This compiles all files matching the tsconfig include patterns.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add dist/ to .gitignore",
+      "details": "Ensure .gitignore at project root contains 'dist/' on its own line. This prevents compiled output from being committed to git.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Run a clean build and verify output",
+      "details": "Run `npm run build`. Check that dist/ is created and contains .js files mirroring the src/ structure. Verify bin/rocket.js is present (either in dist/bin/ or directly in bin/ depending on tsconfig settings).",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Add clean script to package.json",
+      "details": "Add 'clean': 'rm -rf dist/' to scripts in package.json. This allows running `npm run clean && npm run build` for a full rebuild.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1", "TASK-2"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "If outDir is 'dist' and rootDir is 'src', the bin/ directory may need a separate tsconfig build step",
+    "Consider adding a 'prepublishOnly' script that runs build before npm publish"
+  ]
+}

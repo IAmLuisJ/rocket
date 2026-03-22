@@ -1,0 +1,42 @@
+{
+  "id": "TASK-127",
+  "title": "Write unit tests for taskMerger.ts",
+  "category": "testing",
+  "description": "Write comprehensive Vitest unit tests for taskMerger.ts covering ID assignment, schema validation, existing task preservation, empty input handling, and file isolation.",
+  "acceptanceCriteria": [
+    "IDs assigned sequentially from max existing ID + 1 test passes",
+    "Schema validation rejects tasks missing required fields test passes",
+    "Existing tasks in the file are not modified test passes",
+    "Empty newTasks array adds nothing and returns correctly test passes",
+    "All taskMerger unit tests pass with npm test"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/feature/__tests__/taskMerger.test.ts",
+      "details": "Create test file with temp dir setup. Import mergeTasks, fs, path.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Write ID assignment tests",
+      "details": "Create tasks.json with tasks having max ID of 5. Call mergeTasks with 3 new tasks. Verify new tasks have IDs 6, 7, 8.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Write validation and preservation tests",
+      "details": "Test: new task missing 'title' throws ZodError. Test: existing 3 tasks remain unchanged after merge. Test: empty array adds nothing.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Run tests",
+      "details": "Run `npm test` and verify all taskMerger tests pass.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-115", "TASK-7"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

@@ -1,0 +1,46 @@
+{
+  "id": "TASK-39",
+  "title": "Create NewProjectWizard.tsx TUI component",
+  "category": "ui-ux",
+  "description": "Create the main Ink TUI component for the 'rocket new' wizard. Shows step-by-step prompts for project type selection and optional feature toggles. Uses SelectInput for list choices.",
+  "acceptanceCriteria": [
+    "src/tui/components/NewProjectWizard.tsx exists",
+    "Component renders project type selection (Web App | Website)",
+    "Selecting Web App shows feature toggle sub-steps (auth, email, PDF renderer)",
+    "Selecting Website skips feature toggles",
+    "Component uses SelectInput from ink-select-input for list choices",
+    "After all selections, calls an onComplete callback with the configuration"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create NewProjectWizard.tsx with state machine",
+      "details": "Create src/tui/components/NewProjectWizard.tsx. Import React, Box, Text from ink, SelectInput from ink-select-input. Define state: { step: 'type' | 'features' | 'done', type: 'webapp' | 'website' | null, features: { auth: boolean, email: boolean, pdf: boolean } }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement project type selection step",
+      "details": "When step === 'type', render: <Box flexDirection='column'><Text bold>Select project type:</Text><SelectInput items={[{label:'Web App (React + Express)', value:'webapp'},{label:'Website (PHP + MySQL)', value:'website'}]} onSelect={(item) => handleTypeSelect(item.value)} /></Box>",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement feature toggle steps for Web App",
+      "details": "When step === 'features' and type === 'webapp', show sequential yes/no prompts for auth, email, and PDF renderer. Each uses SelectInput with [{label:'Yes',value:true},{label:'No',value:false}]. Advance through sub-steps.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Call onComplete when wizard finishes",
+      "details": "After all steps complete, call props.onComplete({ type, features }). The parent command handler will use this data to call scaffold().",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-6", "TASK-72"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "SelectInput renders options as a list — use flexDirection: 'column' in the parent Box",
+    "Ink's rendering is synchronous within the component tree — state updates trigger re-renders automatically"
+  ]
+}

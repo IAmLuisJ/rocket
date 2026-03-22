@@ -1,0 +1,45 @@
+{
+  "id": "TASK-112",
+  "title": "Create src/lib/feature/clarifier.ts — AI-powered question generation",
+  "category": "functional",
+  "description": "Create a module that reads the existing PRD and feature description, sends them to the AI backend, and returns 3-5 targeted clarifying questions about the feature. Falls back to seeded questions if AI is unavailable.",
+  "acceptanceCriteria": [
+    "generateQuestions(prdContent, featureDescription, backend) is exported",
+    "Returns between 3 and 5 question strings",
+    "Questions are relevant to the feature description",
+    "Falls back to seed questions if AI backend fails",
+    "Seed questions cover scope, UI needs, API changes, dependencies, and edge cases"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/feature/clarifier.ts",
+      "details": "Create the file. Import AgentBackend from backends/types.ts. Define seed questions: const SEED_QUESTIONS = ['What problem does this feature solve?', 'Who is the primary user of this feature?', 'Are there UI components needed, or is this backend-only?', 'Does this depend on any existing tasks or features?', 'Any known edge cases or constraints?']",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement generateQuestions function",
+      "details": "export async function generateQuestions(prdContent: string, featureDescription: string, backend: AgentBackend): Promise<string[]> { // Build a prompt asking the AI to generate 3-5 clarifying questions // Spawn the backend, collect output, parse questions from response // If parsing fails, return SEED_QUESTIONS.slice(0, 5) }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Build the question-generation prompt",
+      "details": "Create a prompt: `You are helping clarify requirements for a new feature. Given this PRD and feature description, generate exactly 3-5 targeted clarifying questions.\\n\\nPRD:\\n${prdContent}\\n\\nFeature: ${featureDescription}\\n\\nOutput ONLY a JSON array of question strings: [\"question1\", \"question2\", ...]`",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Parse AI response and extract questions",
+      "details": "Collect all output from the AI backend process. Extract JSON array from the response (handle markdown code fences). Parse and validate it's an array of strings. If validation fails, fall back to seed questions.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-48"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "The AI may wrap JSON in markdown code fences (```json ... ```) — strip these before parsing",
+    "Validate the response is an array of 3-5 strings — reject and fall back if it doesn't match"
+  ]
+}

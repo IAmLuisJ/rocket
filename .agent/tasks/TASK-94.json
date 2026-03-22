@@ -1,0 +1,49 @@
+{
+  "id": "TASK-94",
+  "title": "Write unit tests for scaffold template-engine.ts",
+  "category": "testing",
+  "description": "Create Vitest unit tests for the template-engine module. Test token replacement, binary file copying, nested directory creation, and unknown token handling.",
+  "acceptanceCriteria": [
+    "src/lib/template-engine.test.ts exists",
+    "Token replacement in text files test passes",
+    "Binary files are copied without modification test passes",
+    "Nested directory creation test passes",
+    "Unknown {{TOKEN}} with no replacement value is left unchanged test passes",
+    "npm test passes all template-engine.test.ts cases"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/template-engine.test.ts with temp dirs",
+      "details": "Create the test file. Use beforeEach/afterEach to create/clean temp source and destination directories.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Write token replacement test",
+      "details": "Create a temp file with content 'Hello {{NAME}}!'. Call processTemplate with vars { NAME: 'World' }. Verify output file contains 'Hello World!'.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Write binary file test",
+      "details": "Create a small binary file (e.g., a 1-byte .png header). Call processTemplate. Verify the output file is byte-for-byte identical to the input.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Write nested directory and unknown token tests",
+      "details": "Create a nested src/deep/file.txt template. Verify processTemplate creates the nested output directory. Test with a template containing {{UNKNOWN}} and no matching var — verify the placeholder is left unchanged.",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Run all tests",
+      "details": "Run `npm test` and verify all template-engine.test.ts tests pass.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-36", "TASK-7"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": []
+}

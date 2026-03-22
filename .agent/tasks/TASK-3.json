@@ -1,0 +1,46 @@
+{
+  "id": "TASK-3",
+  "title": "Install and configure ESLint with TypeScript support",
+  "category": "config",
+  "description": "Install ESLint with TypeScript parser and plugin support. Configure using the new flat config format (eslint.config.js). Enable TypeScript-recommended rules plus warnings for unused variables and explicit any types.",
+  "acceptanceCriteria": [
+    "eslint, @typescript-eslint/parser, @typescript-eslint/eslint-plugin are installed as devDependencies",
+    "eslint.config.js exists at project root using flat config format",
+    "TypeScript recommended rules are enabled",
+    "no-unused-vars is configured as a warning",
+    "no-explicit-any is configured as a warning",
+    "npm run lint exits with code 0 on a clean project"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Install ESLint and TypeScript ESLint packages",
+      "details": "Run: `npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin`. Use the latest compatible versions.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Create eslint.config.js with flat config format",
+      "details": "Create eslint.config.js at project root. Import typescript-eslint and set up: import tseslint from 'typescript-eslint'; export default tseslint.config({ files: ['src/**/*.ts', 'bin/**/*.ts'], extends: [...tseslint.configs.recommended], rules: { '@typescript-eslint/no-unused-vars': 'warn', '@typescript-eslint/no-explicit-any': 'warn' } })",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Add lint script to package.json",
+      "details": "Update the lint script in package.json to: 'eslint src/ bin/'. This lints both source directories.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Verify lint passes on clean project",
+      "details": "Run `npm run lint`. On a project with only src/index.ts containing a simple export, it should exit 0. If it errors, check that the flat config format is correct for your eslint version.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1", "TASK-2"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "ESLint v9+ uses flat config (eslint.config.js) — the old .eslintrc format is deprecated",
+    "The typescript-eslint v8+ package consolidates both parser and plugin into one package"
+  ]
+}

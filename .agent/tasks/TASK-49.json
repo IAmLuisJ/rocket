@@ -1,0 +1,51 @@
+{
+  "id": "TASK-49",
+  "title": "Create src/lib/backends/copilot.ts — Copilot CLI backend",
+  "category": "functional",
+  "description": "Implement the AgentBackend interface for GitHub Copilot CLI. The backend spawns the copilot command with autopilot mode and the prompt. Validates that the copilot binary is available in PATH.",
+  "acceptanceCriteria": [
+    "src/lib/backends/copilot.ts exists and exports a CopilotBackend implementing AgentBackend",
+    "spawn() runs 'copilot --autopilot --prompt <prompt>' via child_process.spawn with stdio:pipe",
+    "parseOutput() returns text lines as { type: 'text', content: line }",
+    "Missing copilot binary throws a descriptive error before spawning",
+    "copilot.spawn() returns a valid ChildProcess"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/backends/copilot.ts",
+      "details": "Create the file. Import spawn from child_process, which from 'which' (or use execSync('which copilot') to check). Import AgentBackend, BackendOptions, ParsedOutput from types.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement binary check",
+      "details": "Before spawning, check if 'copilot' is in PATH: `try { execSync('which copilot', { stdio: 'ignore' }) } catch { throw new Error('copilot CLI not found in PATH. Install it from https://github.com/github/gh-copilot') }`",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement spawn method",
+      "details": "spawn(prompt: string, options: BackendOptions): ChildProcess { // check binary first; return spawn('copilot', ['--autopilot', '--prompt', prompt], { cwd: options.cwd || process.cwd(), stdio: ['ignore', 'pipe', 'pipe'] }) }",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Implement parseOutput method",
+      "details": "parseOutput(line: string): ParsedOutput | null { if (!line.trim()) return null; return { type: 'text', content: line } }",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Export CopilotBackend instance",
+      "details": "Create and export a singleton: export const copilotBackend: AgentBackend = { name: 'Copilot CLI', spawn, parseOutput }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-48"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The prompt is passed as a separate array element to spawn() to prevent shell injection",
+    "Use stdio: ['ignore', 'pipe', 'pipe'] to capture stdout/stderr while ignoring stdin"
+  ]
+}

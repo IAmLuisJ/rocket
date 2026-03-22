@@ -1,0 +1,42 @@
+{
+  "id": "TASK-27",
+  "title": "Add webapp template: .env.example files",
+  "category": "security",
+  "description": "Create .env.example files for both client and server templates containing placeholder environment variable keys with no real values. These serve as documentation for required configuration.",
+  "acceptanceCriteria": [
+    "src/templates/webapp/server/.env.example exists",
+    "Server .env.example contains DATABASE_URL placeholder",
+    "Server .env.example contains JWT_SECRET placeholder",
+    "Server .env.example contains PORT placeholder",
+    "Server .env.example contains SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS placeholders",
+    "src/templates/webapp/client/.env.example exists",
+    "Client .env.example contains VITE_API_URL placeholder",
+    "No real values or secrets are present in either file"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create server .env.example",
+      "details": "Create src/templates/webapp/server/.env.example with content:\nDATABASE_URL=./data/app.db\nJWT_SECRET=your-secret-key-here\nPORT=3001\nCLIENT_URL=http://localhost:5173\nSMTP_HOST=smtp.example.com\nSMTP_PORT=587\nSMTP_USER=your-email@example.com\nSMTP_PASS=your-smtp-password\nSMTP_FROM=noreply@example.com",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Create client .env.example",
+      "details": "Create src/templates/webapp/client/.env.example with content:\nVITE_API_URL=http://localhost:3001",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify no real secrets are present",
+      "details": "Review both files to confirm all values are clearly placeholder strings (e.g., 'your-secret-key-here', 'smtp.example.com'). No real passwords, API keys, or production URLs.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-19"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "JWT_SECRET should be clearly labeled as requiring a strong random value in production (add a comment above it)",
+    "VITE_ prefix is required for Vite to expose env vars to the client-side code"
+  ]
+}

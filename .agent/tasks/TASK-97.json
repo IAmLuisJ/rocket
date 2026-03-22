@@ -1,0 +1,44 @@
+{
+  "id": "TASK-97",
+  "title": "Create README.md",
+  "category": "docs",
+  "description": "Write comprehensive README.md covering installation, quick start, all commands, backend options, and requirements.",
+  "acceptanceCriteria": [
+    "README.md exists at project root",
+    "What Rocket is section is present",
+    "Installation instructions (npm install -g rocket-cli) are present",
+    "Quick start (rocket new my-app, rocket loop) is documented",
+    "Commands reference covers new, loop, init, tasks, feature, status",
+    "Backends section documents Copilot, Claude, and Docker options",
+    "Requirements section lists Node.js 22+"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create README.md with project overview",
+      "details": "Start with: # Rocket CLI, then a one-paragraph description explaining what Rocket is: an AI-powered CLI that scaffolds projects and runs autonomous development loops.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add installation and requirements",
+      "details": "Add: ## Requirements (Node.js >=22), ## Installation (npm install -g rocket-cli), ## Quick Start with the two-command flow.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Document all commands",
+      "details": "Add ## Commands section with subsections for each command: rocket new, rocket loop, rocket init, rocket tasks, rocket feature, rocket status. Include usage, flags, and brief examples.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Add backends and templates sections",
+      "details": "Add ## Backends table (Copilot, Claude, Docker), ## Templates section (webapp, website descriptions).",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-11"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

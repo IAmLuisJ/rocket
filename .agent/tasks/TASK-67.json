@@ -1,0 +1,35 @@
+{
+  "id": "TASK-67",
+  "title": "Create src/tui/components/IterationHeader.tsx",
+  "category": "ui-ux",
+  "description": "Create the Ink component that renders the thick-bar iteration header shown at the start of each AI iteration. Displays iteration number, max, and task ID in a visually distinct format.",
+  "acceptanceCriteria": [
+    "IterationHeader component renders three lines",
+    "First and third lines are thick bars (▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓)",
+    "Middle line shows '↪ Iteration {n} of {max} · Task #{id}'",
+    "Iteration number and task ID are displayed in yellow"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/components/IterationHeader.tsx",
+      "details": "Create the file. Import React, Box, Text from ink.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Define props and render",
+      "details": "export function IterationHeader({ n, max, taskId }: { n: number; max: number; taskId: number }). Render: <Box flexDirection='column'><Text>{'▓'.repeat(30)}</Text><Text>↪ Iteration <Text color='yellow'>{n}</Text> of {max} · Task #<Text color='yellow'>{taskId}</Text></Text><Text>{'▓'.repeat(30)}</Text></Box>",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Make bar width responsive",
+      "details": "Use process.stdout.columns to determine terminal width and fill the bar accordingly: `'▓'.repeat(Math.min(process.stdout.columns || 40, 60))`",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-72"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

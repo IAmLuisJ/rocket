@@ -1,0 +1,48 @@
+{
+  "id": "TASK-83",
+  "title": "Create src/lib/agent-init.ts — .agent/ structure creator",
+  "category": "functional",
+  "description": "Create the module responsible for setting up the .agent/ directory structure. Does not overwrite existing files. Creates all required subdirectories and placeholder files.",
+  "acceptanceCriteria": [
+    "createAgentStructure(projectPath) is exported",
+    "Creates .agent/prd/PRD.md if it doesn't exist",
+    "Creates .agent/prd/SUMMARY.md if it doesn't exist",
+    "Creates .agent/logs/LOG.md if it doesn't exist",
+    "Creates .agent/history/ directory",
+    "Creates .agent/PROMPT.md with default content if it doesn't exist",
+    "Creates .agent/tasks.json with empty task array if it doesn't exist",
+    "Running twice does not overwrite existing content"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/agent-init.ts",
+      "details": "Create the file. Import fs-extra and path. Define helper: async function writeIfAbsent(filePath: string, content: string): Promise<void> { if (await fs.pathExists(filePath)) return; await fs.ensureDir(path.dirname(filePath)); await fs.writeFile(filePath, content, 'utf-8') }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Define default file contents",
+      "details": "Define constants: DEFAULT_PRD_MD (markdown with placeholder sections), DEFAULT_SUMMARY_MD (placeholder), DEFAULT_LOG_MD ('# Loop Log\\n'), DEFAULT_PROMPT_MD (AI instructions with complete/blocked/decide tags), EMPTY_TASKS_JSON ('{\"tasks\":[]}')",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement createAgentStructure",
+      "details": "export async function createAgentStructure(projectPath: string): Promise<void> { const agentDir = path.join(projectPath, '.agent'); await fs.ensureDir(path.join(agentDir, 'history')); await writeIfAbsent(path.join(agentDir, 'prd', 'PRD.md'), DEFAULT_PRD_MD); await writeIfAbsent(path.join(agentDir, 'prd', 'SUMMARY.md'), DEFAULT_SUMMARY_MD); await writeIfAbsent(path.join(agentDir, 'logs', 'LOG.md'), DEFAULT_LOG_MD); await writeIfAbsent(path.join(agentDir, 'PROMPT.md'), DEFAULT_PROMPT_MD); await writeIfAbsent(path.join(agentDir, 'tasks.json'), EMPTY_TASKS_JSON) }",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Test idempotency",
+      "details": "Call createAgentStructure() twice on the same directory. Verify that existing files are NOT overwritten (compare modification timestamps or file contents).",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-6"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "writeIfAbsent uses fs.pathExists() to check before writing — this ensures idempotent behavior",
+    "fs.ensureDir is idempotent — safe to call even if the directory exists"
+  ]
+}

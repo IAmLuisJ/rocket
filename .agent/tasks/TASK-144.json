@@ -1,0 +1,28 @@
+{
+  "id": "TASK-144",
+  "title": "Add rocket status to Commander help and README docs",
+  "category": "docs",
+  "description": "Ensure 'rocket status' appears in rocket --help with a description. Add a 'rocket status' section to the README under the Commands reference.",
+  "acceptanceCriteria": [
+    "rocket --help lists 'status' as a subcommand with description",
+    "README.md has a 'rocket status' section",
+    "README section documents all four flags (--watch, --json, --category, --incomplete) with examples"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Verify status appears in rocket --help",
+      "details": "Run `npm run dev -- --help` and confirm 'status' is listed. If not, check the Commander registration.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add rocket status section to README",
+      "details": "Add after rocket tasks section: ## rocket status. Description. Usage: `rocket status [options]`. Flags table with all four flags. Example terminal output snippet.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-97", "TASK-131"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

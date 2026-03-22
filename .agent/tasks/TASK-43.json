@@ -1,0 +1,34 @@
+{
+  "id": "TASK-43",
+  "title": "Create .agent/ directory as part of scaffold",
+  "category": "functional",
+  "description": "After copying template files, scaffold.ts must create the .agent/ directory structure in the new project. This includes all subdirectories, placeholder files, and an empty tasks.json.",
+  "acceptanceCriteria": [
+    ".agent/prd/PRD.md is created in scaffolded project",
+    ".agent/prd/SUMMARY.md is created in scaffolded project",
+    ".agent/logs/LOG.md is created in scaffolded project",
+    ".agent/history/ directory is created",
+    ".agent/PROMPT.md is created with default content",
+    ".agent/tasks.json is created as empty array []"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Import createAgentStructure in scaffold.ts",
+      "details": "Import the createAgentStructure function from src/lib/agent-init.ts: `import { createAgentStructure } from './agent-init.js'`. Call it after processTemplate: `await createAgentStructure(destPath)`.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify .agent/ structure in scaffolded project",
+      "details": "After scaffolding a test project to a temp directory, run `find /tmp/test-project/.agent -type f` and confirm all expected files are present.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-37", "TASK-83"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "createAgentStructure is implemented in TASK-83 — this task only wires it into scaffold.ts",
+    "The .agent/ directory should be created AFTER the template files are copied to avoid conflicts"
+  ]
+}

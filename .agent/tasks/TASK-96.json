@@ -1,0 +1,52 @@
+{
+  "id": "TASK-96",
+  "title": "Write integration test for rocket new (webapp template)",
+  "category": "testing",
+  "description": "Create an integration test that calls scaffold() for the webapp template and verifies the full directory structure, key files, and .agent/ setup are created correctly.",
+  "acceptanceCriteria": [
+    "Integration test calls scaffold('webapp', 'test-app', tmpDir, {auth:true})",
+    "Test verifies directory structure exists (client/, server/)",
+    "Test verifies package.json exists in client and server",
+    "Test verifies .env.example exists in server",
+    "Test verifies .gitignore exists in project root",
+    "Test verifies .agent/ structure is created",
+    "Integration test passes with npm test"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/__tests__/scaffold.test.ts",
+      "details": "Create the test file. Import scaffold from lib/scaffold.ts. Note: this test will be slow (runs npm install) — consider skipping npm install in test mode or using a flag.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Mock npm install and git init for speed",
+      "details": "To avoid actually running npm install in tests, mock execSync: vi.mock('child_process', () => ({ execSync: vi.fn() })). This lets the test run quickly without network access.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Write the scaffold integration test",
+      "details": "it('scaffolds webapp correctly', async () => { await scaffold('webapp', 'test-app', tmpDir, { auth: true }); expect(await fs.pathExists(path.join(tmpDir, 'client/package.json'))).toBe(true); expect(await fs.pathExists(path.join(tmpDir, 'server/.env.example'))).toBe(true); // ... more checks })",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Test PROJECT_NAME substitution",
+      "details": "Verify that {{PROJECT_NAME}} in template files is replaced with 'test-app': const pkgJson = await fs.readJson(path.join(tmpDir, 'package.json')); expect(pkgJson.name).toBe('test-app')",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Run integration tests",
+      "details": "Run `npm test` and verify scaffold integration tests pass.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-37", "TASK-7"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "Mocking execSync prevents actual npm install from running in CI — test the template file structure, not npm install itself"
+  ]
+}

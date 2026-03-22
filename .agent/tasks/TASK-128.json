@@ -1,0 +1,43 @@
+{
+  "id": "TASK-128",
+  "title": "Write unit tests for prdWriter.ts",
+  "category": "testing",
+  "description": "Write Vitest unit tests for prdWriter.ts covering all cases: new section creation, appending to existing section, existing content preservation, idempotency, and empty PRD handling.",
+  "acceptanceCriteria": [
+    "Spec appended under '## Features Added' when section doesn't exist test passes",
+    "Spec appended under existing '## Features Added' without duplicating heading test passes",
+    "Existing PRD content before the section is unchanged test passes",
+    "Running prdWriter twice with same spec does not produce duplicate block test passes",
+    "Empty PRD file handled gracefully test passes",
+    "All prdWriter unit tests pass with npm test"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/feature/__tests__/prdWriter.test.ts",
+      "details": "Create test file with temp dir setup. Write PRD.md files to temp dirs and call writeFeatureSpec.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Write new section creation test",
+      "details": "Create PRD.md without '## Features Added'. Call writeFeatureSpec. Verify file ends with the section and spec content.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Write append and idempotency tests",
+      "details": "Create PRD.md with existing '## Features Added'. Call writeFeatureSpec. Verify spec is appended without duplicating heading. Call again — verify no duplication.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Run tests",
+      "details": "Run `npm test` and verify all prdWriter tests pass.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-116", "TASK-7"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

@@ -1,0 +1,29 @@
+{
+  "id": "TASK-139",
+  "title": "Implement --incomplete flag — list all incomplete tasks",
+  "category": "functional",
+  "description": "When --incomplete flag is set, read tasks.json, filter to incomplete tasks, and print one line per task. Combine with --category to filter further.",
+  "acceptanceCriteria": [
+    "rocket status --incomplete prints one line per incomplete task",
+    "Format is '#ID · title [category]'",
+    "rocket status --incomplete --category config shows only config tasks",
+    "No TUI rendering occurs"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add --incomplete output path to statusCommand",
+      "details": "In statusCommand: if (options.incomplete) { let tasks = await readTasks(agentDir); tasks = getIncompleteTasks(tasks); if (options.category) tasks = tasks.filter(t => t.category === options.category); tasks.forEach(t => console.log(`#${t.id} · ${t.title} [${t.category}]`)); return }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify output format",
+      "details": "Run `npm run dev -- status --incomplete` in a project with tasks. Verify the output format '#ID · title [category]'.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-131", "TASK-47"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

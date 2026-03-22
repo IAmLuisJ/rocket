@@ -1,0 +1,38 @@
+{
+  "id": "TASK-19",
+  "title": "Create src/templates/webapp/ directory structure",
+  "category": "functional",
+  "description": "Create the skeleton directory structure for the webapp (React + Express) project template. This is the container — actual template files will be added in subsequent tasks.",
+  "acceptanceCriteria": [
+    "src/templates/webapp/ directory exists",
+    "src/templates/webapp/client/ subdirectory exists",
+    "src/templates/webapp/server/ subdirectory exists",
+    "Directory structure is committed to git (add .gitkeep files to empty dirs)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create the webapp template directory tree",
+      "details": "Create the following directory structure: src/templates/webapp/, src/templates/webapp/client/, src/templates/webapp/client/src/, src/templates/webapp/server/, src/templates/webapp/server/src/",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add .gitkeep files to empty directories",
+      "details": "Git does not track empty directories. Add empty .gitkeep files to any directories that don't yet have files: touch src/templates/webapp/client/.gitkeep, src/templates/webapp/server/.gitkeep if needed.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify directory structure",
+      "details": "Run `find src/templates/webapp -type d` and confirm client/ and server/ subdirectories exist.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Template files use {{PLACEHOLDER}} syntax for variable substitution (handled by template-engine.ts, TASK-36)",
+    "Binary files in templates (images, fonts) will be copied without token replacement"
+  ]
+}

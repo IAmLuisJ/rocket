@@ -1,0 +1,39 @@
+{
+  "id": "TASK-118",
+  "title": "Write AI prompt template in src/lib/feature/prompts.ts",
+  "category": "functional",
+  "description": "Create the prompt builder for the feature spec generation. The prompt instructs the AI to output ONLY a JSON object with spec and tasks fields. Includes few-shot examples.",
+  "acceptanceCriteria": [
+    "buildSpecPrompt is exported from prompts.ts",
+    "Returned string contains PRD content",
+    "Returned string contains feature description",
+    "Returned string contains Q&A pairs",
+    "Returned string contains JSON output format instructions",
+    "Prompt includes few-shot examples of the expected output format"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/feature/prompts.ts",
+      "details": "Create the file. Define the few-shot example as a constant showing the expected JSON output format.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement buildSpecPrompt",
+      "details": "export function buildSpecPrompt(prdContent: string, featureDescription: string, qa: { question: string; answer: string }[]): string { const qaText = qa.map(q => `Q: ${q.question}\\nA: ${q.answer}`).join('\\n\\n'); return `You are a software architect. Generate a feature spec and task list.\\n\\n## Existing PRD\\n${prdContent}\\n\\n## New Feature\\n${featureDescription}\\n\\n## Clarifications\\n${qaText}\\n\\n## Output Format\\nOutput ONLY valid JSON with this exact structure:\\n${JSON.stringify(EXAMPLE_OUTPUT, null, 2)}\\n\\nGenerate the spec and tasks now:` }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Define EXAMPLE_OUTPUT with tasks schema",
+      "details": "const EXAMPLE_OUTPUT = { spec: '## Feature Name\\n\\n**User story**: As a user...\\n**Acceptance criteria**: ...', tasks: [{ title: 'Example task', description: 'What to implement', category: 'functional', passes: false, passCondition: 'Verify condition' }] }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-2"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The EXAMPLE_OUTPUT shows the AI exactly what format to return — few-shot examples significantly improve JSON compliance"
+  ]
+}

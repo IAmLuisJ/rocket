@@ -1,0 +1,45 @@
+{
+  "id": "TASK-25",
+  "title": "Add webapp template: client entry point and App.tsx",
+  "category": "functional",
+  "description": "Create the React entry point (main.tsx) and root App component (App.tsx) for the client template. main.tsx sets up React 19 with QueryClientProvider and RouterProvider. App.tsx provides a basic routing shell.",
+  "acceptanceCriteria": [
+    "src/templates/webapp/client/src/main.tsx exists",
+    "main.tsx imports QueryClientProvider from @tanstack/react-query",
+    "main.tsx imports RouterProvider from react-router-dom",
+    "src/templates/webapp/client/src/App.tsx exists",
+    "App.tsx contains basic route configuration"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create main.tsx entry point",
+      "details": "Create src/templates/webapp/client/src/main.tsx: import React from 'react'; import ReactDOM from 'react-dom/client'; import { QueryClient, QueryClientProvider } from '@tanstack/react-query'; import { RouterProvider, createBrowserRouter } from 'react-router-dom'; import App from './App'; import './index.css'; const queryClient = new QueryClient(); const router = createBrowserRouter([{ path: '/', element: <App /> }]); ReactDOM.createRoot(document.getElementById('root')!).render(<QueryClientProvider client={queryClient}><RouterProvider router={router} /></QueryClientProvider>);",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Create App.tsx routing shell",
+      "details": "Create src/templates/webapp/client/src/App.tsx: import React from 'react'; export default function App() { return <div className='min-h-screen bg-background'><h1 className='text-2xl font-bold p-8'>{{PROJECT_NAME}}</h1></div> }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Create index.css with Tailwind imports",
+      "details": "Create src/templates/webapp/client/src/index.css with Tailwind v4 imports: @import 'tailwindcss';",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Create index.html Vite entry",
+      "details": "Create src/templates/webapp/client/index.html with standard Vite HTML shell: DOCTYPE, meta viewport, title {{PROJECT_NAME}}, div#root, and script src='/src/main.tsx' type='module'.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-21", "TASK-23", "TASK-24"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "React 19 uses ReactDOM.createRoot (same as React 18) — the API didn't change for basic mounting",
+    "{{PROJECT_NAME}} in App.tsx will be substituted by the template engine during scaffolding"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "TASK-114",
+  "title": "Create src/lib/feature/specGenerator.ts — prompt assembly and AI response parsing",
+  "category": "functional",
+  "description": "Create a module that assembles the full spec generation prompt, calls the AI backend, collects streamed output, and parses the structured JSON response containing the feature spec and new tasks.",
+  "acceptanceCriteria": [
+    "generateSpec(context, backend) is exported",
+    "Returns { specMarkdown: string, tasks: Task[] }",
+    "Correctly parses JSON envelope { spec: string, tasks: Task[] } from AI output",
+    "Handles JSON wrapped in markdown code fences",
+    "Throws a descriptive error with raw output logged if JSON parsing fails"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/feature/specGenerator.ts",
+      "details": "Create the file. Define: export type SpecContext = { prdContent: string; featureDescription: string; qa: { question: string; answer: string }[] }. Import AgentBackend, buildSpecPrompt from prompts.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement generateSpec function",
+      "details": "export async function generateSpec(context: SpecContext, backend: AgentBackend): Promise<{ specMarkdown: string; tasks: Omit<Task, 'id'>[] }> { const prompt = buildSpecPrompt(context.prdContent, context.featureDescription, context.qa); const proc = backend.spawn(prompt, {}); const output = await collectOutput(proc); return parseSpecResponse(output) }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement output collection",
+      "details": "async function collectOutput(proc: ChildProcess): Promise<string> { return new Promise((resolve, reject) => { let output = ''; proc.stdout?.on('data', d => output += d.toString()); proc.stderr?.on('data', d => output += d.toString()); proc.on('close', () => resolve(output)); proc.on('error', reject) }) }",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Implement JSON response parsing",
+      "details": "function parseSpecResponse(output: string): { specMarkdown: string; tasks: Task[] } { // Strip markdown code fences const cleaned = output.replace(/```json\\n?/g, '').replace(/```\\n?/g, ''); const jsonMatch = cleaned.match(/\\{[\\s\\S]+\\}/); if (!jsonMatch) throw new Error('Could not parse AI response...'); const parsed = JSON.parse(jsonMatch[0]); return { specMarkdown: parsed.spec, tasks: parsed.tasks } }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-48", "TASK-118"],
+  "estimatedComplexity": "high",
+  "technicalNotes": [
+    "The AI response JSON may be surrounded by text before and after — use a regex to extract the first { ... } block",
+    "Log raw output to .agent/logs/LOG.md before throwing for debugging"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "TASK-107",
+  "title": "Add session ID display to loop TUI header",
+  "category": "ui-ux",
+  "description": "Show the current sessionId (truncated to 8 characters) in the loop TUI header so users can correlate history files with loop sessions.",
+  "acceptanceCriteria": [
+    "TUI header shows a session ID (8 chars)",
+    "Session ID matches the prefix of history files created during the session"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Pass sessionId to RocketLoopApp",
+      "details": "Generate the sessionId in loop.ts before rendering: const sessionId = Date.now().toString(). Pass as prop to RocketLoopApp: <RocketLoopApp ... sessionId={sessionId} />",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Display truncated sessionId in header",
+      "details": "Update the header in RocketLoopApp to include: <Text dimColor> | Session: {sessionId.slice(0, 8)}</Text>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-104"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

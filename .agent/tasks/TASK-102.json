@@ -1,0 +1,34 @@
+{
+  "id": "TASK-102",
+  "title": "Add 'Auto — pick next incomplete' logic to loop runner",
+  "category": "functional",
+  "description": "When null is passed as the task (Auto mode), the loop runner automatically selects the first incomplete task. If no incomplete tasks remain, shows a completion message and exits.",
+  "acceptanceCriteria": [
+    "Auto mode selects the first incomplete task automatically",
+    "When all tasks are complete, shows 'All tasks complete!' message",
+    "When all tasks are complete, exits with code 0"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Handle null task in loop runner",
+      "details": "In runLoop, if options.task is null: const allTasks = await readTasks(options.agentDir); const incomplete = getIncompleteTasks(allTasks); if (incomplete.length === 0) { yield { type: 'complete', message: 'All tasks complete!' }; return } const task = incomplete[0]",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Handle Auto mode in RocketLoopApp",
+      "details": "When task selector returns null (Auto), pass null as the task to the loop runner options. The loop runner handles the selection internally.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Show completion message in TUI when all complete",
+      "details": "Add an 'all-complete' state to RocketLoopApp. When the loop yields a completion message for Auto mode with all tasks done, render: <Text color='green' bold>🎉 All tasks complete! Your project is done.</Text>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-61", "TASK-47", "TASK-73"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

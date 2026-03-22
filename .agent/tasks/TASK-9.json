@@ -1,0 +1,36 @@
+{
+  "id": "TASK-9",
+  "title": "Add .gitignore with standard exclusions",
+  "category": "config",
+  "description": "Create a .gitignore file at the project root with standard Node.js exclusions plus project-specific entries to prevent compiled output, environment files, and system files from being committed.",
+  "acceptanceCriteria": [
+    ".gitignore exists at project root",
+    "node_modules/ is excluded",
+    "dist/ is excluded",
+    ".env is excluded",
+    ".env.local is excluded",
+    "*.log is excluded",
+    ".DS_Store is excluded",
+    "coverage/ is excluded"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create .gitignore at project root",
+      "details": "Create .gitignore with the following entries on separate lines:\nnode_modules/\ndist/\n.env\n.env.local\n*.log\n.DS_Store\ncoverage/\n*.db\n*.sqlite",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify .gitignore is working",
+      "details": "Run `git status` and confirm that node_modules/ (if it exists) is not shown as an untracked file. If git is not yet initialized, run `git init` first.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Add *.db and *.sqlite to prevent any SQLite test databases from being committed",
+    ".env.local is used by some frameworks for local-only env overrides"
+  ]
+}

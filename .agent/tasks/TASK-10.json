@@ -1,0 +1,37 @@
+{
+  "id": "TASK-10",
+  "title": "Add dev script with tsx watch mode",
+  "category": "config",
+  "description": "Install tsx as a devDependency and configure a dev script that runs the CLI entry point in watch mode. This enables fast iteration during development without a full tsc build step for every change.",
+  "acceptanceCriteria": [
+    "tsx is installed as a devDependency",
+    "dev script in package.json is 'tsx watch bin/rocket.ts'",
+    "npm run dev -- --help prints CLI usage without errors"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Install tsx as devDependency",
+      "details": "Run: `npm install --save-dev tsx`. tsx is a TypeScript executor that runs .ts files directly without compilation.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Update dev script in package.json",
+      "details": "Set scripts.dev in package.json to: 'tsx watch bin/rocket.ts'. The watch flag re-runs the file automatically when it or its dependencies change.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify dev mode works",
+      "details": "Run `npm run dev -- --help`. The -- passes arguments through to the script. Should print the CLI help text. If src/cli.ts isn't implemented yet, create a minimal stub first.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1", "TASK-5"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "tsx uses esbuild internally for fast TypeScript transpilation — it does not do type-checking",
+    "Use 'npm run dev -- <args>' to pass arguments to the CLI during development"
+  ]
+}

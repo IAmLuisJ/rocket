@@ -1,0 +1,31 @@
+{
+  "id": "TASK-137",
+  "title": "Implement --watch mode in StatusDashboard",
+  "category": "functional",
+  "description": "Add auto-refresh support to StatusDashboard. Re-reads all data sources every 5 seconds and re-renders. Press 'q' to exit. Clears interval on unmount.",
+  "acceptanceCriteria": [
+    "rocket status --watch re-renders every 5 seconds",
+    "When tasks.json is modified during watch, the dashboard updates on next refresh",
+    "Pressing 'q' exits cleanly",
+    "Interval is cleared when component unmounts"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add watch mode state refresh to StatusDashboard",
+      "details": "When watch prop is true, add useEffect: const interval = setInterval(async () => { const tasks = await readTasks(agentDir); const stats = calculateProgress(tasks); const activity = await readRecentActivity(agentDir); setStats(stats); setActivity(activity); }, 5000); return () => clearInterval(interval)",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add 'q' to exit in watch mode",
+      "details": "const { exit } = useApp(); useInput((input) => { if (options.watch && input === 'q') exit() })",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-136"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "setInterval in useEffect must return the clearInterval cleanup function to prevent memory leaks and multiple intervals on re-render"
+  ]
+}

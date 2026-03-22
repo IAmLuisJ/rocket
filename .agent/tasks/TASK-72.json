@@ -1,0 +1,36 @@
+{
+  "id": "TASK-72",
+  "title": "Create src/tui/themes/colors.ts",
+  "category": "ui-ux",
+  "description": "Create the Rocket color palette constants used across all TUI components. Export named color constants for consistent visual styling.",
+  "acceptanceCriteria": [
+    "src/tui/themes/colors.ts exists",
+    "brand color (cyan) is exported",
+    "timing color (yellow) is exported",
+    "success color (green) is exported",
+    "error color (red) is exported",
+    "highlight color (magenta) is exported",
+    "dim color (gray) is exported",
+    "At least brand and success colors are used in other components"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/themes/colors.ts",
+      "details": "Create the directory src/tui/themes/ and the colors.ts file.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Export color constants",
+      "details": "Export: export const colors = { brand: 'cyan', timing: 'yellow', success: 'green', error: 'red', highlight: 'magenta', dim: 'gray' } as const. Also export individual named exports for convenience: export const { brand, timing, success, error, highlight, dim } = colors.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-2"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Ink Text component accepts color as a string prop matching chalk color names: 'cyan', 'yellow', 'green', etc.",
+    "Using a centralized colors file ensures consistent branding across all components"
+  ]
+}

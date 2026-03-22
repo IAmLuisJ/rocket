@@ -1,0 +1,23 @@
+{
+  "id": "TASK-129",
+  "title": "Update README with rocket feature command docs",
+  "category": "docs",
+  "description": "Add a 'rocket feature' section to the README.md. Include description, usage syntax, all three flags, and the dark mode toggle example from the PRD.",
+  "acceptanceCriteria": [
+    "README.md contains a 'rocket feature' section",
+    "Usage syntax (with and without description argument) is documented",
+    "--no-questions, --dry-run, --backend flags are documented in a table",
+    "The terminal example output from PRD Flow 5 is included"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add rocket feature section to README.md",
+      "details": "Add after the rocket loop section: ## rocket feature. Description paragraph. Usage: `rocket feature [description]`. Flags table with all three flags. Terminal example output block (the dark mode toggle example from the PRD).",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-97", "TASK-111"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

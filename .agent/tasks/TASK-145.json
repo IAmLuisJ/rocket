@@ -1,0 +1,34 @@
+{
+  "id": "TASK-145",
+  "title": "Show rocket status hint in completion report after rocket loop ends",
+  "category": "ui-ux",
+  "description": "After a loop session that completes at least one task, append a hint in the completion report suggesting the user run 'rocket status' to see overall progress.",
+  "acceptanceCriteria": [
+    "Hint 'Run rocket status to see overall progress' appears in completion report after a successful session",
+    "Hint is NOT shown when the session ends without completing any tasks",
+    "Hint uses cyan color for the command name"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Track whether any task was completed in the session",
+      "details": "In RocketLoopApp, when the loop emits a 'complete' event, set a completedTask flag. Pass this to CompletionReport.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add hint to CompletionReport when task was completed",
+      "details": "In CompletionReport.tsx, add prop: taskCompleted: boolean. If true: <Text marginTop={1}>Run <Text color='cyan'>rocket status</Text> to see overall progress.</Text>",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify hint appears and disappears correctly",
+      "details": "Test: run loop on a task that completes → hint appears. Test: run loop that reaches max-iterations without <complete> → hint does not appear.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-69", "TASK-73"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

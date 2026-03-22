@@ -1,0 +1,28 @@
+{
+  "id": "TASK-126",
+  "title": "Add rocket feature to Commander help output",
+  "category": "functional",
+  "description": "Ensure the 'feature' subcommand appears in 'rocket --help' with a correct description. Add usage examples to the feature command's own help text.",
+  "acceptanceCriteria": [
+    "rocket --help lists 'feature' with description 'Generate a feature spec and tasks from a natural language description'",
+    "rocket feature --help shows usage examples",
+    "rocket feature --help shows all three flags (--no-questions, --dry-run, --backend)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Verify feature appears in rocket --help",
+      "details": "Run `npm run dev -- --help`. Confirm 'feature' is listed with its description. If not, check the Commander registration in src/cli.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add usage examples to feature command",
+      "details": "In Commander, add .addHelpText('after', '\\nExamples:\\n  rocket feature \"Add dark mode toggle\"\\n  rocket feature --no-questions \"Add email notifications\"\\n  rocket feature --dry-run \"Add user profiles\"')",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-111"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

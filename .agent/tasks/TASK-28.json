@@ -1,0 +1,36 @@
+{
+  "id": "TASK-28",
+  "title": "Add webapp template: .gitignore",
+  "category": "security",
+  "description": "Create a .gitignore template for the webapp project that excludes node_modules, build outputs, environment files, database files, and system files.",
+  "acceptanceCriteria": [
+    "src/templates/webapp/.gitignore.tmpl exists",
+    "node_modules/ is excluded",
+    "dist/ is excluded",
+    ".env is excluded",
+    ".env.local is excluded",
+    "*.db and *.sqlite are excluded",
+    "coverage/ is excluded",
+    ".DS_Store is excluded"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create .gitignore.tmpl for webapp template",
+      "details": "Create src/templates/webapp/.gitignore.tmpl with entries:\nnode_modules/\ndist/\n.env\n.env.local\n.env.production\n*.db\n*.sqlite\ncoverage/\n.DS_Store\n*.log\n.vite/",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify critical exclusions",
+      "details": "Review the file and confirm both .env and *.db are present — these are the most critical entries to prevent credential and data leaks.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-19"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The .tmpl extension is stripped by the template engine during scaffolding — the file becomes .gitignore in the output",
+    "Note: a file named .gitignore in src/templates/ might itself be ignored by git — using .gitignore.tmpl avoids this issue"
+  ]
+}

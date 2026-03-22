@@ -1,0 +1,37 @@
+{
+  "id": "TASK-69",
+  "title": "Create src/tui/components/CompletionReport.tsx",
+  "category": "ui-ux",
+  "description": "Create the Ink component rendered when a task completes successfully. Shows a green success header, task title, iteration count, total elapsed time, and per-iteration timing breakdown.",
+  "acceptanceCriteria": [
+    "CompletionReport renders on task completion",
+    "Green 'Task Complete' header is shown",
+    "Task title is displayed",
+    "Iteration count is shown",
+    "Total elapsed time is formatted as Xm Ys",
+    "Per-iteration timing breakdown is listed"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/components/CompletionReport.tsx",
+      "details": "Create the file. Define props type: { taskTitle: string; taskId: number; iterations: number; totalElapsedMs: number; iterationTimings: number[] }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement time formatting helper",
+      "details": "function formatTime(ms: number): string { const mins = Math.floor(ms / 60000); const secs = Math.floor((ms % 60000) / 1000); return `${mins}m ${secs}s` }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render the completion report",
+      "details": "Render: <Box flexDirection='column' marginTop={1}><Text bold color='green'>✅ Task Complete</Text><Text>Task: #{taskId} {taskTitle}</Text><Text>Iterations: {iterations}</Text><Text>Total time: {formatTime(totalElapsedMs)}</Text><Text bold marginTop={1}>Per-iteration timing:</Text>{iterationTimings.map((ms, i) => <Text key={i}>  Iteration {i+1}: {formatTime(ms)}</Text>)}</Box>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-72"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

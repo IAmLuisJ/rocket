@@ -1,0 +1,39 @@
+{
+  "id": "TASK-41",
+  "title": "Add success screen to NewProjectWizard",
+  "category": "ui-ux",
+  "description": "After all scaffolding steps complete, render a success screen showing the project name, template type used, and next-step instructions.",
+  "acceptanceCriteria": [
+    "Success screen appears after scaffolding completes",
+    "Shows project name in the success message",
+    "Shows the template type used",
+    "Shows next steps: 'cd <name> && rocket loop'",
+    "Uses green color for the success indicator"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add done state to NewProjectWizard",
+      "details": "When all scaffold steps complete, set state to { progressStep: 'done' }. Render a success screen instead of the progress steps.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Create success screen render",
+      "details": "Render: <Box flexDirection='column' marginTop={1}><Text color='green' bold>✅ Project created successfully!</Text><Text>  Name: <Text bold>{projectName}</Text></Text><Text>  Type: <Text bold>{templateType}</Text></Text><Text marginTop={1}>Next steps:</Text><Text>  <Text color='cyan'>cd {projectName} && rocket loop</Text></Text></Box>",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Exit the Ink app after success screen is shown",
+      "details": "Import useApp from ink. In the success screen component, call app.exit() after a brief delay (500ms) or on any keypress to clean up the Ink render and return control to the terminal.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-40"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "useApp hook from ink provides app.exit() to properly terminate the Ink render",
+    "Call process.exit(0) after app.exit() if the CLI should exit completely"
+  ]
+}

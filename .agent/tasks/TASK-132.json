@@ -1,0 +1,32 @@
+{
+  "id": "TASK-132",
+  "title": "Create src/lib/progress/calculator.ts — compute progress stats",
+  "category": "functional",
+  "description": "Create a pure function that computes overall and per-category progress stats from a task array. Returns a typed ProgressStats object.",
+  "acceptanceCriteria": [
+    "calculateProgress(tasks) is exported",
+    "Returns correct overall percent for mixed complete/incomplete tasks",
+    "Returns correct per-category breakdown with complete/total counts",
+    "Handles empty task array without throwing (returns 0% overall)",
+    "Handles all-complete array (returns 100%)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/progress/calculator.ts",
+      "details": "Create directory src/lib/progress/ and the file. Define: export type CategoryStats = { complete: number; total: number; percent: number }. export type ProgressStats = { overall: { complete: number; total: number; percent: number }; byCategory: Record<string, CategoryStats> }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement calculateProgress",
+      "details": "export function calculateProgress(tasks: Task[]): ProgressStats { if (tasks.length === 0) return { overall: { complete: 0, total: 0, percent: 0 }, byCategory: {} }; const complete = tasks.filter(t => t.passes).length; const overall = { complete, total: tasks.length, percent: Math.round(complete / tasks.length * 100) }; const byCategory: Record<string, CategoryStats> = {}; for (const task of tasks) { if (!byCategory[task.category]) byCategory[task.category] = { complete: 0, total: 0, percent: 0 }; byCategory[task.category].total++; if (task.passes) byCategory[task.category].complete++ }; Object.values(byCategory).forEach(c => c.percent = Math.round(c.complete / c.total * 100)); return { overall, byCategory } }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-46"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "This is a pure function — no file I/O, easy to test"
+  ]
+}

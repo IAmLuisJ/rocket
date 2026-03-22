@@ -1,0 +1,38 @@
+{
+  "id": "TASK-116",
+  "title": "Create src/lib/feature/prdWriter.ts — append feature spec to PRD.md",
+  "category": "functional",
+  "description": "Create a module that appends a feature spec to PRD.md. If '## Features Added' section exists, appends there; otherwise creates the section at the end. Does not duplicate content.",
+  "acceptanceCriteria": [
+    "writeFeatureSpec(specMarkdown, prdPath) is exported",
+    "Appends spec under '## Features Added' if section exists",
+    "Creates '## Features Added' section if it doesn't exist",
+    "Existing PRD content before the section is unchanged",
+    "Running twice with the same spec does not duplicate the section"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/feature/prdWriter.ts",
+      "details": "Create the file. Import fs-extra and path.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement writeFeatureSpec",
+      "details": "export async function writeFeatureSpec(specMarkdown: string, prdPath: string): Promise<string> { const content = await fs.readFile(prdPath, 'utf-8').catch(() => ''); const section = '## Features Added'; if (content.includes(section)) { await fs.writeFile(prdPath, content + '\\n' + specMarkdown, 'utf-8'); return section } else { await fs.writeFile(prdPath, content + '\\n\\n' + section + '\\n\\n' + specMarkdown, 'utf-8'); return section } }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Add idempotency check",
+      "details": "Before appending, check if specMarkdown is already in the content: if (content.includes(specMarkdown.slice(0, 100))) { return section }. This prevents duplicate appends.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-6"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Using the first 100 chars of specMarkdown for the idempotency check is a reasonable heuristic — feature titles are unique"
+  ]
+}

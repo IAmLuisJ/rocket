@@ -1,0 +1,29 @@
+{
+  "id": "TASK-82",
+  "title": "Create src/commands/tasks.ts and wire TasksApp",
+  "category": "functional",
+  "description": "Implement the full tasks command handler. Checks for tasks.json, reads tasks, and renders the TasksApp TUI. Handles missing tasks.json and empty task lists gracefully.",
+  "acceptanceCriteria": [
+    "rocket tasks renders the TasksApp TUI",
+    "Missing .agent/tasks.json shows a helpful error message",
+    "Empty task list shows 'No tasks found' message",
+    "Initial filter from --filter flag is applied"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Implement tasksCommand in src/commands/tasks.ts",
+      "details": "Replace stub with: import { render } from 'ink'. Import TasksApp, readTasks, path, fs. async function tasksCommand(options) { const agentDir = path.join(process.cwd(), '.agent'); if (!await fs.pathExists(path.join(agentDir, 'tasks.json'))) { console.error('No .agent/tasks.json found. Run rocket init first.'); process.exit(1) } const tasks = await readTasks(agentDir); if (tasks.length === 0) { console.log('No tasks found in tasks.json'); return } render(<TasksApp tasks={tasks} agentDir={agentDir} initialFilter={options.filter} />) }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify TUI renders and is navigable",
+      "details": "Run `npm run dev -- tasks` in a project with tasks.json. Verify the task list renders and arrow keys navigate it.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-15", "TASK-47", "TASK-77", "TASK-81"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

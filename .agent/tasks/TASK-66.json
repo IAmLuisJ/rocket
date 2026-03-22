@@ -1,0 +1,46 @@
+{
+  "id": "TASK-66",
+  "title": "Create src/tui/components/TaskSelector.tsx",
+  "category": "ui-ux",
+  "description": "Create the Ink TUI component for task selection at the start of a loop session. Shows an 'Auto' option followed by all incomplete tasks. Highlights selected item in cyan.",
+  "acceptanceCriteria": [
+    "TaskSelector component renders task list",
+    "'Auto — pick next incomplete' option appears first",
+    "Each task shown as '[#id] title'",
+    "Selected item is highlighted in cyan",
+    "Selecting a task calls onSelect with the task object",
+    "Selecting Auto calls onSelect with null"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/components/TaskSelector.tsx",
+      "details": "Create the file. Import React, Box, Text from ink. Import SelectInput from ink-select-input. Import Task from lib/tasks/schema.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Define component props and items",
+      "details": "export function TaskSelector({ tasks, onSelect }: { tasks: Task[]; onSelect: (task: Task | null) => void }). Build items array: const items = [{ label: 'Auto — pick next incomplete', value: null }, ...tasks.map(t => ({ label: `[#${t.id}] ${t.title}`, value: t }))]",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render the SelectInput",
+      "details": "Return: <Box flexDirection='column'><Text bold color='cyan'>Select task to focus on:</Text><SelectInput items={items} onSelect={(item) => onSelect(item.value)} /></Box>",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Verify component renders correctly",
+      "details": "Test by rendering in a test command (or via storybook-like testing) with a mock task array. Confirm Auto appears first and task titles are formatted correctly.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-46", "TASK-6", "TASK-72"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "ink-select-input handles keyboard navigation (arrow keys) automatically",
+    "The value: null | Task union requires careful type handling in the onSelect callback"
+  ]
+}

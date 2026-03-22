@@ -1,0 +1,44 @@
+{
+  "id": "TASK-16",
+  "title": "Add global error handler and graceful exit to CLI",
+  "category": "functional",
+  "description": "Wrap the CLI's parseAsync call in a try/catch to handle unhandled errors gracefully. Also handle SIGINT (Ctrl+C) to exit cleanly without showing a stack trace to the user.",
+  "acceptanceCriteria": [
+    "Unhandled errors show a user-friendly error message (not a raw stack trace)",
+    "Process exits with code 1 on unhandled errors",
+    "Pressing Ctrl+C during any command exits cleanly without a stack trace",
+    "SIGINT handler is registered before parseAsync is called"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Wrap parseAsync in try/catch in bin/rocket.ts",
+      "details": "In bin/rocket.ts, wrap the program.parseAsync call: `try { await program.parseAsync(process.argv) } catch (err) { const message = err instanceof Error ? err.message : String(err); console.error('\\x1b[31mError:\\x1b[0m', message); process.exit(1) }`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Register SIGINT handler",
+      "details": "Before parseAsync, add: `process.on('SIGINT', () => { process.stdout.write('\\n'); process.exit(0) })`. This intercepts Ctrl+C and exits cleanly.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Register unhandledRejection handler",
+      "details": "Add: `process.on('unhandledRejection', (reason) => { const message = reason instanceof Error ? reason.message : String(reason); console.error('\\x1b[31mUnhandled error:\\x1b[0m', message); process.exit(1) })`",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Test error handling",
+      "details": "Temporarily modify a command handler to throw an error and verify: (1) error message is shown without stack trace, (2) process exits with code 1. Then test Ctrl+C exits cleanly.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-5", "TASK-11"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Use \\x1b[31m...\\x1b[0m for red color in error messages (ANSI escape codes) since chalk may not be set up at this point",
+    "Commander.js has its own error handling — set program.exitOverride() if you want to catch Commander errors in your try/catch"
+  ]
+}

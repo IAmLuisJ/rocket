@@ -1,0 +1,39 @@
+{
+  "id": "TASK-60",
+  "title": "Create src/lib/preflight.ts — pre-loop checks",
+  "category": "functional",
+  "description": "Create a preflight module that runs all checks needed before starting the rocket loop. Validates tasks.json exists, has incomplete tasks, and the selected backend binary is in PATH.",
+  "acceptanceCriteria": [
+    "runPreflight(agentDir, backend) is exported",
+    "Throws with 'run rocket init' message if tasks.json is missing",
+    "Throws with install instructions if the backend binary is not in PATH",
+    "Throws with 'All tasks complete' message if no incomplete tasks remain",
+    "Does not throw when all checks pass"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/preflight.ts",
+      "details": "Create the file. Import fs-extra, readTasks, getIncompleteTasks from tasks/reader.ts. Import AgentBackend from backends/types.ts. Import checkBinaryInPath from this file (or separate helper).",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement checkBinaryInPath helper",
+      "details": "export function checkBinaryInPath(binary: string): boolean { try { execSync(`which ${binary}`, { stdio: 'ignore' }); return true } catch { return false } }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement runPreflight function",
+      "details": "export async function runPreflight(agentDir: string, backend: AgentBackend): Promise<void> { // 1. Check tasks.json exists const tasksFile = path.join(agentDir, 'tasks.json'); if (!await fs.pathExists(tasksFile)) { throw new Error('No tasks.json found. Run rocket init to set up the .agent/ directory.') } // 2. Read and validate tasks const tasks = await readTasks(agentDir); // 3. Check incomplete tasks if (getIncompleteTasks(tasks).length === 0) { throw new Error('All tasks are complete! Nothing to loop on.') } // 4. Check backend binary (done by the backend itself when spawning, but pre-check here for better UX) }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-47"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "checkBinaryInPath must also be exported — it's used by TASK-105 independently",
+    "The backend binary check is also done by the backend's spawn() method, but doing it in preflight gives a better error message before the loop starts"
+  ]
+}

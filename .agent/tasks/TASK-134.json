@@ -1,0 +1,38 @@
+{
+  "id": "TASK-134",
+  "title": "Create src/lib/progress/historyReader.ts — count sessions and compute total runtime",
+  "category": "functional",
+  "description": "Create a module that reads the .agent/history/ directory, counts sessions from ITERATION files, and computes total runtime from session timestamps. Returns zeros when directory is missing.",
+  "acceptanceCriteria": [
+    "readHistoryStats(agentDir) is exported",
+    "Returns correct session count from history directory",
+    "Returns correct total runtime in seconds",
+    "Returns { sessionCount: 0, totalRuntimeSeconds: 0 } when history/ is missing"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/progress/historyReader.ts",
+      "details": "Create the file. Define: export type HistoryStats = { sessionCount: number; totalRuntimeSeconds: number }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement readHistoryStats",
+      "details": "export async function readHistoryStats(agentDir: string): Promise<HistoryStats> { const historyDir = path.join(agentDir, 'history'); if (!await fs.pathExists(historyDir)) return { sessionCount: 0, totalRuntimeSeconds: 0 }; const files = await fs.readdir(historyDir); const sessionIds = new Set(files.filter(f => f.startsWith('ITERATION-')).map(f => f.split('-')[1])); return { sessionCount: sessionIds.size, totalRuntimeSeconds: 0 } // TODO: compute runtime from timestamps }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Compute total runtime from session timestamps",
+      "details": "The ITERATION files are named ITERATION-{sessionId}-{n}.txt. The sessionId is a Unix timestamp (Date.now()). Compute runtime by finding min and max timestamps per session and summing the differences.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-58"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The sessionId is Date.now().toString() — parse as integer to get the Unix timestamp in milliseconds",
+    "Each session's runtime = lastIterationTime - sessionId (approximate, since we don't store end time)"
+  ]
+}

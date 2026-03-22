@@ -1,0 +1,39 @@
+{
+  "id": "TASK-115",
+  "title": "Create src/lib/feature/taskMerger.ts — append new tasks to tasks.json",
+  "category": "functional",
+  "description": "Create a module that reads the current tasks.json, finds the maximum task ID, and appends new tasks with sequential IDs. Validates each new task against the schema before writing.",
+  "acceptanceCriteria": [
+    "mergeTasks(newTasks, tasksPath) is exported",
+    "New tasks get IDs continuing from previous max+1",
+    "Existing tasks in the file are unchanged",
+    "Each new task is validated against TaskSchema before writing",
+    "Returns { added: number, newMaxId: number }",
+    "Empty newTasks array adds nothing and returns correctly"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/feature/taskMerger.ts",
+      "details": "Create the file. Import fs-extra, TaskSchema, Task from schema.ts. Define function signature.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement ID assignment logic",
+      "details": "Read existing tasks.json. Find max ID: const maxId = Math.max(0, ...existingTasks.map(t => t.id)). Assign new IDs: newTasks.map((t, i) => ({ ...t, id: maxId + 1 + i }))",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Validate and write",
+      "details": "Validate each new task: tasksWithIds.forEach(t => TaskSchema.parse(t)). Merge and write: await fs.writeJson(tasksPath, { tasks: [...existingTasks, ...tasksWithIds] }, { spaces: 2 }). Return { added: newTasks.length, newMaxId: maxId + newTasks.length }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-46", "TASK-6"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Validate ALL new tasks before writing any — fail atomically if any task is invalid"
+  ]
+}

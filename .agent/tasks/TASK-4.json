@@ -1,0 +1,54 @@
+{
+  "id": "TASK-4",
+  "title": "Install and configure Prettier",
+  "category": "config",
+  "description": "Install Prettier code formatter and configure it with project-wide formatting rules. Create a .prettierrc config file and add a format script to package.json.",
+  "acceptanceCriteria": [
+    "prettier is installed as a devDependency",
+    ".prettierrc exists at project root",
+    "singleQuote is true in .prettierrc",
+    "semi is false in .prettierrc",
+    "trailingComma is 'all' in .prettierrc",
+    "printWidth is 100 in .prettierrc",
+    "format script exists in package.json",
+    "npm run format exits with code 0"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Install Prettier",
+      "details": "Run: `npm install --save-dev prettier`. Install the latest version.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Create .prettierrc configuration file",
+      "details": "Create .prettierrc at project root with the following JSON content: { \"singleQuote\": true, \"semi\": false, \"trailingComma\": \"all\", \"printWidth\": 100, \"tabWidth\": 2 }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Create .prettierignore file",
+      "details": "Create .prettierignore at project root excluding: dist/, node_modules/, src/templates/ (template files should not be reformatted), coverage/",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Add format script to package.json",
+      "details": "Add to the scripts object in package.json: 'format': 'prettier --write \"src/**/*.ts\" \"bin/**/*.ts\"'. Also add 'format:check': 'prettier --check \"src/**/*.ts\" \"bin/**/*.ts\"' for CI.",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Verify format script runs successfully",
+      "details": "Run `npm run format` on the current source files. Should exit 0. Then run `npm run format:check` — should also exit 0 after formatting.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Template files in src/templates/ should be excluded from Prettier to preserve intentional formatting in generated files",
+    "Consider adding a pre-commit hook with lint-staged to auto-format on commit (optional, not required for v1)"
+  ]
+}

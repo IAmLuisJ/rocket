@@ -1,0 +1,29 @@
+{
+  "id": "TASK-122",
+  "title": "Add preflight check: verify .agent/prd/PRD.md and .agent/tasks.json exist",
+  "category": "functional",
+  "description": "At the start of the feature command, check that both PRD.md and tasks.json exist. If either is missing, print a clear error and suggest running 'rocket init'.",
+  "acceptanceCriteria": [
+    "Running rocket feature without .agent/prd/PRD.md prints error mentioning 'rocket init'",
+    "Running rocket feature without .agent/tasks.json prints error mentioning 'rocket init'",
+    "Process exits with code 1 when either file is missing",
+    "No TUI renders before the check completes"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add file existence checks at start of featureCommand",
+      "details": "const agentDir = path.join(process.cwd(), '.agent'); const prdPath = path.join(agentDir, 'prd', 'PRD.md'); const tasksPath = path.join(agentDir, 'tasks.json'); if (!await fs.pathExists(prdPath)) { console.error('Missing .agent/prd/PRD.md. Run rocket init to set up the .agent/ structure.'); process.exit(1) } if (!await fs.pathExists(tasksPath)) { console.error('Missing .agent/tasks.json. Run rocket init first.'); process.exit(1) }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Test the checks",
+      "details": "Run rocket feature in a directory with only tasks.json (no PRD.md) and verify the error message. Repeat for missing tasks.json.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-111"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

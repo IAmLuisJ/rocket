@@ -1,0 +1,47 @@
+{
+  "id": "TASK-53",
+  "title": "Create src/lib/parser/tags.ts — exit tag detection",
+  "category": "functional",
+  "description": "Create a module to detect the three exit tags in AI output: <complete>, <blocked>reason</blocked>, and <decide>question</decide>. Each returns a typed result or null if the tag is not found.",
+  "acceptanceCriteria": [
+    "detectComplete(text) returns true when <complete> is anywhere in text",
+    "detectComplete returns false for text without <complete>",
+    "detectBlocked('<blocked>reason</blocked>') extracts and returns the reason string",
+    "detectBlocked returns null when no blocked tag is found",
+    "detectDecide('<decide>question</decide>') extracts and returns the question string",
+    "detectDecide returns null when no decide tag is found"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/parser/tags.ts",
+      "details": "Create the file with three exported functions.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement detectComplete",
+      "details": "export function detectComplete(text: string): boolean { return text.includes('<complete>') }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement detectBlocked",
+      "details": "export function detectBlocked(text: string): { blocked: true; reason: string } | null { const match = text.match(/<blocked>(.*?)<\\/blocked>/s); if (!match) return null; return { blocked: true, reason: match[1].trim() } }. The /s flag enables dotAll mode so . matches newlines.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Implement detectDecide",
+      "details": "export function detectDecide(text: string): { decide: true; question: string } | null { const match = text.match(/<decide>(.*?)<\\/decide>/s); if (!match) return null; return { decide: true, question: match[1].trim() } }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-2"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "The /s flag (dotAll) in the regex allows . to match newlines — important for multi-line blocked reasons",
+    "detectComplete uses includes() not regex for simplicity — <complete> is a self-closing tag with no content",
+    "These functions should be called on the accumulated full output of each iteration, not individual lines"
+  ]
+}

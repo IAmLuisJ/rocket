@@ -1,0 +1,28 @@
+{
+  "id": "TASK-108",
+  "title": "Handle tasks.json with all tasks complete in rocket loop",
+  "category": "functional",
+  "description": "In preflight, if tasks.json exists but all tasks have passes:true, show a success message and exit gracefully without starting the loop.",
+  "acceptanceCriteria": [
+    "Running rocket loop when all tasks are complete shows 'All tasks are already complete!' message",
+    "Completed task titles are listed",
+    "Process exits with code 0"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add all-complete check to runPreflight",
+      "details": "In runPreflight, after reading tasks: if (getIncompleteTasks(tasks).length === 0) { throw new Error('All tasks are already complete! Use rocket status to see the summary.') }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Handle this error gracefully in loop.ts",
+      "details": "In loop.ts, catch the specific error: if (error.message.includes('already complete')) { console.log('\\n✅ All tasks are already complete!'); tasks.forEach(t => console.log(` ✓ #${t.id} ${t.title}`)); process.exit(0) }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-60", "TASK-76"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

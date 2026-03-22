@@ -1,0 +1,34 @@
+{
+  "id": "TASK-26",
+  "title": "Add webapp template: Express server entry point",
+  "category": "functional",
+  "description": "Create the Express v5 server entry point for the server template. Includes JSON middleware, CORS, a health-check GET endpoint, and configurable port from environment variables.",
+  "acceptanceCriteria": [
+    "src/templates/webapp/server/src/index.ts exists",
+    "Express v5 app is created",
+    "JSON middleware is configured",
+    "CORS middleware is configured",
+    "GET /api/health endpoint returns { status: 'ok' }",
+    "Server listens on PORT env var with default 3001"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create server/src/index.ts template",
+      "details": "Create src/templates/webapp/server/src/index.ts: import express from 'express'; import cors from 'cors'; const app = express(); const PORT = process.env.PORT || 3001; app.use(express.json()); app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' })); app.get('/api/health', (_req, res) => { res.json({ status: 'ok', timestamp: new Date().toISOString() }); }); app.listen(PORT, () => { console.log(`Server running on http://localhost:${PORT}`); }); export default app;",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify the template is syntactically correct",
+      "details": "Review the template file for TypeScript syntax errors. The file should compile cleanly (ignoring missing imports that would be in node_modules of the scaffolded project).",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-19", "TASK-22", "TASK-24"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Express v5 has different error handling signatures than v4 — async route handlers auto-catch errors",
+    "The CORS origin should be configurable via env var to support different environments"
+  ]
+}

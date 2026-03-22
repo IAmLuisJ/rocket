@@ -1,0 +1,39 @@
+{
+  "id": "TASK-68",
+  "title": "Create src/tui/components/SpinnerPreview.tsx",
+  "category": "ui-ux",
+  "description": "Create the Ink component that shows a spinner alongside a rolling preview of the last 3-5 lines of AI output. Lines are truncated to terminal width and dimmed for readability.",
+  "acceptanceCriteria": [
+    "SpinnerPreview component renders a spinner and output preview",
+    "Shows last 3-5 lines of AI output",
+    "Lines are truncated to terminal width",
+    "Preview text is displayed in a dimmed color",
+    "Updates as new output lines arrive"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/tui/components/SpinnerPreview.tsx",
+      "details": "Create the file. Import React, Box, Text from ink. Import Spinner from ink-spinner.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Define props and compute preview lines",
+      "details": "export function SpinnerPreview({ lines }: { lines: string[] }). const maxWidth = (process.stdout.columns || 80) - 4. const previewLines = lines.slice(-5).map(l => l.length > maxWidth ? l.slice(0, maxWidth) + '…' : l)",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Render spinner and preview",
+      "details": "Return: <Box><Spinner type='dots' /><Box flexDirection='column' marginLeft={1}>{previewLines.map((line, i) => <Text key={i} dimColor>{line}</Text>)}</Box></Box>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-6", "TASK-72"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "ink-spinner provides multiple spinner types — 'dots' is the default animated dots pattern",
+    "dimColor is an Ink Text prop that renders the text at reduced brightness"
+  ]
+}

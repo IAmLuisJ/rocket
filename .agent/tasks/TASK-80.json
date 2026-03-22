@@ -1,0 +1,37 @@
+{
+  "id": "TASK-80",
+  "title": "Add 'mark complete' action to TasksApp",
+  "category": "functional",
+  "description": "Add a keyboard shortcut 'm' in TasksApp to mark the selected task as complete. Writes the change to tasks.json and refreshes the list.",
+  "acceptanceCriteria": [
+    "Pressing 'm' on an incomplete task sets passes:true in tasks.json",
+    "Task list refreshes to reflect the change immediately",
+    "A success flash message is shown after marking complete",
+    "Pressing 'm' on an already-complete task has no effect"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add 'm' keypress handler",
+      "details": "In useInput: if (input === 'm') { const task = filteredTasks[selectedIndex]; if (task && !task.passes) { handleMarkComplete(task.id) } }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement handleMarkComplete",
+      "details": "async function handleMarkComplete(id: number) { const updated = markTaskComplete(tasks, id); await writeTasks(agentDir, updated); setTasks(updated); setFlash(`Task #${id} marked complete`) }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Add flash message display",
+      "details": "Add flash state: const [flash, setFlash] = useState<string | null>(null). When flash is set, show it for 2 seconds then clear: setTimeout(() => setFlash(null), 2000). Render flash at the bottom of the TUI: {flash && <Text color='green'>{flash}</Text>}",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-47", "TASK-77"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Tasks state must be stored in React state (not just read once) to allow re-renders after modifications"
+  ]
+}

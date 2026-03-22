@@ -1,0 +1,51 @@
+{
+  "id": "TASK-95",
+  "title": "Write integration test for rocket init",
+  "category": "testing",
+  "description": "Create an integration test that calls createAgentStructure() against a temp directory and verifies all expected files and directories are created with the correct content.",
+  "acceptanceCriteria": [
+    "Integration test creates a temp directory and calls createAgentStructure",
+    "Test verifies .agent/prd/PRD.md is created",
+    "Test verifies .agent/prd/SUMMARY.md is created",
+    "Test verifies .agent/logs/LOG.md is created",
+    "Test verifies .agent/history/ directory exists",
+    "Test verifies .agent/PROMPT.md is created with correct content",
+    "Test verifies .agent/tasks.json is created as valid JSON",
+    "Integration test passes with npm test"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/__tests__/agent-init.test.ts",
+      "details": "Create the test file. Import createAgentStructure from agent-init.ts. Import fs, path, os from Node.js.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Set up temp directory fixture",
+      "details": "Use beforeEach: tmpDir = await mkdtemp(path.join(os.tmpdir(), 'rocket-test-')). Use afterEach: await rm(tmpDir, { recursive: true }).",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Write the main test case",
+      "details": "it('creates all .agent/ files', async () => { await createAgentStructure(tmpDir); const agentDir = path.join(tmpDir, '.agent'); await expect(fs.pathExists(path.join(agentDir, 'prd/PRD.md'))).resolves.toBe(true); // ... check all other files; const tasksJson = await fs.readJson(path.join(agentDir, 'tasks.json')); expect(tasksJson).toHaveProperty('tasks'); })",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Write idempotency test",
+      "details": "Call createAgentStructure twice. Add a file to verify it wasn't overwritten: `await fs.writeFile(path.join(agentDir, 'prd/PRD.md'), 'custom content'); await createAgentStructure(tmpDir); const content = await fs.readFile(path.join(agentDir, 'prd/PRD.md'), 'utf-8'); expect(content).toBe('custom content')`",
+      "pass": false
+    },
+    {
+      "step": 5,
+      "description": "Run integration tests",
+      "details": "Run `npm test` and verify the integration tests pass.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-83", "TASK-7"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

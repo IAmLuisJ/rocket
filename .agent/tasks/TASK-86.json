@@ -1,0 +1,39 @@
+{
+  "id": "TASK-86",
+  "title": "Ensure no hardcoded credentials in webapp template",
+  "category": "security",
+  "description": "Audit all files in the webapp template directory to confirm no real secrets are present. All sensitive config must use process.env or template placeholders. Add a test to enforce this.",
+  "acceptanceCriteria": [
+    "No JWT_SECRET values present in template files",
+    "No database passwords present in template files",
+    "No API keys present in template files",
+    "grep for common secret patterns returns no hardcoded values",
+    "A test enforces this constraint automatically"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Audit webapp template files for secrets",
+      "details": "Run: `grep -r -i 'password=' src/templates/webapp/` and `grep -r -i 'secret=' src/templates/webapp/` and `grep -r -i 'apikey=' src/templates/webapp/`. All results should only be placeholder text or env var references.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Fix any hardcoded values found",
+      "details": "If any hardcoded secrets are found, replace them with process.env references or {{PLACEHOLDER}} tokens. Check config files, server entry point, and database configuration.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Write a test that checks for secrets",
+      "details": "Add a Vitest test in src/templates/__tests__/security.test.ts that walks the webapp template directory and asserts no files contain patterns like /password\\s*=\\s*['\"][^'\"]+['\"]/ (a literal password value).",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-19", "TASK-27"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Common secret patterns to check: JWT_SECRET=<value>, password=<literal>, api_key=<literal>",
+    ".env.example values like 'your-secret-key-here' are intentionally placeholder text — do not flag these"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "TASK-81",
+  "title": "Apply --filter flag from Commander to TasksApp",
+  "category": "functional",
+  "description": "Pass the --filter option from Commander to TasksApp as the initialFilter prop, so the app starts with the specified filter pre-applied.",
+  "acceptanceCriteria": [
+    "rocket tasks --filter incomplete starts with the Incomplete filter active",
+    "rocket tasks --filter complete starts with the Complete filter active",
+    "rocket tasks --filter blocked starts with the Blocked filter active",
+    "rocket tasks (no filter) starts with All filter"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Read --filter option in tasks.ts command handler",
+      "details": "In src/commands/tasks.ts, extract the filter option: const { filter } = options. Validate it's one of 'incomplete', 'complete', 'blocked' or undefined.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Pass filter to TasksApp",
+      "details": "When rendering TasksApp: render(<TasksApp tasks={tasks} agentDir={agentDir} initialFilter={filter || 'all'} />)",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Initialize filter state from prop in TasksApp",
+      "details": "In TasksApp, initialize filter state with the prop: useState<FilterType>(initialFilter as FilterType || 'all')",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-15", "TASK-79"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

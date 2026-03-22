@@ -1,0 +1,44 @@
+{
+  "id": "TASK-42",
+  "title": "Wire feature toggles into scaffold options",
+  "category": "functional",
+  "description": "Pass the user's feature toggle selections (auth, email, PDF renderer) from NewProjectWizard through to scaffold.ts. scaffold.ts should conditionally include or exclude feature-specific files.",
+  "acceptanceCriteria": [
+    "Feature toggle selections from wizard are passed to scaffold() as options",
+    "Selecting auth:false causes auth-related files to be excluded from the scaffolded project",
+    "Selecting email:false causes email-related files to be excluded",
+    "Scaffolded project files match the user's selections"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Pass wizard results to scaffold in new.ts",
+      "details": "In the NewProjectWizard onComplete callback (in new.ts), extract { type, features } and call scaffold(type, projectName, destPath, features).",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement feature file exclusion in scaffold.ts",
+      "details": "In scaffold.ts, after processTemplate completes, check options for each feature. If auth is false, delete auth-related files (e.g., server/src/middleware/auth.ts, server/src/routes/auth.ts). Use a featureFiles map to define which files belong to each feature.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Define featureFiles map",
+      "details": "In scaffold.ts, define: const featureFiles = { auth: ['server/src/middleware/auth.ts', 'server/src/routes/auth.ts', 'server/src/lib/jwt.ts'], email: ['server/src/lib/mailer.ts', 'server/src/routes/email.ts'], pdf: ['server/src/lib/pdf.ts'] }. Use fs.remove() to delete each file if the feature is disabled.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Verify feature exclusion works",
+      "details": "Scaffold a webapp with auth:false into a temp directory. Confirm auth-related files are not present. Scaffold another with auth:true and confirm they are present.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-37", "TASK-39"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "fs-extra's fs.remove() is safe to call on non-existent files (it resolves without error)",
+    "Feature files must be templated in the webapp template even if they'll be deleted — deletion happens post-copy"
+  ]
+}

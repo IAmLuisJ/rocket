@@ -1,0 +1,43 @@
+{
+  "id": "TASK-50",
+  "title": "Create src/lib/backends/claude.ts — Claude direct backend",
+  "category": "functional",
+  "description": "Implement the AgentBackend interface for Claude CLI (direct, no docker). Spawns Claude with the opus model and the prompt. Validates that the claude binary is in PATH.",
+  "acceptanceCriteria": [
+    "src/lib/backends/claude.ts exists and exports a ClaudeBackend implementing AgentBackend",
+    "spawn() runs 'claude --model opus -p <prompt>' via child_process.spawn",
+    "Missing claude binary throws a descriptive error",
+    "claude.spawn() returns a valid ChildProcess"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/backends/claude.ts",
+      "details": "Create the file mirroring the structure of copilot.ts. Import spawn from child_process, execSync from child_process. Import types from types.ts.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement binary check for 'claude'",
+      "details": "Check for 'claude' in PATH: `try { execSync('which claude', { stdio: 'ignore' }) } catch { throw new Error('claude CLI not found in PATH. Install Claude Code from https://claude.ai/download') }`",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement spawn method",
+      "details": "spawn(prompt: string, options: BackendOptions): ChildProcess { // check binary; return spawn('claude', ['--model', 'opus', '-p', prompt], { cwd: options.cwd || process.cwd(), stdio: ['ignore', 'pipe', 'pipe'] }) }",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Implement parseOutput and export",
+      "details": "Same parseOutput as copilot — text lines. Export: export const claudeBackend: AgentBackend = { name: 'Claude (direct)', spawn, parseOutput }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-48"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "claude CLI is part of Claude Code — the user needs to have it installed and authenticated"
+  ]
+}

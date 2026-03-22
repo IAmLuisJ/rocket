@@ -1,0 +1,35 @@
+{
+  "id": "TASK-84",
+  "title": "Create src/commands/init.ts handler",
+  "category": "functional",
+  "description": "Implement the full init command handler. Calls createAgentStructure in the current directory. If .agent/ already exists, shows a warning and asks for confirmation.",
+  "acceptanceCriteria": [
+    "rocket init creates the .agent/ structure in the current working directory",
+    "Success message lists all created files",
+    "Running rocket init when .agent/ already exists asks for confirmation before proceeding",
+    "User can cancel (answer 'n') without overwriting files"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Implement initCommand in src/commands/init.ts",
+      "details": "Import createAgentStructure, fs, path. async function initCommand() { const agentDir = path.join(process.cwd(), '.agent'); if (await fs.pathExists(agentDir)) { // show warning and prompt } else { await createAgentStructure(process.cwd()); console.log('✅ .agent/ structure created') } }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Add confirmation prompt when .agent/ exists",
+      "details": "Use readline to ask for confirmation: const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); const answer = await new Promise(resolve => rl.question('.agent/ already exists. Proceed? (y/N) ', resolve)); if (answer !== 'y') { console.log('Aborted.'); return } await createAgentStructure(process.cwd())",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Print success message with file list",
+      "details": "After creating: console.log('Created:'); console.log('  .agent/prd/PRD.md'); console.log('  .agent/prd/SUMMARY.md'); console.log('  .agent/logs/LOG.md'); console.log('  .agent/PROMPT.md'); console.log('  .agent/tasks.json')",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-14", "TASK-83"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

@@ -1,0 +1,45 @@
+{
+  "id": "TASK-7",
+  "title": "Install and configure Vitest for unit testing",
+  "category": "config",
+  "description": "Install Vitest and configure it for TypeScript ESM unit testing. Create a vitest.config.ts pointing to test files in src/. Add a test script to package.json. Verify the test runner starts correctly with no test files.",
+  "acceptanceCriteria": [
+    "vitest is installed as a devDependency",
+    "vitest.config.ts exists at project root",
+    "vitest.config.ts include pattern covers src/**/*.test.ts",
+    "test script in package.json runs vitest",
+    "npm test exits 0 with a message indicating no test files found"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Install Vitest",
+      "details": "Run: `npm install --save-dev vitest`. Vitest includes its own type definitions.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Create vitest.config.ts",
+      "details": "Create vitest.config.ts at project root: import { defineConfig } from 'vitest/config'; export default defineConfig({ test: { include: ['src/**/*.test.ts'], environment: 'node' } })",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Update test script in package.json",
+      "details": "Update scripts.test in package.json to: 'vitest run'. The run flag ensures tests exit after completion rather than watching for changes.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Verify Vitest runs without errors",
+      "details": "Run `npm test`. Should exit 0. With no test files, Vitest prints a message like 'No test files found'. If it errors on config, verify vitest.config.ts is valid TypeScript.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-1", "TASK-2"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Vitest natively supports TypeScript and ESM — no additional transform configuration needed for this project",
+    "Use 'vitest run' (not 'vitest') in package.json scripts to run tests once and exit (CI-friendly)"
+  ]
+}

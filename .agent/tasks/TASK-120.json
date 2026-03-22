@@ -1,0 +1,35 @@
+{
+  "id": "TASK-120",
+  "title": "Implement --dry-run flag: preview without writing files",
+  "category": "functional",
+  "description": "When --dry-run is passed, run the full clarification + spec generation + preview flow, but skip the file-write step when the user selects 'Yes'. Print a dry-run mode indicator.",
+  "acceptanceCriteria": [
+    "rocket feature 'test' --dry-run --no-questions shows the preview",
+    "Dry-run message is printed indicating no files were changed",
+    "Neither PRD.md nor tasks.json is modified after a dry-run",
+    "Process exits with code 0"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Pass dryRun flag through to the apply step",
+      "details": "In featureCommand, extract options.dryRun. Pass it to the confirmation handler so the apply step knows not to write files.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Skip file writes when dryRun is true",
+      "details": "In the onApply callback: if (options.dryRun) { console.log('\\n[Dry run] No files were changed.'); return }. Otherwise: await writeFeatureSpec(...); await mergeTasks(...)",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Add dry-run indicator to the preview",
+      "details": "Show a yellow banner in FeatureDiffPreview when dryRun is true: <Text color='yellow'>⚠ DRY RUN — changes will not be applied</Text>",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-111", "TASK-117"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

@@ -1,0 +1,29 @@
+{
+  "id": "TASK-85",
+  "title": "Add post-init instructions output in rocket init",
+  "category": "ui-ux",
+  "description": "After creating the .agent/ structure, print styled next-step instructions using the Rocket color palette.",
+  "acceptanceCriteria": [
+    "rocket init prints '📝 Edit .agent/prd/PRD.md' after creation",
+    "rocket init prints '📋 Edit .agent/tasks.json' after creation",
+    "rocket init prints '▶ Then run: rocket loop' after creation",
+    "Instructions use appropriate colors from the Rocket palette"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add next-step instructions to initCommand",
+      "details": "After success message in initCommand, add: console.log('\\nNext steps:'); console.log('  📝 Edit .agent/prd/PRD.md with your project requirements'); console.log('  📋 Edit .agent/tasks.json with your task list'); console.log('  ▶ Then run: rocket loop')",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Use ANSI color codes for the command suggestion",
+      "details": "Highlight 'rocket loop' in cyan: `console.log('  ▶ Then run: \\x1b[36mrocket loop\\x1b[0m')`",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-84"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

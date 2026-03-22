@@ -1,0 +1,36 @@
+{
+  "id": "TASK-110",
+  "title": "Add GitHub Actions CI workflow",
+  "category": "config",
+  "description": "Create a GitHub Actions CI workflow that runs on push and pull requests to main. Runs Node.js 22, installs dependencies, builds, lints, and tests.",
+  "acceptanceCriteria": [
+    ".github/workflows/ci.yml exists",
+    "Workflow triggers on push and PR to main",
+    "Uses ubuntu-latest runner",
+    "Sets up Node.js 22",
+    "Runs npm ci",
+    "Runs npm run build",
+    "Runs npm run lint",
+    "Runs npm test",
+    "Workflow YAML syntax is valid"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create .github/workflows/ directory and ci.yml",
+      "details": "Create .github/workflows/ci.yml with: name: CI. on: push: branches: [main], pull_request: branches: [main]. jobs: build: runs-on: ubuntu-latest. steps: - uses: actions/checkout@v4, - uses: actions/setup-node@v4 with: node-version: '22', - run: npm ci, - run: npm run build, - run: npm run lint, - run: npm test",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Validate workflow YAML syntax",
+      "details": "Use `python3 -c \"import yaml; yaml.safe_load(open('.github/workflows/ci.yml'))\"` to validate the YAML syntax. Or use actionlint if available.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-7", "TASK-8"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Use npm ci (not npm install) in CI — it respects package-lock.json exactly and is faster"
+  ]
+}

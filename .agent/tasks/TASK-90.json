@@ -1,0 +1,42 @@
+{
+  "id": "TASK-90",
+  "title": "Sanitize user-provided project name in rocket new",
+  "category": "security",
+  "description": "Sanitize the project name input in rocket new to prevent invalid directory names. Strip whitespace, replace spaces with hyphens, remove invalid characters. Show an error if the name is empty after sanitization.",
+  "acceptanceCriteria": [
+    "'My App!' becomes 'my-app'",
+    "Leading/trailing whitespace is stripped",
+    "Spaces are replaced with hyphens",
+    "Characters not in [a-z0-9-_] are removed",
+    "Empty string after sanitization shows a clear error message and exits"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create sanitizeProjectName function",
+      "details": "In src/lib/scaffold.ts or src/commands/new.ts: export function sanitizeProjectName(input: string): string { return input.trim().toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-_]/g, '') }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Apply sanitization in new.ts handler",
+      "details": "After receiving the project name (from args or prompt), call sanitizeProjectName(). If result is empty, show: console.error('Project name cannot be empty or contain only invalid characters.'); process.exit(1)",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Show sanitized name to user for confirmation if it changed",
+      "details": "If the sanitized name differs from the input, show: console.log(`Using project name: ${sanitized} (sanitized from: ${input})`). This prevents surprises.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Test sanitization cases",
+      "details": "Test: 'My App!' → 'my-app', '  hello world  ' → 'hello-world', 'valid-name' → 'valid-name', '!!!' → (error). All should behave as specified.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-38"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

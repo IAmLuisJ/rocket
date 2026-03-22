@@ -1,0 +1,35 @@
+{
+  "id": "TASK-87",
+  "title": "Ensure no hardcoded credentials in website template",
+  "category": "security",
+  "description": "Audit all files in the website PHP template to confirm no hardcoded database credentials or API keys. config/database.php must use getenv() for all credentials.",
+  "acceptanceCriteria": [
+    "config/database.php uses getenv() for all credentials",
+    "No hardcoded passwords in any template file",
+    "grep for password patterns returns no literal values",
+    "No hardcoded MySQL host or database names (except example defaults)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Audit website template for credentials",
+      "details": "Run: `grep -r -i 'password' src/templates/website/` and check that all results use getenv() or are placeholder strings.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Verify database.php uses getenv()",
+      "details": "Open src/templates/website/config/database.php and confirm every credential (DB_PASS, DB_USER, DB_HOST, DB_NAME) comes from getenv() calls.",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Fix any hardcoded values",
+      "details": "Replace any hardcoded credentials with getenv() calls. Remove any debug or test credentials that may have been added.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-31", "TASK-33"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

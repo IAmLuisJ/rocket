@@ -1,0 +1,45 @@
+{
+  "id": "TASK-18",
+  "title": "Add --max-iterations flag to rocket loop",
+  "category": "functional",
+  "description": "Add an optional --max-iterations <n> flag to the loop command. The flag accepts a positive integer with a default of 10. Invalid values should show a user-friendly error.",
+  "acceptanceCriteria": [
+    "--max-iterations flag is registered on the loop command",
+    "Default value is 10 when not specified",
+    "rocket loop --max-iterations 5 passes the value to the loop runner",
+    "Non-integer values show an error and exit non-zero",
+    "Negative values show an error and exit non-zero"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Add --max-iterations option to loop command in src/cli.ts",
+      "details": "Update the loop command registration to include: `.option('--max-iterations <n>', 'Maximum number of loop iterations', '10')`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Parse and validate --max-iterations in loop command handler",
+      "details": "In src/commands/loop.ts, parse the option: `const maxIterations = parseInt(options.maxIterations, 10)`. Validate: `if (isNaN(maxIterations) || maxIterations < 1) { console.error('--max-iterations must be a positive integer'); process.exit(1) }`",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Update loop command handler type signature",
+      "details": "Update the options type in loopCommand: `options: { claude?: boolean; docker?: boolean; maxIterations: string }`. Commander parses options as strings, so parseInt is needed.",
+      "pass": false
+    },
+    {
+      "step": 4,
+      "description": "Verify flag behavior",
+      "details": "Run `npm run dev -- loop --max-iterations 5` and verify value is parsed. Run `npm run dev -- loop --max-iterations abc` and verify error message appears. Run `npm run dev -- loop --max-iterations -1` and verify error.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-13"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Commander stores option values as strings by default — always parseInt/parseFloat when expecting numbers",
+    "The default value '10' in option() is stored as a string, consistent with other option values"
+  ]
+}

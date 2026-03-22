@@ -1,0 +1,23 @@
+{
+  "id": "TASK-130",
+  "title": "Add rocket feature to .agent/PROMPT.md loop template",
+  "category": "docs",
+  "description": "Update the default PROMPT.md template to include a description of the 'rocket feature' command so the AI agent running in rocket loop is aware it exists.",
+  "acceptanceCriteria": [
+    ".agent/PROMPT.md template contains description of 'rocket feature'",
+    "Description explains what the command does",
+    "Description explains when to suggest it (when user wants to add a feature)",
+    "Description explains that it generates tasks automatically"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Update DEFAULT_PROMPT_MD in agent-init.ts",
+      "details": "Add a section to the default PROMPT.md content: '## Available Commands\\n\\n**rocket feature** — When the user mentions wanting to add a new feature or capability, suggest using `rocket feature \"<feature description>\"`. It will generate a spec, ask clarifying questions, and automatically add tasks to tasks.json.'",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-83", "TASK-111"],
+  "estimatedComplexity": "low",
+  "technicalNotes": []
+}

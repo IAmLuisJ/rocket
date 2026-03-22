@@ -1,0 +1,38 @@
+{
+  "id": "TASK-17",
+  "title": "Add preflight Node.js version check at CLI startup",
+  "category": "functional",
+  "description": "Add a runtime Node.js version check that runs before any commands execute. If Node.js version is below 22, display a clear error message with the required version and exit immediately.",
+  "acceptanceCriteria": [
+    "Version check runs before any command executes",
+    "Running with Node 18 prints a clear version error message and exits with code 1",
+    "Error message includes the required Node.js version (>=22)",
+    "Node 22+ runs normally without any version error"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/preflight.ts with version check",
+      "details": "Create src/lib/preflight.ts. Add function: `export function checkNodeVersion(): void { const [major] = process.version.slice(1).split('.').map(Number); if (major < 22) { console.error(`\\x1b[31mError:\\x1b[0m Rocket requires Node.js >=22. You are running ${process.version}.\\nPlease upgrade: https://nodejs.org`); process.exit(1) } }`",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Call checkNodeVersion in bin/rocket.ts before parseAsync",
+      "details": "In bin/rocket.ts, import and call checkNodeVersion() before program.parseAsync(). It must be the very first thing that runs: `import { checkNodeVersion } from '../src/lib/preflight.js'; checkNodeVersion();`",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Verify version check behavior",
+      "details": "Test manually by temporarily changing the version check threshold to a higher number (e.g., 999) and verifying the error message appears. Then restore the correct threshold. Alternatively, test with NVM by switching to Node 18.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-5", "TASK-11"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "process.version returns a string like 'v22.1.0' — slice(1) removes the 'v' prefix before splitting",
+    "The version check must run synchronously before any async code to prevent deferred errors"
+  ]
+}

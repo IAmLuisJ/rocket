@@ -1,0 +1,40 @@
+{
+  "id": "TASK-62",
+  "title": "Build prompt constructor for loop runner",
+  "category": "functional",
+  "description": "Create a function that assembles the full prompt sent to the AI backend for each loop iteration. Combines PROMPT.md instructions, PRD content, and the current task details.",
+  "acceptanceCriteria": [
+    "buildPrompt(task, agentDir) is exported",
+    "Returned string contains the task title",
+    "Returned string contains the task description",
+    "Returned string contains the PROMPT.md content",
+    "Returned string contains the PRD.md content (or a summary)",
+    "Handles missing PROMPT.md gracefully (uses default instructions)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/prompt-builder.ts",
+      "details": "Create the file (or add to loop-runner.ts). Import fs-extra, path, Task type.",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Read PROMPT.md and PRD.md",
+      "details": "async function readAgentFile(agentDir: string, relativePath: string, defaultContent = ''): Promise<string> { const fullPath = path.join(agentDir, relativePath); try { return await fs.readFile(fullPath, 'utf-8') } catch { return defaultContent } }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement buildPrompt",
+      "details": "export async function buildPrompt(task: Task, agentDir: string): Promise<string> { const promptMd = await readAgentFile(agentDir, 'PROMPT.md', DEFAULT_PROMPT); const prdMd = await readAgentFile(agentDir, 'prd/PRD.md', ''); return `${promptMd}\\n\\n---\\n\\n## Project PRD\\n\\n${prdMd}\\n\\n---\\n\\n## Current Task\\n\\n**ID**: ${task.id}\\n**Title**: ${task.title}\\n**Description**: ${task.description}\\n**Pass Condition**: ${task.passCondition}` }",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-46", "TASK-6"],
+  "estimatedComplexity": "low",
+  "technicalNotes": [
+    "Keep the DEFAULT_PROMPT constant in this file as a fallback if PROMPT.md doesn't exist",
+    "The PRD content could be very long — consider truncating to the last N characters if the AI has a context limit"
+  ]
+}

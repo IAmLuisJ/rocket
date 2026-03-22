@@ -1,0 +1,38 @@
+{
+  "id": "TASK-133",
+  "title": "Create src/lib/progress/logReader.ts — parse recent activity from LOG.md",
+  "category": "functional",
+  "description": "Create a module that reads LOG.md and parses the last N session entries into a typed array. Returns empty array if LOG.md doesn't exist.",
+  "acceptanceCriteria": [
+    "readRecentActivity(agentDir, n) is exported",
+    "Returns correct entries for a fixture LOG.md",
+    "Returns [] when LOG.md does not exist",
+    "Each entry has taskId, taskTitle, timestamp, backend, outcome"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Create src/lib/progress/logReader.ts",
+      "details": "Create the file. Define: export type ActivityEntry = { taskId: number; taskTitle: string; backend: string; outcome: string; timestamp: Date }",
+      "pass": false
+    },
+    {
+      "step": 2,
+      "description": "Implement readRecentActivity",
+      "details": "export async function readRecentActivity(agentDir: string, n = 5): Promise<ActivityEntry[]> { const logPath = path.join(agentDir, 'logs', 'LOG.md'); if (!await fs.pathExists(logPath)) return []; const content = await fs.readFile(logPath, 'utf-8'); return parseLogSections(content).slice(-n) }",
+      "pass": false
+    },
+    {
+      "step": 3,
+      "description": "Implement parseLogSections",
+      "details": "Parse LOG.md by splitting on '## Session' headers. For each section, extract the task ID, title, backend, and outcome using regex matching on the markdown list format defined in log.ts.",
+      "pass": false
+    }
+  ],
+  "dependencies": ["TASK-59"],
+  "estimatedComplexity": "medium",
+  "technicalNotes": [
+    "The parser must match the format defined by appendSessionLog in log.ts — they must stay in sync",
+    "Use regex like /- \\*\\*Task\\*\\*: #(\\d+) (.+)/ to extract task ID and title"
+  ]
+}
