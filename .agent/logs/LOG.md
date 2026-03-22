@@ -194,3 +194,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-25 — Add webapp template: client entry point and App.tsx
 - **Outcome:** pass
 - **Summary:** Updated main.tsx to use RouterProvider+createBrowserRouter from react-router-dom per spec (was using BrowserRouter from react-router). Updated App.tsx to default export with {{PROJECT_NAME}} placeholder. Created index.css with Tailwind v4 import. Created index.html with Vite entry shell. Added 9 unit tests covering all acceptance criteria. All 125 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-26
+- **Time:** 2026-03-22T14:17:00.000Z
+- **Task:** TASK-26 — Add webapp template: Express server entry point
+- **Outcome:** pass
+- **Summary:** Updated server/src/index.ts to use cors package import instead of manual CORS headers, added configurable CLIENT_URL origin, and added export default app. Created webapp-server-entry.test.ts with 8 tests covering all acceptance criteria. All 133 tests pass, tsc clean.

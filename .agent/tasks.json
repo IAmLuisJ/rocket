@@ -230,7 +230,7 @@
       "title": "Add webapp template: Express server entry point",
       "description": "Create src/templates/webapp/server/src/index.ts with Express v5 app, JSON middleware, CORS, health-check GET /api/health endpoint, and listen on PORT env var (default 3001).",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "server/src/index.ts template exists with health endpoint and env-based port",
       "specFilePath": ".agent/tasks/TASK-26.json"
     },
