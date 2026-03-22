@@ -188,3 +188,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-24 — Add webapp template: composite tsconfig files
 - **Outcome:** pass
 - **Summary:** All 4 tsconfig files already existed. Fixed server tsconfig.json module resolution from Node16 to NodeNext per spec. Added 5 unit tests verifying composite references, compiler options, @/* path alias, vite.config.ts inclusion, and NodeNext resolution. All 116 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-25
+- **Time:** 2026-03-22T14:16:00.000Z
+- **Task:** TASK-25 — Add webapp template: client entry point and App.tsx
+- **Outcome:** pass
+- **Summary:** Updated main.tsx to use RouterProvider+createBrowserRouter from react-router-dom per spec (was using BrowserRouter from react-router). Updated App.tsx to default export with {{PROJECT_NAME}} placeholder. Created index.css with Tailwind v4 import. Created index.html with Vite entry shell. Added 9 unit tests covering all acceptance criteria. All 125 tests pass, tsc clean.

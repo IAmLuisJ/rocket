@@ -221,7 +221,7 @@
       "title": "Add webapp template: client entry point and App.tsx",
       "description": "Create src/templates/webapp/client/src/main.tsx (React 19 root render with QueryClientProvider and RouterProvider) and src/templates/webapp/client/src/App.tsx (basic routing shell).",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "main.tsx and App.tsx exist in template with correct imports",
       "specFilePath": ".agent/tasks/TASK-25.json"
     },

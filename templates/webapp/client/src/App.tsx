@@ -1,17 +1,9 @@
-import { Routes, Route } from 'react-router'
+import React from 'react'
 
-function Home() {
+export default function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold">{{PROJECT_NAME}}</h1>
+    <div className="min-h-screen bg-background">
+      <h1 className="text-2xl font-bold p-8">{'{{PROJECT_NAME}}'}</h1>
     </div>
-  )
-}
-
-export function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-    </Routes>
   )
 }
