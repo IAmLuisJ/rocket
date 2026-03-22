@@ -51,4 +51,12 @@ describe('src/cli.ts Commander program', () => {
     expect(commandNames).toContain('status')
     expect(commandNames).toContain('feature')
   })
+
+  it("'new' command has correct description and accepts [project-name]", async () => {
+    const { program } = await import('./cli.js')
+    const newCmd = program.commands.find((c) => c.name() === 'new')
+    expect(newCmd).toBeDefined()
+    expect(newCmd!.description()).toBe('Scaffold a new project from a template')
+    expect(newCmd!.usage()).toContain('[project-name]')
+  })
 })

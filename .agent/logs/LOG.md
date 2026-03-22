@@ -110,3 +110,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-10 — Add dev script with tsx watch mode
 - **Outcome:** pass
 - **Summary:** Verified tsx already installed as devDependency (v4.21.0) and dev script already configured as `tsx watch bin/rocket.ts`. Fixed esbuild ARM64 compatibility by patching native binary with esbuild-wasm. `npx tsx bin/rocket.ts --help` prints CLI usage correctly. All 55 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-12
+- **Time:** 2026-03-22T04:26:00.000Z
+- **Task:** TASK-12 — Register 'rocket new' command in Commander
+- **Outcome:** pass
+- **Summary:** Command already wired in cli.ts. Fixed description to match spec exactly ('Scaffold a new project from a template'). Added unit test verifying description and [project-name] argument. All 57 tests pass, tsc clean.

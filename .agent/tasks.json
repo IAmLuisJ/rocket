@@ -104,7 +104,7 @@
       "title": "Register 'rocket new' command in Commander",
       "description": "Add 'new [project-name]' command to the Commander program in src/cli.ts. Wire it to src/commands/new.ts handler. Add description: 'Scaffold a new project from a template'.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket new --help prints command description and [project-name] argument",
       "specFilePath": ".agent/tasks/TASK-12.json"
     },

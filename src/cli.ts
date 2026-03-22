@@ -19,7 +19,7 @@ program
 // Lazy-load commands
 program
   .command('new [project-name]')
-  .description('Scaffold a new project from a starter template')
+  .description('Scaffold a new project from a template')
   .option('-t, --type <type>', 'Project type: webapp or website')
   .action(async (projectName: string | undefined, opts: { type?: string }) => {
     const { runNew } = await import('./commands/new.js')
