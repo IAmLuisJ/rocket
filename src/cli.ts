@@ -13,7 +13,7 @@ export const program = new Command()
 
 program
   .name('rocket')
-  .description('Bootstrap projects and run AI development loops')
+  .description('AI-powered project scaffolding and development loop')
   .version(pkg.version)
 
 // Lazy-load commands

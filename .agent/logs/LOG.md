@@ -99,6 +99,12 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Outcome:** pass
 - **Summary:** Updated existing .gitignore to include all required entries: node_modules/, dist/, .env, .env.local, *.log, .DS_Store, coverage/, *.db, *.sqlite. All 55 tests pass, tsc clean.
 
+## Session 2026-03-22 · TASK-11
+- **Time:** 2026-03-22T04:24:00.000Z
+- **Task:** TASK-11 — Create src/cli.ts and wire Commander.js program
+- **Outcome:** pass
+- **Summary:** Updated program description to match spec ('AI-powered project scaffolding and development loop'). Added description test to cli.test.ts. All 56 tests pass, tsc clean. `rocket --version` prints 0.1.0, `rocket --help` shows all commands.
+
 ## Session 2026-03-22 · TASK-10
 - **Time:** 2026-03-22T04:22:00.000Z
 - **Task:** TASK-10 — Add dev script with tsx watch mode

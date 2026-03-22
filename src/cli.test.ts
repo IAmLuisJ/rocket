@@ -28,6 +28,11 @@ describe('src/cli.ts Commander program', () => {
     expect(program.name()).toBe('rocket')
   })
 
+  it('has the correct description', async () => {
+    const { program } = await import('./cli.js')
+    expect(program.description()).toBe('AI-powered project scaffolding and development loop')
+  })
+
   it('has the correct version from package.json', async () => {
     const { program } = await import('./cli.js')
     const pkg = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8')) as {

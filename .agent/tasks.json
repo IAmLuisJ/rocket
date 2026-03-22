@@ -95,7 +95,7 @@
       "title": "Create src/cli.ts and wire Commander.js program",
       "description": "Create src/cli.ts that instantiates a Commander program with name 'rocket', description 'AI-powered project scaffolding and development loop', and version read from package.json. Export the program.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket --version prints the version from package.json; rocket --help prints all commands",
       "specFilePath": ".agent/tasks/TASK-11.json"
     },
