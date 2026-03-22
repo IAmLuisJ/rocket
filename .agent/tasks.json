@@ -203,7 +203,7 @@
       "title": "Add webapp template: vite.config.ts",
       "description": "Create src/templates/webapp/client/vite.config.ts with React plugin, @/* path alias pointing to src/, and test config for vitest with jsdom environment.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Template file exists with path alias and vitest config",
       "specFilePath": ".agent/tasks/TASK-23.json"
     },

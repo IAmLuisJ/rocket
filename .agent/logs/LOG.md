@@ -176,3 +176,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-22 — Add webapp template: server package.json
 - **Outcome:** pass
 - **Summary:** Updated templates/webapp/server/package.json.tmpl: added cors and @types/cors dependencies, fixed build script to use `tsc -p tsconfig.json`. Added 12 unit tests verifying all acceptance criteria (express ^5, better-sqlite3, jsonwebtoken, bcryptjs, nodemailer, zod, cors, tsx/vitest in devDeps, @types packages, scripts). All 104 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-23
+- **Time:** 2026-03-22T14:12:00.000Z
+- **Task:** TASK-23 — Add webapp template: vite.config.ts
+- **Outcome:** pass
+- **Summary:** Verified existing vite.config.ts has React plugin, @/* path alias, and jsdom vitest config. Created templates/webapp/client/src/test/setup.ts with @testing-library/jest-dom import. Added 7 unit tests covering all acceptance criteria. All 111 tests pass, tsc clean.

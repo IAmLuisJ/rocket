@@ -139,6 +139,50 @@ describe('webapp template server package.json', () => {
   })
 })
 
+describe('webapp template vite.config.ts', () => {
+  let content: string
+
+  beforeAll(async () => {
+    content = await readFile(join(TEMPLATES_DIR, 'webapp', 'client', 'vite.config.ts'), 'utf-8')
+  })
+
+  it('vite.config.ts exists', () => {
+    expect(content).toBeDefined()
+  })
+
+  it('configures React plugin', () => {
+    expect(content).toContain("from '@vitejs/plugin-react'")
+    expect(content).toContain('react()')
+  })
+
+  it('configures @/* path alias pointing to src/', () => {
+    expect(content).toContain("'@'")
+    expect(content).toContain("'src'")
+  })
+
+  it('configures vitest with jsdom environment', () => {
+    expect(content).toContain("environment: 'jsdom'")
+  })
+
+  it('sets up test globals', () => {
+    expect(content).toContain('globals: true')
+  })
+
+  it('references test setup file', () => {
+    expect(content).toContain('setup.ts')
+  })
+})
+
+describe('webapp template test setup file', () => {
+  it('src/test/setup.ts exists with jest-dom import', async () => {
+    const content = await readFile(
+      join(TEMPLATES_DIR, 'webapp', 'client', 'src', 'test', 'setup.ts'),
+      'utf-8',
+    )
+    expect(content).toContain('@testing-library/jest-dom')
+  })
+})
+
 describe('webapp template client package.json', () => {
   let pkg: Record<string, unknown>
   let deps: Record<string, string>
