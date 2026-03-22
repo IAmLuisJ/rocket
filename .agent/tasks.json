@@ -239,7 +239,7 @@
       "title": "Add webapp template: .env.example files",
       "description": "Create .env.example for the server template with DATABASE_URL, JWT_SECRET, PORT, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS placeholders (no real values). Create client .env.example with VITE_API_URL.",
       "category": "security",
-      "passes": false,
+      "passes": true,
       "passCondition": "Both .env.example files exist with placeholder values only (no real secrets)",
       "specFilePath": ".agent/tasks/TASK-27.json"
     },

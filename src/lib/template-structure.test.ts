@@ -295,3 +295,47 @@ describe('webapp template client package.json', () => {
     expect(scripts.lint).toBe('eslint src/')
   })
 })
+
+describe('webapp template .env.example files', () => {
+  let serverEnv: string
+  let clientEnv: string
+
+  beforeAll(async () => {
+    serverEnv = await readFile(join(TEMPLATES_DIR, 'webapp', 'server', '.env.example'), 'utf-8')
+    clientEnv = await readFile(join(TEMPLATES_DIR, 'webapp', 'client', '.env.example'), 'utf-8')
+  })
+
+  it('server .env.example contains DATABASE_URL placeholder', () => {
+    expect(serverEnv).toContain('DATABASE_URL=')
+  })
+
+  it('server .env.example contains JWT_SECRET placeholder', () => {
+    expect(serverEnv).toContain('JWT_SECRET=')
+    expect(serverEnv).not.toMatch(/JWT_SECRET=\s*$/)
+  })
+
+  it('server .env.example contains PORT placeholder', () => {
+    expect(serverEnv).toContain('PORT=3001')
+  })
+
+  it('server .env.example contains SMTP placeholders', () => {
+    expect(serverEnv).toContain('SMTP_HOST=')
+    expect(serverEnv).toContain('SMTP_PORT=')
+    expect(serverEnv).toContain('SMTP_USER=')
+    expect(serverEnv).toContain('SMTP_PASS=')
+  })
+
+  it('server .env.example has comment about JWT_SECRET security', () => {
+    expect(serverEnv).toMatch(/strong random value/i)
+  })
+
+  it('client .env.example contains VITE_API_URL placeholder', () => {
+    expect(clientEnv).toContain('VITE_API_URL=http://localhost:3001')
+  })
+
+  it('no real secrets are present in server .env.example', () => {
+    expect(serverEnv).toContain('example.com')
+    expect(serverEnv).not.toMatch(/sk-[a-zA-Z0-9]{20,}/)
+    expect(serverEnv).not.toMatch(/password123/)
+  })
+})

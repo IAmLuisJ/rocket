@@ -200,3 +200,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-26 — Add webapp template: Express server entry point
 - **Outcome:** pass
 - **Summary:** Updated server/src/index.ts to use cors package import instead of manual CORS headers, added configurable CLIENT_URL origin, and added export default app. Created webapp-server-entry.test.ts with 8 tests covering all acceptance criteria. All 133 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-27
+- **Time:** 2026-03-22T14:19:00.000Z
+- **Task:** TASK-27 — Add webapp template: .env.example files
+- **Outcome:** pass
+- **Summary:** Updated server .env.example with all required placeholders (DATABASE_URL, JWT_SECRET with security comment, PORT, CLIENT_URL, SMTP_HOST/PORT/USER/PASS/FROM). Updated client .env.example with VITE_API_URL and comment about VITE_ prefix requirement. Added 7 unit tests to template-structure.test.ts. All 140 tests pass, tsc clean.
