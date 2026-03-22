@@ -184,9 +184,38 @@ Place these in your `.agent/PROMPT.md` so the AI knows when to use them:
 
 ## Templates
 
-**Web App** — React 19, TypeScript 5.9, Vite 7, Tailwind v4, shadcn/ui, TanStack Query v5, React Hook Form + Zod, React Router v7, Express v5, better-sqlite3, JWT auth, nodemailer, Vitest, Playwright.
+**Web App** — React 19, TypeScript, Vite, Tailwind v4, shadcn/ui, Express v5, **Drizzle ORM + PostgreSQL** (via Docker Compose), JWT auth, React Query, React Hook Form + Zod, React Router v7
 
 **Website** — PHP (procedural or simple MVC), MySQL via PDO, Tailwind CSS, standard folder layout (`public/`, `src/`, `templates/`, `config/`).
+
+---
+
+## Database Setup
+
+The Web App template includes a Docker Compose setup for PostgreSQL.
+
+**Start the database:**
+```bash
+cd my-app
+cp .env.example .env        # configure your credentials
+npm run docker:up           # start Postgres in Docker
+npm run db:push             # push schema to database
+npm run dev                 # start the dev server
+```
+
+**Drizzle commands:**
+
+| Command | Description |
+|---------|-------------|
+| `npm run db:generate` | Generate migration files from schema changes |
+| `npm run db:migrate` | Run pending migrations |
+| `npm run db:push` | Push schema directly (good for dev) |
+| `npm run db:studio` | Open Drizzle Studio (visual DB browser) |
+| `npm run docker:up` | Start Postgres container |
+| `npm run docker:down` | Stop Postgres container |
+| `npm run docker:reset` | Wipe and restart Postgres |
+
+**Schema** is defined in `server/db/schema.ts`. Edit it, run `npm run db:generate`, then `npm run db:migrate`.
 
 ---
 
