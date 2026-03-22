@@ -176,7 +176,7 @@
       "title": "Add webapp template: root package.json",
       "description": "Create src/templates/webapp/package.json.tmpl with workspaces for client and server, scripts: dev (runs both), build (builds both), test. Use {{PROJECT_NAME}} as a placeholder for project name.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Template file exists and contains {{PROJECT_NAME}} placeholder",
       "specFilePath": ".agent/tasks/TASK-20.json"
     },

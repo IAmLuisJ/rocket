@@ -158,3 +158,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-19 — Create templates/webapp/ directory structure
 - **Outcome:** pass
 - **Summary:** Directory structure already existed at templates/webapp/ with client/, server/, client/src/, server/src/ subdirectories (task spec referenced src/templates/ but project uses templates/ at root per STRUCTURE.md). Added template-structure.test.ts with 5 tests verifying all directories exist. All 76 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-20
+- **Time:** 2026-03-22T14:06:00.000Z
+- **Task:** TASK-20 — Add webapp template: root package.json
+- **Outcome:** pass
+- **Summary:** Rewrote templates/webapp/package.json.tmpl to be a monorepo workspace root with {{PROJECT_NAME}} placeholder, workspaces: [client, server], and dev/build/test scripts targeting workspaces. Added 6 unit tests verifying template structure and content. All 82 tests pass, tsc clean.
