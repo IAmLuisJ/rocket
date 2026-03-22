@@ -68,3 +68,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-4 — Install and configure Prettier
 - **Outcome:** pass
 - **Summary:** Added tabWidth:2 to .prettierrc, created .prettierignore (dist/, node_modules/, templates/, coverage/), added format:check script to package.json. Ran prettier --write on all source files and verified format:check passes. All 49 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-5
+- **Time:** 2026-03-22T04:12:00.000Z
+- **Task:** TASK-5 — Create bin/rocket.ts entry point
+- **Outcome:** pass
+- **Summary:** Verified bin/rocket.ts already exists with correct shebang, imports program from src/cli.js, calls parseAsync. Build produces dist/bin/rocket.js with shebang preserved. `node dist/bin/rocket.js --help` works. Added cli.test.ts with 6 tests covering entry point and Commander program. All 55 tests pass, tsc clean.

@@ -41,7 +41,7 @@
       "title": "Create bin/rocket.ts entry point",
       "description": "Create bin/rocket.ts with shebang #!/usr/bin/env node, import the main program from src/cli.ts, and call program.parseAsync(process.argv). Ensure it is compiled to bin/rocket.js by tsconfig.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": "node bin/rocket.js --help prints usage without errors",
       "specFilePath": ".agent/tasks/TASK-5.json"
     },
