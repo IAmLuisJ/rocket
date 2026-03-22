@@ -77,7 +77,7 @@
       "title": "Add .gitignore with standard exclusions",
       "description": "Create .gitignore at project root excluding: node_modules/, dist/, .env, .env.local, *.log, .DS_Store, coverage/",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": ".gitignore exists and contains node_modules/ and dist/",
       "specFilePath": ".agent/tasks/TASK-9.json"
     },

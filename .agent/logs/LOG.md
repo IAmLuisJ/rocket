@@ -92,3 +92,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-8 — Configure build script with tsc
 - **Outcome:** pass
 - **Summary:** Build script already configured as `tsc -p tsconfig.build.json`. Added `clean` script (`rm -rf dist/`). Verified clean+build cycle works, dist/ contains compiled .js files for src/ and bin/, `node dist/bin/rocket.js --help` works. .gitignore already excludes dist/. All 55 tests pass.
+
+## Session 2026-03-22 · TASK-9
+- **Time:** 2026-03-22T04:18:00.000Z
+- **Task:** TASK-9 — Add .gitignore with standard exclusions
+- **Outcome:** pass
+- **Summary:** Updated existing .gitignore to include all required entries: node_modules/, dist/, .env, .env.local, *.log, .DS_Store, coverage/, *.db, *.sqlite. All 55 tests pass, tsc clean.
