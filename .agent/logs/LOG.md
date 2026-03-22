@@ -164,3 +164,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-20 — Add webapp template: root package.json
 - **Outcome:** pass
 - **Summary:** Rewrote templates/webapp/package.json.tmpl to be a monorepo workspace root with {{PROJECT_NAME}} placeholder, workspaces: [client, server], and dev/build/test scripts targeting workspaces. Added 6 unit tests verifying template structure and content. All 82 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-21
+- **Time:** 2026-03-22T14:08:00.000Z
+- **Task:** TASK-21 — Add webapp template: client package.json
+- **Outcome:** pass
+- **Summary:** Updated templates/webapp/client/package.json.tmpl to match spec: react-router changed to react-router-dom, typescript bumped to ^5.9, vite bumped to ^7, added @testing-library/user-event, version set to 0.0.1. Added 10 unit tests covering all acceptance criteria (dependencies, versions, scripts). All 92 tests pass, tsc clean.

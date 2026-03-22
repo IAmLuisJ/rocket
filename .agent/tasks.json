@@ -185,7 +185,7 @@
       "title": "Add webapp template: client package.json",
       "description": "Create src/templates/webapp/client/package.json.tmpl with React 19, TypeScript 5.9, Vite 7, TanStack Query v5, React Router v7, React Hook Form, Zod, Tailwind v4. Dev dependencies include vitest and @testing-library.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Template lists all required dependencies with correct version ranges",
       "specFilePath": ".agent/tasks/TASK-21.json"
     },
