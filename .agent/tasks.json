@@ -86,7 +86,7 @@
       "title": "Add dev script with tsx watch mode",
       "description": "Install tsx as devDependency. Add dev script: 'tsx watch bin/rocket.ts'. This enables fast iteration during development without a full build step.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm run dev -- --help prints usage without errors",
       "specFilePath": ".agent/tasks/TASK-10.json"
     },

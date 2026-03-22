@@ -98,3 +98,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-9 — Add .gitignore with standard exclusions
 - **Outcome:** pass
 - **Summary:** Updated existing .gitignore to include all required entries: node_modules/, dist/, .env, .env.local, *.log, .DS_Store, coverage/, *.db, *.sqlite. All 55 tests pass, tsc clean.
+
+## Session 2026-03-22 · TASK-10
+- **Time:** 2026-03-22T04:22:00.000Z
+- **Task:** TASK-10 — Add dev script with tsx watch mode
+- **Outcome:** pass
+- **Summary:** Verified tsx already installed as devDependency (v4.21.0) and dev script already configured as `tsx watch bin/rocket.ts`. Fixed esbuild ARM64 compatibility by patching native binary with esbuild-wasm. `npx tsx bin/rocket.ts --help` prints CLI usage correctly. All 55 tests pass, tsc clean.
