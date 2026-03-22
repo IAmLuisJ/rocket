@@ -23,7 +23,7 @@
       "title": "Install and configure ESLint with TypeScript support",
       "description": "Install eslint, @typescript-eslint/parser, @typescript-eslint/eslint-plugin. Create eslint.config.js (flat config) with recommended TypeScript rules and no-unused-vars, no-explicit-any as warnings.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm run lint exits 0 on a clean project",
       "specFilePath": ".agent/tasks/TASK-3.json"
     },
