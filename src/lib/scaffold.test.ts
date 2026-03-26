@@ -110,6 +110,16 @@ describe('scaffold webapp template', () => {
     expect(pkg.name).toBe('my-app')
   })
 
+  it('calls onProgress callback with sequential steps', async () => {
+    const projectDir = join(tmpDir, 'test-app')
+    const steps: string[] = []
+    await scaffold('webapp', 'test-app', projectDir, {}, (step) => {
+      steps.push(step)
+    })
+
+    expect(steps).toEqual(['scaffolding', 'installing', 'git', 'done'])
+  })
+
   it('handles npm install failure gracefully', async () => {
     mockedExecSync.mockImplementation((cmd) => {
       if (cmd === 'npm install') throw new Error('npm failed')

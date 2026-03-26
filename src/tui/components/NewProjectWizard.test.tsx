@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from 'ink-testing-library'
-import { NewProjectWizard } from './NewProjectWizard.js'
+import { NewProjectWizard, ProgressStep } from './NewProjectWizard.js'
 
 vi.mock('../../lib/scaffold.js', () => ({
   scaffold: vi.fn().mockResolvedValue(undefined),
@@ -51,7 +51,6 @@ describe('NewProjectWizard', () => {
   it('shows feature toggles with auth enabled by default', () => {
     const { lastFrame } = render(<NewProjectWizard initialName="my-app" initialType="webapp" />)
     const frame = lastFrame()
-    // auth defaults to true (✓), email and pdf default to false (✗)
     expect(frame).toContain('✓')
     expect(frame).toContain('✗')
   })
@@ -67,5 +66,34 @@ describe('NewProjectWizard', () => {
     const frame = lastFrame()
     expect(frame).toContain('my-app')
     expect(frame).toContain('webapp')
+  })
+})
+
+describe('ProgressStep', () => {
+  it('renders spinner when not done', () => {
+    const { lastFrame } = render(<ProgressStep label="Scaffolding my-app..." done={false} />)
+    const frame = lastFrame()
+    expect(frame).toContain('Scaffolding my-app...')
+    // Should NOT contain the green checkmark
+    expect(frame).not.toContain('✓')
+  })
+
+  it('renders green checkmark when done', () => {
+    const { lastFrame } = render(<ProgressStep label="Scaffolding my-app..." done={true} />)
+    const frame = lastFrame()
+    expect(frame).toContain('✓')
+    expect(frame).toContain('Scaffolding my-app...')
+  })
+
+  it('renders installing dependencies label', () => {
+    const { lastFrame } = render(<ProgressStep label="Installing dependencies..." done={false} />)
+    const frame = lastFrame()
+    expect(frame).toContain('Installing dependencies...')
+  })
+
+  it('renders initializing git label', () => {
+    const { lastFrame } = render(<ProgressStep label="Initializing git..." done={false} />)
+    const frame = lastFrame()
+    expect(frame).toContain('Initializing git...')
   })
 })

@@ -356,7 +356,7 @@
       "title": "Add scaffolding progress display to NewProjectWizard",
       "description": "After user completes wizard selections, show a progress screen: spinner with 'Scaffolding <name>...', then 'Installing dependencies...', then 'Initializing git...', each completing before the next. Use Ink Spinner component.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Progress screen shows all three steps sequentially with spinner; each step shows a checkmark when done",
       "specFilePath": ".agent/tasks/TASK-40.json"
     },

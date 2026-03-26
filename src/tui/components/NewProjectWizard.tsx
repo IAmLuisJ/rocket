@@ -4,10 +4,25 @@ import TextInput from 'ink-text-input'
 import SelectInput from 'ink-select-input'
 import Spinner from 'ink-spinner'
 import { scaffold } from '../../lib/scaffold.js'
-import type { ScaffoldOptions } from '../../lib/scaffold.js'
+import type { ScaffoldOptions, ScaffoldProgress } from '../../lib/scaffold.js'
 import { join } from 'path'
 
 type Step = 'name' | 'type' | 'features' | 'scaffolding' | 'done' | 'error'
+
+export function ProgressStep({ label, done }: { label: string; done: boolean }) {
+  return (
+    <Box>
+      {done ? (
+        <Text color="green">✓</Text>
+      ) : (
+        <Text color="yellow">
+          <Spinner type="dots" />
+        </Text>
+      )}
+      <Text> {label}</Text>
+    </Box>
+  )
+}
 
 interface Props {
   initialName?: string
@@ -37,7 +52,7 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
     email: false,
     pdf: false,
   })
-  const [scaffoldStep, setScaffoldStep] = useState('')
+  const [progressStep, setProgressStep] = useState<ScaffoldProgress | null>(null)
   const [errorMsg, setErrorMsg] = useState('')
 
   const handleNameSubmit = (value: string) => {
@@ -66,11 +81,13 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
     opts: ScaffoldOptions,
   ) => {
     setStep('scaffolding')
+    setProgressStep('scaffolding')
     const destPath = join(process.cwd(), projName)
 
     try {
-      setScaffoldStep(`Scaffolding ${projName}...`)
-      await scaffold(type, projName, destPath, opts)
+      await scaffold(type, projName, destPath, opts, (step) => {
+        setProgressStep(step)
+      })
       setStep('done')
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : String(err))
@@ -154,11 +171,14 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
         <Text bold color="cyan">
           Rocket — New Project
         </Text>
-        <Box marginTop={1}>
-          <Text color="yellow">
-            <Spinner type="dots" />
-          </Text>
-          <Text> {scaffoldStep}</Text>
+        <Box marginTop={1} flexDirection="column">
+          <ProgressStep label={`Scaffolding ${name}...`} done={progressStep !== 'scaffolding'} />
+          {progressStep !== 'scaffolding' && (
+            <ProgressStep label="Installing dependencies..." done={progressStep !== 'installing'} />
+          )}
+          {(progressStep === 'git' || progressStep === 'done') && (
+            <ProgressStep label="Initializing git..." done={progressStep === 'done'} />
+          )}
         </Box>
       </Box>
     )

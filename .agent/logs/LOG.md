@@ -278,3 +278,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-39 — Create NewProjectWizard.tsx TUI component
 - **Outcome:** pass
 - **Summary:** NewProjectWizard.tsx was already fully implemented with state machine (name/type/features/scaffolding/done/error steps), SelectInput for project type and feature toggles, and scaffold integration. Added ink-testing-library and 8 unit tests covering: name input rendering, type selection skip, features step, auth default state, Continue option, project info display. Updated vitest.config.ts to include .test.tsx files. All 241 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-40
+- **Time:** 2026-03-26T00:12:00.000Z
+- **Task:** TASK-40 — Add scaffolding progress display to NewProjectWizard
+- **Outcome:** pass
+- **Summary:** Added sequential progress display to NewProjectWizard: exported ProgressStep component (spinner when active, green checkmark when done), added ScaffoldProgress type and onProgress callback to scaffold.ts, updated doScaffold to pass progress callback. Progress shows three sequential steps: Scaffolding, Installing dependencies, Initializing git. Added 4 ProgressStep unit tests and 1 scaffold onProgress callback test. All 246 tests pass, tsc clean.

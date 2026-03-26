@@ -30,17 +30,21 @@ export function sanitizeProjectName(name: string): string {
   return sanitized
 }
 
+export type ScaffoldProgress = 'scaffolding' | 'installing' | 'git' | 'done'
+
 export async function scaffold(
   templateName: 'webapp' | 'website',
   projectName: string,
   destPath: string,
   options?: ScaffoldOptions,
+  onProgress?: (step: ScaffoldProgress) => void,
 ): Promise<void> {
   const safeName = sanitizeProjectName(projectName)
   const templateDir = join(getTemplatesDir(), templateName)
   const vars = { PROJECT_NAME: safeName }
 
-  // Copy and process template files
+  // Step 1: Copy and process template files
+  onProgress?.('scaffolding')
   await processTemplate(templateDir, destPath, vars)
 
   // Post-copy cleanup for feature toggles
@@ -56,14 +60,16 @@ export async function scaffold(
   // Create .agent/ structure
   await createAgentStructure(destPath, projectName)
 
-  // Run npm install
+  // Step 2: Run npm install
+  onProgress?.('installing')
   try {
     execSync('npm install', { cwd: destPath, stdio: 'inherit' })
   } catch {
     console.error('Warning: npm install failed. You may need to run it manually.')
   }
 
-  // Initialize git
+  // Step 3: Initialize git
+  onProgress?.('git')
   execSync('git init', { cwd: destPath, stdio: 'inherit' })
   execSync('git add -A', { cwd: destPath, stdio: 'inherit' })
   execSync('git commit -m "Initial commit from Rocket"', {
@@ -77,6 +83,8 @@ export async function scaffold(
       GIT_COMMITTER_EMAIL: 'rocket@localhost',
     },
   })
+
+  onProgress?.('done')
 }
 
 async function createAgentStructure(projectPath: string, projectName: string): Promise<void> {
