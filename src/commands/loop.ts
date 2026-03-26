@@ -4,7 +4,7 @@ import { render } from 'ink'
 import React from 'react'
 import { checkAgentStructure, checkBackendAvailability } from '../lib/preflight.js'
 import { readTasks, getIncompleteTasks } from '../lib/tasks/reader.js'
-import { selectBackend } from '../lib/backends/index.js'
+import { getBackend } from '../lib/backends/index.js'
 import { startCaffeinate, stopCaffeinate } from '../lib/caffeinate.js'
 import { ensureLogFile } from '../lib/log.js'
 import { getDefaultPromptContent } from '../lib/prompt.js'
@@ -49,7 +49,7 @@ export async function runLoop(opts: {
   }
 
   const backends = checkBackendAvailability()
-  const backend = selectBackend(opts)
+  const backend = getBackend(opts)
 
   if (opts.docker && !backends.docker) {
     console.error('  ❌ Docker not found in PATH. Please install Docker Desktop.')

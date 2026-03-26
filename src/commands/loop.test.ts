@@ -30,7 +30,7 @@ vi.mock('../lib/tasks/reader.js', () => ({
 }))
 
 vi.mock('../lib/backends/index.js', () => ({
-  selectBackend: vi.fn().mockReturnValue('copilot'),
+  getBackend: vi.fn().mockReturnValue('copilot'),
 }))
 
 vi.mock('../lib/caffeinate.js', () => ({

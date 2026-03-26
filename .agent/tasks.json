@@ -464,7 +464,7 @@
       "title": "Create src/lib/backends/index.ts — backend selector",
       "description": "Create index.ts that exports getBackend(options: { claude: boolean; docker: boolean }): AgentBackend. Returns copilot backend by default, claude if --claude, docker if --docker. Throws if both --claude and --docker are passed.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "getBackend({}) returns copilot; getBackend({claude:true}) returns claude; getBackend({claude:true, docker:true}) throws",
       "specFilePath": ".agent/tasks/TASK-52.json"
     },

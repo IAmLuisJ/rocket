@@ -350,3 +350,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-51 — Create src/lib/backends/docker.ts — Docker sandbox backend
 - **Outcome:** pass
 - **Summary:** Created docker.ts implementing AgentBackend for Docker sandbox. checkDockerBinary() uses execSync('which docker') with descriptive error and install URL. spawn() runs 'docker sandbox run claude . -- --model opus -p <prompt>' with cwd defaulting to process.cwd(). parseOutput() same as claude backend (text, complete, blocked, decide tags). Created docker.test.ts with 13 tests covering: name, interface shape, binary check, missing binary error, spawn args/cwd/default-cwd/return, parseOutput for empty/text/complete/blocked/decide. All 321 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-52
+- **Time:** 2026-03-26T23:00:00.000Z
+- **Task:** TASK-52 — Create src/lib/backends/index.ts — backend selector
+- **Outcome:** pass
+- **Summary:** Renamed selectBackend to getBackend per spec. Added conflict check that throws when both --claude and --docker are set. Added re-export of AgentBackend, BackendOptions, ParsedOutput types. Updated all consumers (loop.ts, feature.tsx, loop.test.ts, CONTRIBUTING.md). Created index.test.ts with 5 tests covering default/claude/docker/both-throws/both-false. All 326 tests pass, tsc clean.

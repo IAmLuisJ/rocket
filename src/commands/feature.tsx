@@ -4,7 +4,7 @@ import { render } from 'ink'
 import React, { useState } from 'react'
 import { Box, Text, useApp } from 'ink'
 import TextInput from 'ink-text-input'
-import { selectBackend } from '../lib/backends/index.js'
+import { getBackend } from '../lib/backends/index.js'
 import type { AgentBackend } from '../lib/backends/types.js'
 import { generateClarifyingQuestions } from '../lib/feature/clarifier.js'
 import { generateSpec, type SpecResult } from '../lib/feature/specGenerator.js'
@@ -183,7 +183,7 @@ export async function runFeature(
   const backendOpts: { claude?: boolean; docker?: boolean } = {}
   if (opts.backend === 'claude') backendOpts.claude = true
   if (opts.backend === 'docker') backendOpts.docker = true
-  const backend = selectBackend(backendOpts)
+  const backend = getBackend(backendOpts)
 
   const noQuestions = opts.questions === false
   const dryRun = opts.dryRun === true
