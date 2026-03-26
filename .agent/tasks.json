@@ -518,7 +518,7 @@
       "title": "Create src/lib/history.ts — iteration history writer",
       "description": "Create history.ts with saveIteration(agentDir, sessionId, iteration, rawOutput): void. Strips ANSI codes from rawOutput using strip-ansi. Writes to .agent/history/ITERATION-{sessionId}-{iteration}.txt.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "saveIteration creates the file with ANSI codes stripped; file path matches the specified pattern",
       "specFilePath": ".agent/tasks/TASK-58.json"
     },

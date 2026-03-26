@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-26 · TASK-58
+- **Task:** Create src/lib/history.ts — iteration history writer
+- **Summary:** Refactored history.ts to spec-compliant API: async `saveIteration(agentDir, sessionId, iteration, rawOutput)` using strip-ansi and fs-extra. Updated RocketLoop.tsx consumer. 5 unit tests covering file creation, ANSI stripping, directory creation, empty output, and multiple iterations. All 353 project tests pass.
+
 ## 2026-03-26 · TASK-57
 - **Task:** Create src/lib/caffeinate.ts — macOS sleep prevention
 - **Summary:** Refactored caffeinate.ts to spec-compliant API: `start()` returns `ChildProcess | null`, `stop(proc)` takes a process parameter. Updated loop.ts consumer. 5 unit tests covering macOS spawn, Linux no-op, SIGTERM kill, null safety, and already-exited handling. All 348 project tests pass.

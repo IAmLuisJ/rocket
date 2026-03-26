@@ -8,7 +8,7 @@ import type { AgentBackend } from '../lib/backends/types.js'
 import type { Task } from '../lib/tasks/schema.js'
 import { getIncompleteTasks } from '../lib/tasks/reader.js'
 import { buildLoopPrompt, getDefaultPromptContent } from '../lib/prompt.js'
-import { saveIterationHistory } from '../lib/history.js'
+import { saveIteration } from '../lib/history.js'
 import { appendLogEntry } from '../lib/log.js'
 import {
   hasCompleteTag,
@@ -151,7 +151,7 @@ export function RocketLoop({
           const iterDuration = Date.now() - iterStart
           const fullOutput = accumulatedLines.join('\n')
 
-          saveIterationHistory(projectRoot, sid, iter, fullOutput)
+          void saveIteration(join(projectRoot, '.agent'), sid, iter, fullOutput)
 
           let exitOutcome: Outcome | null = null
           let exitBlockedReason: string | undefined
