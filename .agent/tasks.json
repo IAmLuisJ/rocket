@@ -473,7 +473,7 @@
       "title": "Create src/lib/parser/tags.ts — exit tag detection",
       "description": "Create tags.ts with functions: detectComplete(text): boolean — checks for <complete> anywhere in text; detectBlocked(text): { blocked: false; reason: string } | null; detectDecide(text): { decide: true; question: string } | null.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "detectComplete('<complete>') returns true; detectBlocked('<blocked>reason</blocked>') extracts reason; detectDecide('<decide>question</decide>') extracts question",
       "specFilePath": ".agent/tasks/TASK-53.json"
     },

@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-26 · TASK-53
+- **Task:** Create src/lib/parser/tags.ts — exit tag detection
+- **Summary:** Implemented detectComplete, detectBlocked, and detectDecide functions for parsing AI exit tags. Added 17 unit tests covering mid-text detection, multi-line content, whitespace trimming, missing tags, and incomplete tags. All 343 project tests pass.
+
 ## Session 2026-03-21T20-00-48 · Iteration 1
 - **Time:** 2026-03-21T20:14:06.027Z
 - **Task:** Auto
