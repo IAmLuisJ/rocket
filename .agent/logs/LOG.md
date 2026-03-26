@@ -272,3 +272,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-38 — Create src/commands/new.ts handler skeleton
 - **Outcome:** pass
 - **Summary:** new.ts and NewProjectWizard.tsx already implemented with name prompt flow (TextInput when no args) and direct wizard launch (when name provided). Added new.test.ts with 6 unit tests: renders with initialName, renders without initialName, passes initialType, awaits waitUntilExit, CLI registration checks for project-name arg and --type flag. All 233 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-39
+- **Time:** 2026-03-26T00:06:00.000Z
+- **Task:** TASK-39 — Create NewProjectWizard.tsx TUI component
+- **Outcome:** pass
+- **Summary:** NewProjectWizard.tsx was already fully implemented with state machine (name/type/features/scaffolding/done/error steps), SelectInput for project type and feature toggles, and scaffold integration. Added ink-testing-library and 8 unit tests covering: name input rendering, type selection skip, features step, auth default state, Continue option, project info display. Updated vitest.config.ts to include .test.tsx files. All 241 tests pass, tsc clean.

@@ -347,7 +347,7 @@
       "title": "Create NewProjectWizard.tsx TUI component",
       "description": "Create src/tui/components/NewProjectWizard.tsx — an Ink component that shows step-by-step prompts: (1) project type selection (Web App | Website), (2) for Web App: toggle auth, email, PDF renderer. Renders with SelectInput for list choices.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Component renders project type selection; selecting Web App shows feature toggle sub-steps",
       "specFilePath": ".agent/tasks/TASK-39.json"
     },
