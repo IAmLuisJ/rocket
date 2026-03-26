@@ -332,3 +332,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-48 — Create src/lib/backends/types.ts — AgentBackend interface
 - **Outcome:** pass
 - **Summary:** Rewrote types.ts to match spec: BackendOptions with prompt/maxIterations/cwd, ParsedOutput as discriminated union (text/json/complete/blocked/decide), AgentBackend with spawn(prompt, options) and parseOutput(line). Updated all 3 backend implementations (copilot, claude, docker) and all consumers (RocketLoop.tsx, clarifier.ts) to use new signatures. Created types.test.ts with 9 tests covering all type variants, exhaustive switch, and interface shape. All 284 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-49
+- **Time:** 2026-03-26T13:03:00.000Z
+- **Task:** TASK-49 — Create src/lib/backends/copilot.ts — Copilot CLI backend
+- **Outcome:** pass
+- **Summary:** Added checkCopilotBinary() preflight check using execSync('which copilot') that throws a descriptive error with install URL when copilot is not in PATH. Called before spawn(). Created copilot.test.ts with 12 tests covering: name, interface shape, binary check call, missing binary error, spawn args/flags/cwd/return, parseOutput for empty/text/complete/blocked/decide lines. All 296 tests pass, tsc clean.

@@ -437,7 +437,7 @@
       "title": "Create src/lib/backends/copilot.ts — Copilot CLI backend",
       "description": "Implement AgentBackend for Copilot CLI. spawn() runs: 'copilot --autopilot --prompt \"<prompt>\"' via child_process.spawn with stdio:pipe. parseOutput() returns text lines as { type: 'output', content: line }. Check 'copilot' is in PATH before spawning.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "copilot.spawn() returns a ChildProcess; missing copilot binary throws a descriptive error",
       "specFilePath": ".agent/tasks/TASK-49.json"
     },

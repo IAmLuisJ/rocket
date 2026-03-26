@@ -1,4 +1,4 @@
-import { spawn, type ChildProcess } from 'child_process'
+import { spawn, execSync, type ChildProcess } from 'child_process'
 import type { AgentBackend, BackendOptions, ParsedOutput } from './types.js'
 import {
   hasCompleteTag,
@@ -8,10 +8,21 @@ import {
   extractDecideQuestion,
 } from './tags.js'
 
+function checkCopilotBinary(): void {
+  try {
+    execSync('which copilot', { stdio: 'ignore' })
+  } catch {
+    throw new Error(
+      'copilot CLI not found in PATH. Install it from https://github.com/github/gh-copilot',
+    )
+  }
+}
+
 export const copilotBackend: AgentBackend = {
   name: 'Copilot CLI',
 
   spawn(prompt: string, options: BackendOptions): ChildProcess {
+    checkCopilotBinary()
     return spawn('copilot', ['--autopilot', '--prompt', prompt], {
       cwd: options.cwd,
       stdio: ['ignore', 'pipe', 'pipe'],
