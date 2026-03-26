@@ -383,7 +383,7 @@
       "title": "Create .agent/ directory as part of scaffold",
       "description": "In scaffold.ts, after copying template files, call a createAgentStructure(projectPath) function that creates: .agent/prd/PRD.md (placeholder), .agent/prd/SUMMARY.md (placeholder), .agent/logs/LOG.md, .agent/history/, .agent/PROMPT.md, .agent/tasks.json (empty array).",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Scaffolded project contains all .agent/ subdirectories and files",
       "specFilePath": ".agent/tasks/TASK-43.json"
     },

@@ -296,3 +296,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-42 — Wire feature toggles into scaffold options
 - **Outcome:** pass
 - **Summary:** Implemented feature file exclusion in scaffold.ts: added featureFiles map (auth: 3 files, email: 2 files, pdf: 1 file) and removeDisabledFeatureFiles() that deletes feature files when toggled off. Created 6 template files (auth middleware/route/jwt, mailer, email route, pdf lib). Wizard-to-scaffold wiring was already in place. Added 5 unit tests covering auth/email/pdf exclusion and mixed feature combinations. All 255 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-43
+- **Time:** 2026-03-26T00:19:00.000Z
+- **Task:** TASK-43 — Create .agent/ directory as part of scaffold
+- **Outcome:** pass
+- **Summary:** Verified scaffold.ts already calls createAgentStructure(destPath, projectName) after template copy, creating .agent/prd/PRD.md, .agent/prd/SUMMARY.md, .agent/logs/LOG.md, .agent/history/, .agent/PROMPT.md, and .agent/tasks.json (empty array). Existing test "creates .agent/ structure in scaffolded project" covers all 6 acceptance criteria. All 255 tests pass, tsc clean.
