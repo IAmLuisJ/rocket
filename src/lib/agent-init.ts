@@ -18,16 +18,28 @@ export async function createAgentStructure(projectRoot: string): Promise<void> {
 
   await writeFile(
     join(agentDir, 'prd', 'PRD.md'),
-    `# Product Requirements Document
+    `<!-- Edit this file with your project requirements. rocket loop reads this to understand what to build. -->
+
+# Project Name PRD
 
 ## Overview
 <!-- Describe the purpose and goals of the project -->
 
-## Features
+Your project overview goes here. Explain what problem this project solves and who it is for.
+
+## Core Features
 <!-- List the key features to implement -->
+
+- Feature 1: Description
+- Feature 2: Description
+- Feature 3: Description
 
 ## Technical Requirements
 <!-- Describe technical constraints, stack choices, etc. -->
+
+- Runtime: Node.js 22+
+- Language: TypeScript
+- Add your technical requirements here
 `,
   )
 

@@ -302,3 +302,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-43 — Create .agent/ directory as part of scaffold
 - **Outcome:** pass
 - **Summary:** Verified scaffold.ts already calls createAgentStructure(destPath, projectName) after template copy, creating .agent/prd/PRD.md, .agent/prd/SUMMARY.md, .agent/logs/LOG.md, .agent/history/, .agent/PROMPT.md, and .agent/tasks.json (empty array). Existing test "creates .agent/ structure in scaffolded project" covers all 6 acceptance criteria. All 255 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-44
+- **Time:** 2026-03-26T00:22:00.000Z
+- **Task:** TASK-44 — Write placeholder content for .agent/prd/PRD.md
+- **Outcome:** pass
+- **Summary:** Updated PRD.md template in agent-init.ts with rich placeholder content: top-level instructional HTML comment, "# Project Name PRD" title, ## Overview with placeholder text, ## Core Features with bullet list placeholders, ## Technical Requirements with example entries. Added dedicated test verifying all section headers, instructional comments, and non-empty content. All 256 tests pass, tsc clean.

@@ -48,12 +48,35 @@ describe('createAgentStructure', () => {
 
     // Verify PRD.md has template structure
     const prd = await readFile(join(tmpDir, '.agent', 'prd', 'PRD.md'), 'utf-8')
-    expect(prd).toContain('# Product Requirements Document')
-    expect(prd).toContain('## Features')
+    expect(prd).toContain('## Overview')
+    expect(prd).toContain('## Core Features')
+    expect(prd).toContain('## Technical Requirements')
 
     // Verify LOG.md content
     const log = await readFile(join(tmpDir, '.agent', 'logs', 'LOG.md'), 'utf-8')
     expect(log).toContain('# Development Log')
+  })
+
+  it('PRD.md has placeholder sections and instructional comments', async () => {
+    await createAgentStructure(tmpDir)
+    const prd = await readFile(join(tmpDir, '.agent', 'prd', 'PRD.md'), 'utf-8')
+
+    // Not empty
+    expect(prd.length).toBeGreaterThan(0)
+
+    // Has all required section headers
+    expect(prd).toContain('## Overview')
+    expect(prd).toContain('## Core Features')
+    expect(prd).toContain('## Technical Requirements')
+
+    // Has instructional comments
+    expect(prd).toContain('<!-- Edit this file with your project requirements')
+    expect(prd).toContain('<!-- Describe the purpose and goals')
+    expect(prd).toContain('<!-- List the key features')
+    expect(prd).toContain('<!-- Describe technical constraints')
+
+    // Has placeholder content (not just headers and comments)
+    expect(prd).toContain('Feature 1')
   })
 
   it('throws if .agent/ already exists', async () => {

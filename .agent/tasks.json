@@ -392,7 +392,7 @@
       "title": "Write placeholder content for .agent/prd/PRD.md",
       "description": "The PRD.md written by scaffold should contain a helpful placeholder with section headers (Overview, Features, Technical Requirements) and instructional comments telling the user to fill in their requirements.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": ".agent/prd/PRD.md in scaffolded project has placeholder sections and is not empty",
       "specFilePath": ".agent/tasks/TASK-44.json"
     },
