@@ -1,4 +1,4 @@
-import { spawn, type ChildProcess } from 'child_process'
+import { spawn, execSync, type ChildProcess } from 'child_process'
 import type { AgentBackend, BackendOptions, ParsedOutput } from './types.js'
 import {
   hasCompleteTag,
@@ -8,62 +8,32 @@ import {
   extractDecideQuestion,
 } from './tags.js'
 
-function extractTextFromClaudeJson(line: string): string | null {
+function checkClaudeBinary(): void {
   try {
-    const obj = JSON.parse(line) as Record<string, unknown>
-
-    // result event — contains the final output text
-    if (obj.type === 'result' && typeof obj.result === 'string') {
-      return obj.result
-    }
-
-    // assistant event — contains the message with content array
-    if (obj.type === 'assistant') {
-      const msg = obj.message as Record<string, unknown> | undefined
-      const content = msg?.content as Array<Record<string, unknown>> | undefined
-      if (Array.isArray(content)) {
-        const texts = content
-          .filter((c) => c.type === 'text' && typeof c.text === 'string')
-          .map((c) => c.text as string)
-        if (texts.length > 0) return texts.join('\n')
-      }
-    }
-
-    return null
+    execSync('which claude', { stdio: 'ignore' })
   } catch {
-    return null
+    throw new Error(
+      'claude CLI not found in PATH. Install Claude Code from https://claude.ai/download',
+    )
   }
 }
 
 export const claudeBackend: AgentBackend = {
-  name: 'Claude CLI',
+  name: 'Claude (direct)',
 
   spawn(prompt: string, options: BackendOptions): ChildProcess {
-    return spawn(
-      'claude',
-      [
-        '--model',
-        'opus',
-        '--output-format',
-        'stream-json',
-        '--verbose',
-        '--dangerously-skip-permissions',
-        '-p',
-        prompt,
-      ],
-      {
-        cwd: options.cwd,
-        stdio: ['ignore', 'pipe', 'pipe'],
-      },
-    )
+    checkClaudeBinary()
+    return spawn('claude', ['--model', 'opus', '-p', prompt], {
+      cwd: options.cwd,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    })
   },
 
   parseOutput(line: string): ParsedOutput | null {
-    const text = extractTextFromClaudeJson(line)
-    if (!text) return null
-    if (hasCompleteTag(text)) return { type: 'complete' }
-    if (hasBlockedTag(text)) return { type: 'blocked', reason: extractBlockedReason(text) }
-    if (hasDecideTag(text)) return { type: 'decide', question: extractDecideQuestion(text) }
-    return { type: 'text', content: text }
+    if (!line.trim()) return null
+    if (hasCompleteTag(line)) return { type: 'complete' }
+    if (hasBlockedTag(line)) return { type: 'blocked', reason: extractBlockedReason(line) }
+    if (hasDecideTag(line)) return { type: 'decide', question: extractDecideQuestion(line) }
+    return { type: 'text', content: line }
   },
 }

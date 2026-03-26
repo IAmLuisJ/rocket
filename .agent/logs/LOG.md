@@ -338,3 +338,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-49 — Create src/lib/backends/copilot.ts — Copilot CLI backend
 - **Outcome:** pass
 - **Summary:** Added checkCopilotBinary() preflight check using execSync('which copilot') that throws a descriptive error with install URL when copilot is not in PATH. Called before spawn(). Created copilot.test.ts with 12 tests covering: name, interface shape, binary check call, missing binary error, spawn args/flags/cwd/return, parseOutput for empty/text/complete/blocked/decide lines. All 296 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-50
+- **Time:** 2026-03-26T21:50:00.000Z
+- **Task:** TASK-50 — Create src/lib/backends/claude.ts — Claude direct backend
+- **Outcome:** pass
+- **Summary:** Rewrote claude.ts to match spec: added checkClaudeBinary() preflight using execSync('which claude') with descriptive error and download URL, simplified spawn to use ['--model', 'opus', '-p', prompt] (removed stream-json/verbose/dangerously-skip-permissions flags), renamed backend to 'Claude (direct)', simplified parseOutput to match copilot pattern (plain text, not JSON). Created claude.test.ts with 12 tests covering: name, interface shape, binary check, missing binary error, spawn args/flags/cwd/return, parseOutput for empty/text/complete/blocked/decide. All 308 tests pass, tsc clean.

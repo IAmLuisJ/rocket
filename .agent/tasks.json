@@ -446,7 +446,7 @@
       "title": "Create src/lib/backends/claude.ts — Claude direct backend",
       "description": "Implement AgentBackend for Claude CLI. spawn() runs: 'claude --model opus -p \"<prompt>\"' via child_process.spawn. parseOutput() handles Claude's output format. Check 'claude' is in PATH before spawning.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "claude.spawn() returns a ChildProcess; missing claude binary throws a descriptive error",
       "specFilePath": ".agent/tasks/TASK-50.json"
     },
