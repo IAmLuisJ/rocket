@@ -419,7 +419,7 @@
       "title": "Create src/lib/tasks/reader.ts — read/write tasks.json",
       "description": "Create reader.ts with: readTasks(agentDir): Task[] — reads and validates tasks.json; writeTasks(agentDir, tasks): void — writes back; getIncompleteTasks(tasks): Task[]; markTaskComplete(tasks, id): Task[].",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "readTasks returns validated Task[]; writeTasks persists changes; getIncompleteTasks filters correctly",
       "specFilePath": ".agent/tasks/TASK-47.json"
     },

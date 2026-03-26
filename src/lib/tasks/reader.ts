@@ -29,3 +29,7 @@ export function getMaxTaskId(tasks: Task[]): number {
 export function getIncompleteTasks(tasks: Task[]): Task[] {
   return tasks.filter((t) => !t.passes)
 }
+
+export function markTaskComplete(tasks: Task[], id: number): Task[] {
+  return tasks.map((t) => (t.id === id ? { ...t, passes: true } : t))
+}

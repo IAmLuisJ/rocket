@@ -2,7 +2,13 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { mkdtemp, rm, mkdir, writeFile } from 'fs/promises'
 import { join } from 'path'
 import { tmpdir } from 'os'
-import { readTasks, writeTasks, getIncompleteTasks, getMaxTaskId } from './reader.js'
+import {
+  readTasks,
+  writeTasks,
+  getIncompleteTasks,
+  getMaxTaskId,
+  markTaskComplete,
+} from './reader.js'
 
 describe('task reader', () => {
   let tmpDir: string
@@ -101,5 +107,55 @@ describe('task reader', () => {
 
   it('getMaxTaskId returns 0 for empty array', () => {
     expect(getMaxTaskId([])).toBe(0)
+  })
+
+  it('markTaskComplete sets passes to true for matching id', () => {
+    const tasks = [
+      {
+        id: 1,
+        title: 'Task A',
+        description: 'First',
+        category: 'functional' as const,
+        passes: false,
+        passCondition: 'It works',
+      },
+      {
+        id: 2,
+        title: 'Task B',
+        description: 'Second',
+        category: 'functional' as const,
+        passes: false,
+        passCondition: 'It works',
+      },
+    ]
+    const updated = markTaskComplete(tasks, 1)
+    expect(updated[0]!.passes).toBe(true)
+    expect(updated[1]!.passes).toBe(false)
+    // original array is not mutated
+    expect(tasks[0]!.passes).toBe(false)
+  })
+
+  it('markTaskComplete leaves all tasks unchanged if id not found', () => {
+    const tasks = [
+      {
+        id: 1,
+        title: 'Task A',
+        description: 'First',
+        category: 'functional' as const,
+        passes: false,
+        passCondition: 'It works',
+      },
+    ]
+    const updated = markTaskComplete(tasks, 99)
+    expect(updated[0]!.passes).toBe(false)
+  })
+
+  it('readTasks throws descriptive error if tasks.json is missing', () => {
+    expect(() => readTasks(tmpDir)).toThrow(/tasks\.json/)
+  })
+
+  it('readTasks throws on invalid tasks.json', async () => {
+    await writeFile(join(tmpDir, '.agent', 'tasks.json'), '{"tasks": [{"bad": true}]}')
+    expect(() => readTasks(tmpDir)).toThrow()
   })
 })

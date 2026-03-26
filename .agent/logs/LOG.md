@@ -320,3 +320,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-46 — Create src/lib/tasks/schema.ts with Zod validation
 - **Outcome:** pass
 - **Summary:** Enhanced existing schema.ts with stricter Zod validation: id requires .int().positive(), title/description/passCondition require .min(1), added missing category values (config, data-model, integration), added specFilePath optional field. Created comprehensive schema.test.ts with 14 tests covering valid parsing, optional fields, ZodError on invalid input, and type exports. Updated reader.test.ts fixtures to comply with new min(1) constraints. All 271 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-47
+- **Time:** 2026-03-26T04:58:00.000Z
+- **Task:** TASK-47 — Create src/lib/tasks/reader.ts — read/write tasks.json
+- **Outcome:** pass
+- **Summary:** Added markTaskComplete function (immutable update returning new array with matching task's passes set to true). Added 4 unit tests: markTaskComplete with matching id, markTaskComplete with non-existent id, readTasks error on missing file, readTasks error on invalid JSON. All 275 tests pass, tsc clean.
