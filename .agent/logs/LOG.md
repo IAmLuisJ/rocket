@@ -314,3 +314,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-45 — Write default .agent/PROMPT.md loop instructions
 - **Outcome:** pass
 - **Summary:** Enhanced PROMPT.md template in agent-init.ts with comprehensive loop instructions: Context section referencing PRD.md and SUMMARY.md, Mission section focusing on current task, Exit Tags section with detailed <complete>, <blocked>, and <decide> usage, Code Quality guidelines (tests, no over-engineering, error handling, commits), and updated Rules. Added dedicated test covering all acceptance criteria. All 257 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-46
+- **Time:** 2026-03-26T04:55:00.000Z
+- **Task:** TASK-46 — Create src/lib/tasks/schema.ts with Zod validation
+- **Outcome:** pass
+- **Summary:** Enhanced existing schema.ts with stricter Zod validation: id requires .int().positive(), title/description/passCondition require .min(1), added missing category values (config, data-model, integration), added specFilePath optional field. Created comprehensive schema.test.ts with 14 tests covering valid parsing, optional fields, ZodError on invalid input, and type exports. Updated reader.test.ts fixtures to comply with new min(1) constraints. All 271 tests pass, tsc clean.

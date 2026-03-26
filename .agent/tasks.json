@@ -410,7 +410,7 @@
       "title": "Create src/lib/tasks/schema.ts with Zod validation",
       "description": "Create a Zod schema for tasks.json: array of objects with id (number), title (string), description (string), category (enum), passes (boolean), passCondition (string), blockedReason (optional string). Export TaskSchema and Task type.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "TaskSchema.parse() accepts valid tasks and throws ZodError on invalid input",
       "specFilePath": ".agent/tasks/TASK-46.json"
     },

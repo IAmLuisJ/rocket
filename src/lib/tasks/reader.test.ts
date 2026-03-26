@@ -58,18 +58,18 @@ describe('task reader', () => {
       {
         id: 1,
         title: 'Done',
-        description: '',
+        description: 'A done task',
         category: 'functional' as const,
         passes: true,
-        passCondition: '',
+        passCondition: 'It passes',
       },
       {
         id: 2,
         title: 'Todo',
-        description: '',
+        description: 'A todo task',
         category: 'functional' as const,
         passes: false,
-        passCondition: '',
+        passCondition: 'It passes',
       },
     ]
     const incomplete = getIncompleteTasks(tasks)
@@ -82,18 +82,18 @@ describe('task reader', () => {
       {
         id: 3,
         title: 'A',
-        description: '',
+        description: 'Task A',
         category: 'functional' as const,
         passes: false,
-        passCondition: '',
+        passCondition: 'It works',
       },
       {
         id: 7,
         title: 'B',
-        description: '',
+        description: 'Task B',
         category: 'functional' as const,
         passes: false,
-        passCondition: '',
+        passCondition: 'It works',
       },
     ]
     expect(getMaxTaskId(tasks)).toBe(7)

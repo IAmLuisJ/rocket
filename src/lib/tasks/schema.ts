@@ -1,23 +1,26 @@
 import { z } from 'zod'
 
 export const TaskCategorySchema = z.enum([
+  'config',
   'functional',
   'ui-ux',
+  'data-model',
   'api-endpoint',
+  'integration',
   'security',
   'testing',
-  'config',
   'docs',
 ])
 
 export const TaskSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  description: z.string(),
+  id: z.number().int().positive(),
+  title: z.string().min(1),
+  description: z.string().min(1),
   category: TaskCategorySchema,
   passes: z.boolean(),
-  passCondition: z.string(),
+  passCondition: z.string().min(1),
   blockedReason: z.string().optional(),
+  specFilePath: z.string().optional(),
 })
 
 export const TasksFileSchema = z.object({
