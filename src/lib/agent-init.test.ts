@@ -45,6 +45,7 @@ describe('createAgentStructure', () => {
     expect(prompt).toContain('<complete>')
     expect(prompt).toContain('<blocked>')
     expect(prompt).toContain('<decide>')
+    expect(prompt).toContain('.agent/prd/PRD.md')
 
     // Verify PRD.md has template structure
     const prd = await readFile(join(tmpDir, '.agent', 'prd', 'PRD.md'), 'utf-8')
@@ -77,6 +78,31 @@ describe('createAgentStructure', () => {
 
     // Has placeholder content (not just headers and comments)
     expect(prd).toContain('Feature 1')
+  })
+
+  it('PROMPT.md contains exit tag instructions and PRD reference', async () => {
+    await createAgentStructure(tmpDir)
+    const prompt = await readFile(join(tmpDir, '.agent', 'PROMPT.md'), 'utf-8')
+
+    // Must instruct AI to read the PRD
+    expect(prompt).toContain('.agent/prd/PRD.md')
+    expect(prompt).toContain('focus')
+
+    // Must define all three exit tags
+    expect(prompt).toContain('<complete>')
+    expect(prompt).toContain('<blocked>')
+    expect(prompt).toContain('<decide>')
+
+    // Exit tags should have explanations of when to use them
+    expect(prompt).toContain('task is fully implemented')
+    expect(prompt).toContain('stuck')
+    expect(prompt).toContain('decision')
+
+    // Code quality guidelines
+    expect(prompt).toContain('tests')
+    expect(prompt).toContain('over-engineering')
+    expect(prompt).toContain('errors gracefully')
+    expect(prompt).toContain('Commit')
   })
 
   it('throws if .agent/ already exists', async () => {

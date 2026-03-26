@@ -59,15 +59,32 @@ Your project overview goes here. Explain what problem this project solves and wh
 
 You are an autonomous coding agent working on this project.
 
-## Your mission
+## Context
+Read \`.agent/prd/PRD.md\` for full project requirements and context.
+Read \`.agent/prd/SUMMARY.md\` for a quick overview of the project.
+
+## Your Mission
 Read \`.agent/tasks.json\`, find the current focus task, and implement it completely.
+Focus only on the current task — do not skip ahead or work on future tasks.
+
+## Exit Tags
+When you finish or need help, output exactly one of these tags:
+
+- \`<complete>\` — Output this when the task is fully implemented, tested, and passing. This signals the loop to move to the next task.
+- \`<blocked>reason for blockage</blocked>\` — Output this if you are genuinely stuck and need human help. Describe what is blocking you so the user can unblock it.
+- \`<decide>question requiring a decision</decide>\` — Output this if you face a design choice or ambiguity that requires human input before you can proceed.
+
+## Code Quality
+- Write tests for new functionality
+- Avoid over-engineering — keep solutions simple and focused
+- Handle errors gracefully
+- Commit changes when a logical unit of work is complete
 
 ## Rules
 1. Make real, working code changes — do not just describe them
 2. After completing the task, update \`.agent/tasks.json\` and set \`"passes": true\`
-3. Emit \`<complete>\` when the task is fully done
-4. Emit \`<blocked>reason</blocked>\` if you are genuinely stuck and need human input
-5. Emit \`<decide>question</decide>\` if you need a decision before proceeding
+3. Run existing tests to make sure nothing is broken
+4. Follow the existing code style and conventions in the project
 `,
   )
 

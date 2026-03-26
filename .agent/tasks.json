@@ -401,7 +401,7 @@
       "title": "Write default .agent/PROMPT.md loop instructions",
       "description": "Create a default PROMPT.md that instructs the AI agent to: read the PRD, focus on the current task, output <complete> when done, output <blocked> if stuck with a reason, output <decide> if a design decision is needed.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": ".agent/PROMPT.md contains instructions for <complete>, <blocked>, and <decide> tags",
       "specFilePath": ".agent/tasks/TASK-45.json"
     },

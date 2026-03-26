@@ -308,3 +308,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-44 — Write placeholder content for .agent/prd/PRD.md
 - **Outcome:** pass
 - **Summary:** Updated PRD.md template in agent-init.ts with rich placeholder content: top-level instructional HTML comment, "# Project Name PRD" title, ## Overview with placeholder text, ## Core Features with bullet list placeholders, ## Technical Requirements with example entries. Added dedicated test verifying all section headers, instructional comments, and non-empty content. All 256 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-45
+- **Time:** 2026-03-26T00:22:00.000Z
+- **Task:** TASK-45 — Write default .agent/PROMPT.md loop instructions
+- **Outcome:** pass
+- **Summary:** Enhanced PROMPT.md template in agent-init.ts with comprehensive loop instructions: Context section referencing PRD.md and SUMMARY.md, Mission section focusing on current task, Exit Tags section with detailed <complete>, <blocked>, and <decide> usage, Code Quality guidelines (tests, no over-engineering, error handling, commits), and updated Rules. Added dedicated test covering all acceptance criteria. All 257 tests pass, tsc clean.
