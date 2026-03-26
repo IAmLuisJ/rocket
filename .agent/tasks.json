@@ -509,7 +509,7 @@
       "title": "Create src/lib/caffeinate.ts — macOS sleep prevention",
       "description": "Create caffeinate.ts with: start(): ChildProcess | null — spawns 'caffeinate -i' on macOS (process.platform === 'darwin'), returns null on Linux. stop(proc): void — kills the caffeinate process. Export start and stop.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "On macOS, start() returns a running ChildProcess; stop() terminates it. On Linux, start() returns null without error.",
       "specFilePath": ".agent/tasks/TASK-57.json"
     },

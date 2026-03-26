@@ -5,81 +5,69 @@ vi.mock('child_process', () => ({
   spawn: vi.fn(),
 }))
 
-vi.mock('os', () => ({
-  platform: vi.fn(),
-}))
-
 import { spawn } from 'child_process'
-import { platform } from 'os'
 
-const mockPlatform = vi.mocked(platform)
 const mockSpawn = vi.mocked(spawn)
 
 describe('caffeinate', () => {
+  const originalPlatform = process.platform
+
   beforeEach(() => {
     vi.resetModules()
     vi.clearAllMocks()
   })
 
   afterEach(() => {
-    vi.restoreAllMocks()
+    Object.defineProperty(process, 'platform', { value: originalPlatform })
   })
 
-  it('start() on darwin spawns caffeinate -i', async () => {
-    mockPlatform.mockReturnValue('darwin')
-    const fakeProcess = { kill: vi.fn() } as unknown as ChildProcess
+  it('start() spawns caffeinate -i on macOS and returns ChildProcess', async () => {
+    Object.defineProperty(process, 'platform', { value: 'darwin' })
+    const fakeProcess = { kill: vi.fn(), pid: 123 } as unknown as ChildProcess
     mockSpawn.mockReturnValue(fakeProcess)
 
-    const { startCaffeinate, stopCaffeinate } = await import('./caffeinate.js')
-    startCaffeinate()
+    const { start } = await import('./caffeinate.js')
+    const proc = start()
 
     expect(mockSpawn).toHaveBeenCalledWith('caffeinate', ['-i'], {
       stdio: 'ignore',
       detached: false,
     })
-
-    // Cleanup
-    stopCaffeinate()
+    expect(proc).toBe(fakeProcess)
   })
 
-  it('start() on linux does not spawn anything', async () => {
-    mockPlatform.mockReturnValue('linux')
+  it('start() returns null on Linux without throwing', async () => {
+    Object.defineProperty(process, 'platform', { value: 'linux' })
 
-    const { startCaffeinate } = await import('./caffeinate.js')
-    startCaffeinate()
+    const { start } = await import('./caffeinate.js')
+    const proc = start()
 
+    expect(proc).toBeNull()
     expect(mockSpawn).not.toHaveBeenCalled()
   })
 
-  it('start() does not spawn twice if already running', async () => {
-    mockPlatform.mockReturnValue('darwin')
+  it('stop(proc) kills the caffeinate process with SIGTERM', async () => {
     const fakeProcess = { kill: vi.fn() } as unknown as ChildProcess
-    mockSpawn.mockReturnValue(fakeProcess)
 
-    const { startCaffeinate, stopCaffeinate } = await import('./caffeinate.js')
-    startCaffeinate()
-    startCaffeinate()
+    const { stop } = await import('./caffeinate.js')
+    stop(fakeProcess)
 
-    expect(mockSpawn).toHaveBeenCalledTimes(1)
-
-    // Cleanup
-    stopCaffeinate()
+    expect(fakeProcess.kill).toHaveBeenCalledWith('SIGTERM')
   })
 
-  it('stop() with a process calls kill()', async () => {
-    mockPlatform.mockReturnValue('darwin')
-    const fakeProcess = { kill: vi.fn() } as unknown as ChildProcess
-    mockSpawn.mockReturnValue(fakeProcess)
-
-    const { startCaffeinate, stopCaffeinate } = await import('./caffeinate.js')
-    startCaffeinate()
-    stopCaffeinate()
-
-    expect(fakeProcess.kill).toHaveBeenCalled()
+  it('stop(null) is a no-op', async () => {
+    const { stop } = await import('./caffeinate.js')
+    expect(() => stop(null)).not.toThrow()
   })
 
-  it('stop() is safe to call when not started', async () => {
-    const { stopCaffeinate } = await import('./caffeinate.js')
-    expect(() => stopCaffeinate()).not.toThrow()
+  it('stop() handles already-exited process gracefully', async () => {
+    const fakeProcess = {
+      kill: vi.fn(() => {
+        throw new Error('process already exited')
+      }),
+    } as unknown as ChildProcess
+
+    const { stop } = await import('./caffeinate.js')
+    expect(() => stop(fakeProcess)).not.toThrow()
   })
 })

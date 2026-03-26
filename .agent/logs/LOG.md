@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-26 · TASK-57
+- **Task:** Create src/lib/caffeinate.ts — macOS sleep prevention
+- **Summary:** Refactored caffeinate.ts to spec-compliant API: `start()` returns `ChildProcess | null`, `stop(proc)` takes a process parameter. Updated loop.ts consumer. 5 unit tests covering macOS spawn, Linux no-op, SIGTERM kill, null safety, and already-exited handling. All 348 project tests pass.
+
 ## 2026-03-26 · TASK-56
 - **Task:** Write unit tests for jsonStream.ts
 - **Summary:** Verified existing jsonStream.test.ts already covers all acceptance criteria: 10 tests for valid JSON parsing, plain text passthrough, empty/whitespace lines, partial JSON buffering, array parsing, multi-line JSON, and parser independence. All 348 project tests pass.

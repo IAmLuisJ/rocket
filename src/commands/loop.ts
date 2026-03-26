@@ -5,7 +5,7 @@ import React from 'react'
 import { checkAgentStructure, checkBackendAvailability } from '../lib/preflight.js'
 import { readTasks, getIncompleteTasks } from '../lib/tasks/reader.js'
 import { getBackend } from '../lib/backends/index.js'
-import { startCaffeinate, stopCaffeinate } from '../lib/caffeinate.js'
+import { start as startCaffeinate, stop as stopCaffeinate } from '../lib/caffeinate.js'
 import { ensureLogFile } from '../lib/log.js'
 import { getDefaultPromptContent } from '../lib/prompt.js'
 import { RocketLoop } from '../tui/RocketLoop.js'
@@ -82,9 +82,7 @@ export async function runLoop(opts: {
   }
 
   // Start caffeinate on macOS (unless --no-caffeinate)
-  if (opts.caffeinate !== false) {
-    startCaffeinate()
-  }
+  const caffeinateProc = opts.caffeinate !== false ? startCaffeinate() : null
 
   // Ensure log file exists
   ensureLogFile(projectRoot)
@@ -106,6 +104,6 @@ export async function runLoop(opts: {
   try {
     await waitUntilExit()
   } finally {
-    stopCaffeinate()
+    stopCaffeinate(caffeinateProc)
   }
 }
