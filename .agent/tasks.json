@@ -338,7 +338,7 @@
       "title": "Create src/commands/new.ts handler skeleton",
       "description": "Create new.ts that accepts the Commander action callback signature (projectName, options). If projectName is not provided, render a TextInput Ink component to prompt for it. Then pass control to the wizard TUI.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket new (no args) prompts for project name; rocket new my-app skips the prompt",
       "specFilePath": ".agent/tasks/TASK-38.json"
     },

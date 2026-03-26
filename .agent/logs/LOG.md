@@ -266,3 +266,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-37 — Create src/lib/scaffold.ts — project scaffolding logic
 - **Outcome:** pass
 - **Summary:** Updated scaffold.ts: narrowed templateName type to 'webapp' | 'website', changed stdio from 'pipe' to 'inherit' per spec, added try/catch for npm install failure, added post-copy auth file cleanup for feature toggles. Fixed NewProjectWizard.tsx type error. Rewrote scaffold.test.ts with 9 tests covering directory creation, .agent/ structure, npm install call verification, git init/add/commit verification, name sanitization, and npm install failure handling. All 227 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-38
+- **Time:** 2026-03-26T00:03:00.000Z
+- **Task:** TASK-38 — Create src/commands/new.ts handler skeleton
+- **Outcome:** pass
+- **Summary:** new.ts and NewProjectWizard.tsx already implemented with name prompt flow (TextInput when no args) and direct wizard launch (when name provided). Added new.test.ts with 6 unit tests: renders with initialName, renders without initialName, passes initialType, awaits waitUntilExit, CLI registration checks for project-name arg and --type flag. All 233 tests pass, tsc clean.
