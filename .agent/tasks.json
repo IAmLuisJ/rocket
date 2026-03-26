@@ -536,7 +536,7 @@
       "title": "Create src/lib/preflight.ts — pre-loop checks",
       "description": "Create preflight.ts with runPreflight(agentDir, backend): void. Checks: (1) .agent/tasks.json exists, (2) at least one incomplete task exists, (3) the selected backend binary is in PATH. Throws descriptive errors for each failure.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "runPreflight throws with 'run rocket init' message if tasks.json missing; throws with install instructions if backend binary missing",
       "specFilePath": ".agent/tasks/TASK-60.json"
     },

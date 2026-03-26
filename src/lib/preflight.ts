@@ -1,3 +1,10 @@
+import { existsSync } from 'fs'
+import { join, dirname } from 'path'
+import { execSync } from 'child_process'
+import { pathExists } from 'fs-extra'
+import { readTasks, getIncompleteTasks } from './tasks/reader.js'
+import type { AgentBackend } from './backends/types.js'
+
 export function checkNodeVersion(): void {
   const [major] = process.version.slice(1).split('.').map(Number)
   if (major < 22) {
@@ -7,10 +14,6 @@ export function checkNodeVersion(): void {
     process.exit(1)
   }
 }
-
-import { existsSync } from 'fs'
-import { join } from 'path'
-import { execSync } from 'child_process'
 
 export interface PreflightResult {
   ok: boolean
@@ -54,5 +57,38 @@ export function checkBackendAvailability(): {
     copilot: checkBinaryInPath('copilot'),
     claude: checkBinaryInPath('claude'),
     docker: checkBinaryInPath('docker'),
+  }
+}
+
+const backendBinaryMap: Record<string, { binary: string; installUrl: string }> = {
+  'Copilot CLI': {
+    binary: 'copilot',
+    installUrl: 'https://github.com/github/gh-copilot',
+  },
+  'Claude (direct)': {
+    binary: 'claude',
+    installUrl: 'https://claude.ai/download',
+  },
+  'Claude (Docker sandbox)': {
+    binary: 'docker',
+    installUrl: 'https://docker.com',
+  },
+}
+
+export async function runPreflight(agentDir: string, backend: AgentBackend): Promise<void> {
+  const tasksFile = join(agentDir, 'tasks.json')
+  if (!(await pathExists(tasksFile))) {
+    throw new Error("No tasks.json found. Run 'rocket init' to set up the .agent/ directory.")
+  }
+
+  const projectRoot = dirname(agentDir)
+  const tasks = readTasks(projectRoot)
+  if (getIncompleteTasks(tasks.tasks).length === 0) {
+    throw new Error('All tasks are complete! Nothing to loop on.')
+  }
+
+  const info = backendBinaryMap[backend.name]
+  if (info && !checkBinaryInPath(info.binary)) {
+    throw new Error(`${info.binary} not found in PATH. Install it from ${info.installUrl}`)
   }
 }

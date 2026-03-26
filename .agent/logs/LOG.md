@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-26 · TASK-60
+- **Task:** Create src/lib/preflight.ts — pre-loop checks
+- **Summary:** Added `runPreflight(agentDir, backend)` async function to existing preflight.ts. Checks tasks.json exists, has incomplete tasks, and backend binary is in PATH. Maps backend names to binaries via lookup table. 5 new unit tests (9 total). All 363 project tests pass.
+
 ## 2026-03-26 · TASK-59
 - **Task:** Create src/lib/log.ts — progress log writer
 - **Summary:** Refactored log.ts to spec-compliant async API: `appendSessionLog(agentDir, sessionLog)` with `SessionLog` type using fs-extra. Updated RocketLoop.tsx consumer. 5 unit tests covering file creation, markdown fields, append preservation, null task handling, and elapsed formatting. All 358 project tests pass.
