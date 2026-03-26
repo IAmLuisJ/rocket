@@ -428,7 +428,7 @@
       "title": "Create src/lib/backends/types.ts — AgentBackend interface",
       "description": "Define the AgentBackend interface: { name: string; spawn(prompt: string, options: BackendOptions): ChildProcess; parseOutput(line: string): ParsedOutput | null }. Define BackendOptions and ParsedOutput types. Export all.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "types.ts compiles without errors; interface is importable from other modules",
       "specFilePath": ".agent/tasks/TASK-48.json"
     },

@@ -32,7 +32,7 @@ async function collectBackendOutput(
   prompt: string,
   projectRoot: string,
 ): Promise<string> {
-  const proc = backend.spawn({ prompt, projectRoot })
+  const proc = backend.spawn(prompt, { prompt, cwd: projectRoot })
 
   if (!proc.stdout) {
     throw new Error('Backend process has no stdout')
@@ -43,8 +43,8 @@ async function collectBackendOutput(
 
   return new Promise<string>((resolve, reject) => {
     rl.on('line', (line) => {
-      const parsed = backend.parseOutputLine(line)
-      if (parsed) lines.push(parsed.text)
+      const parsed = backend.parseOutput(line)
+      if (parsed) lines.push(parsed.type === 'text' ? parsed.content : line)
     })
 
     proc.on('close', () => {

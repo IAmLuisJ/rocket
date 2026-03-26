@@ -120,7 +120,7 @@ export function RocketLoop({
       const accumulatedLines: string[] = []
 
       return new Promise<boolean>((resolve) => {
-        const proc = backend.spawn({ prompt, projectRoot })
+        const proc = backend.spawn(prompt, { prompt, cwd: projectRoot })
         processRef.current = proc
 
         if (!proc.stdout) {
@@ -132,13 +132,14 @@ export function RocketLoop({
         const rl = createInterface({ input: proc.stdout })
 
         rl.on('line', (line) => {
-          const parsed = backend.parseOutputLine(line)
+          const parsed = backend.parseOutput(line)
           if (!parsed) return
-          accumulatedLines.push(parsed.text)
+          const text = parsed.type === 'text' ? parsed.content : line
+          accumulatedLines.push(text)
           if (!cancelledRef.current) {
-            setOutputLines((prev) => [...prev, parsed.text])
-            if (parsed.text.trim()) {
-              setStepText(parsed.text.slice(0, 100))
+            setOutputLines((prev) => [...prev, text])
+            if (text.trim()) {
+              setStepText(text.slice(0, 100))
             }
           }
         })

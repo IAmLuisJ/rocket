@@ -38,7 +38,7 @@ function extractTextFromClaudeJson(line: string): string | null {
 export const claudeBackend: AgentBackend = {
   name: 'Claude CLI',
 
-  spawn(options: BackendOptions): ChildProcess {
+  spawn(prompt: string, options: BackendOptions): ChildProcess {
     return spawn(
       'claude',
       [
@@ -49,25 +49,21 @@ export const claudeBackend: AgentBackend = {
         '--verbose',
         '--dangerously-skip-permissions',
         '-p',
-        options.prompt,
+        prompt,
       ],
       {
-        cwd: options.projectRoot,
+        cwd: options.cwd,
         stdio: ['ignore', 'pipe', 'pipe'],
       },
     )
   },
 
-  parseOutputLine(line: string): ParsedOutput | null {
+  parseOutput(line: string): ParsedOutput | null {
     const text = extractTextFromClaudeJson(line)
     if (!text) return null
-    return {
-      text,
-      isComplete: hasCompleteTag(text),
-      isBlocked: hasBlockedTag(text),
-      isDecide: hasDecideTag(text),
-      blockedReason: hasBlockedTag(text) ? extractBlockedReason(text) : undefined,
-      decideQuestion: hasDecideTag(text) ? extractDecideQuestion(text) : undefined,
-    }
+    if (hasCompleteTag(text)) return { type: 'complete' }
+    if (hasBlockedTag(text)) return { type: 'blocked', reason: extractBlockedReason(text) }
+    if (hasDecideTag(text)) return { type: 'decide', question: extractDecideQuestion(text) }
+    return { type: 'text', content: text }
   },
 }

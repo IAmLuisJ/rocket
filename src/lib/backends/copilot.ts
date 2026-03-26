@@ -11,22 +11,18 @@ import {
 export const copilotBackend: AgentBackend = {
   name: 'Copilot CLI',
 
-  spawn(options: BackendOptions): ChildProcess {
-    return spawn('copilot', ['--autopilot', '--prompt', options.prompt], {
-      cwd: options.projectRoot,
+  spawn(prompt: string, options: BackendOptions): ChildProcess {
+    return spawn('copilot', ['--autopilot', '--prompt', prompt], {
+      cwd: options.cwd,
       stdio: ['ignore', 'pipe', 'pipe'],
     })
   },
 
-  parseOutputLine(line: string): ParsedOutput | null {
+  parseOutput(line: string): ParsedOutput | null {
     if (!line.trim()) return null
-    return {
-      text: line,
-      isComplete: hasCompleteTag(line),
-      isBlocked: hasBlockedTag(line),
-      isDecide: hasDecideTag(line),
-      blockedReason: hasBlockedTag(line) ? extractBlockedReason(line) : undefined,
-      decideQuestion: hasDecideTag(line) ? extractDecideQuestion(line) : undefined,
-    }
+    if (hasCompleteTag(line)) return { type: 'complete' }
+    if (hasBlockedTag(line)) return { type: 'blocked', reason: extractBlockedReason(line) }
+    if (hasDecideTag(line)) return { type: 'decide', question: extractDecideQuestion(line) }
+    return { type: 'text', content: line }
   },
 }

@@ -40,17 +40,17 @@ const DOCKER_CMD =
 export const dockerBackend: AgentBackend = {
   name: 'Docker Sandbox',
 
-  spawn(options: BackendOptions): ChildProcess {
+  spawn(prompt: string, options: BackendOptions): ChildProcess {
     const env = {
       ...process.env,
-      ROCKET_PROMPT: options.prompt,
+      ROCKET_PROMPT: prompt,
       DOCKER_DEFAULT_PLATFORM: 'linux/amd64',
     }
 
     if (platform() === 'darwin') {
       // On macOS, use `script -q /dev/null` to provide a pseudo-TTY
       return spawn('script', ['-q', '/dev/null', 'bash', '-c', DOCKER_CMD], {
-        cwd: options.projectRoot,
+        cwd: options.cwd,
         env,
         stdio: ['ignore', 'pipe', 'pipe'],
       })
@@ -58,45 +58,34 @@ export const dockerBackend: AgentBackend = {
 
     // On Linux, spawn bash directly
     return spawn('bash', ['-c', DOCKER_CMD], {
-      cwd: options.projectRoot,
+      cwd: options.cwd,
       env,
       stdio: ['ignore', 'pipe', 'pipe'],
     })
   },
 
-  parseOutputLine(line: string): ParsedOutput | null {
+  parseOutput(line: string): ParsedOutput | null {
     // Detect Docker-specific error strings (plain text, not JSON)
     if (line.includes('docker daemon not ready')) {
       return {
-        text: line,
-        isComplete: false,
-        isBlocked: true,
-        isDecide: false,
-        blockedReason: 'Docker daemon is not ready. Please ensure Docker Desktop is running.',
+        type: 'blocked',
+        reason: 'Docker daemon is not ready. Please ensure Docker Desktop is running.',
       }
     }
 
     if (line.includes('Invalid API key')) {
       return {
-        text: line,
-        isComplete: false,
-        isBlocked: true,
-        isDecide: false,
-        blockedReason:
+        type: 'blocked',
+        reason:
           'Invalid API key. Run `docker sandbox run claude . --` to authenticate inside the sandbox.',
       }
     }
 
     const text = extractTextFromClaudeJson(line)
     if (!text) return null
-
-    return {
-      text,
-      isComplete: hasCompleteTag(text),
-      isBlocked: hasBlockedTag(text),
-      isDecide: hasDecideTag(text),
-      blockedReason: hasBlockedTag(text) ? extractBlockedReason(text) : undefined,
-      decideQuestion: hasDecideTag(text) ? extractDecideQuestion(text) : undefined,
-    }
+    if (hasCompleteTag(text)) return { type: 'complete' }
+    if (hasBlockedTag(text)) return { type: 'blocked', reason: extractBlockedReason(text) }
+    if (hasDecideTag(text)) return { type: 'decide', question: extractDecideQuestion(text) }
+    return { type: 'text', content: text }
   },
 }

@@ -326,3 +326,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-47 — Create src/lib/tasks/reader.ts — read/write tasks.json
 - **Outcome:** pass
 - **Summary:** Added markTaskComplete function (immutable update returning new array with matching task's passes set to true). Added 4 unit tests: markTaskComplete with matching id, markTaskComplete with non-existent id, readTasks error on missing file, readTasks error on invalid JSON. All 275 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-48
+- **Time:** 2026-03-26T05:02:00.000Z
+- **Task:** TASK-48 — Create src/lib/backends/types.ts — AgentBackend interface
+- **Outcome:** pass
+- **Summary:** Rewrote types.ts to match spec: BackendOptions with prompt/maxIterations/cwd, ParsedOutput as discriminated union (text/json/complete/blocked/decide), AgentBackend with spawn(prompt, options) and parseOutput(line). Updated all 3 backend implementations (copilot, claude, docker) and all consumers (RocketLoop.tsx, clarifier.ts) to use new signatures. Created types.test.ts with 9 tests covering all type variants, exhaustive switch, and interface shape. All 284 tests pass, tsc clean.
