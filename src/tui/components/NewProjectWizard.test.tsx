@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from 'ink-testing-library'
-import { NewProjectWizard, ProgressStep } from './NewProjectWizard.js'
+import { NewProjectWizard, ProgressStep, SuccessScreen } from './NewProjectWizard.js'
 
 vi.mock('../../lib/scaffold.js', () => ({
   scaffold: vi.fn().mockResolvedValue(undefined),
@@ -66,6 +66,36 @@ describe('NewProjectWizard', () => {
     const frame = lastFrame()
     expect(frame).toContain('my-app')
     expect(frame).toContain('webapp')
+  })
+})
+
+describe('SuccessScreen', () => {
+  it('shows project name and type', () => {
+    const { lastFrame } = render(<SuccessScreen name="my-app" projectType="webapp" />)
+    const frame = lastFrame()
+    expect(frame).toContain('Project created successfully')
+    expect(frame).toContain('my-app')
+    expect(frame).toContain('webapp')
+  })
+
+  it('shows next steps with cd and rocket loop', () => {
+    const { lastFrame } = render(<SuccessScreen name="my-app" projectType="webapp" />)
+    const frame = lastFrame()
+    expect(frame).toContain('Next steps')
+    expect(frame).toContain('cd my-app && rocket loop')
+  })
+
+  it('shows green success indicator', () => {
+    const { lastFrame } = render(<SuccessScreen name="test-proj" projectType="website" />)
+    const frame = lastFrame()
+    expect(frame).toContain('✅')
+  })
+
+  it('displays website template type correctly', () => {
+    const { lastFrame } = render(<SuccessScreen name="my-site" projectType="website" />)
+    const frame = lastFrame()
+    expect(frame).toContain('my-site')
+    expect(frame).toContain('website')
   })
 })
 

@@ -365,7 +365,7 @@
       "title": "Add success screen to NewProjectWizard",
       "description": "After scaffolding completes, render a success screen showing: project name, template used, next steps ('cd <name> && rocket loop'). Use green color for success indicator.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Success screen appears after scaffolding with correct project name and next-step instructions",
       "specFilePath": ".agent/tasks/TASK-41.json"
     },

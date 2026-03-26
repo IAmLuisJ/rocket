@@ -9,6 +9,29 @@ import { join } from 'path'
 
 type Step = 'name' | 'type' | 'features' | 'scaffolding' | 'done' | 'error'
 
+export function SuccessScreen({ name, projectType }: { name: string; projectType: string }) {
+  return (
+    <Box flexDirection="column" marginTop={1}>
+      <Text color="green" bold>
+        ✅ Project created successfully!
+      </Text>
+      <Text>
+        {'  '}Name: <Text bold>{name}</Text>
+      </Text>
+      <Text>
+        {'  '}Type: <Text bold>{projectType}</Text>
+      </Text>
+      <Box marginTop={1} flexDirection="column">
+        <Text>Next steps:</Text>
+        <Text>
+          {'  '}
+          <Text color="cyan">cd {name} && rocket loop</Text>
+        </Text>
+      </Box>
+    </Box>
+  )
+}
+
 export function ProgressStep({ label, done }: { label: string; done: boolean }) {
   return (
     <Box>
@@ -197,21 +220,6 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
   }
 
   // step === 'done'
-  setTimeout(() => exit(), 100)
-  return (
-    <Box flexDirection="column" padding={1}>
-      <Text bold color="green">
-        ✓ Project created!
-      </Text>
-      <Box marginTop={1} flexDirection="column">
-        <Text> Name: {name}</Text>
-        <Text> Template: {projectType}</Text>
-      </Box>
-      <Box marginTop={1} flexDirection="column">
-        <Text bold>Next steps:</Text>
-        <Text> cd {name}</Text>
-        <Text> rocket loop</Text>
-      </Box>
-    </Box>
-  )
+  setTimeout(() => exit(), 500)
+  return <SuccessScreen name={name} projectType={projectType} />
 }

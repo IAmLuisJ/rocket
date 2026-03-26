@@ -284,3 +284,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-40 — Add scaffolding progress display to NewProjectWizard
 - **Outcome:** pass
 - **Summary:** Added sequential progress display to NewProjectWizard: exported ProgressStep component (spinner when active, green checkmark when done), added ScaffoldProgress type and onProgress callback to scaffold.ts, updated doScaffold to pass progress callback. Progress shows three sequential steps: Scaffolding, Installing dependencies, Initializing git. Added 4 ProgressStep unit tests and 1 scaffold onProgress callback test. All 246 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-41
+- **Time:** 2026-03-26T00:14:00.000Z
+- **Task:** TASK-41 — Add success screen to NewProjectWizard
+- **Outcome:** pass
+- **Summary:** Extracted SuccessScreen component from NewProjectWizard with green ✅ indicator, project name (bold), template type (bold), and cyan "cd <name> && rocket loop" next steps. Uses useApp().exit() after 500ms delay. Added 4 unit tests for SuccessScreen covering content, next steps, green indicator, and website type. All 250 tests pass, tsc clean.
