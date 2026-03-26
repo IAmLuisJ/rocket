@@ -455,7 +455,7 @@
       "title": "Create src/lib/backends/docker.ts — Docker sandbox backend",
       "description": "Implement AgentBackend for Docker sandbox. spawn() runs: 'docker sandbox run claude . -- --model opus -p \"<prompt>\"'. Check 'docker' is in PATH. parseOutput() same as claude backend.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "docker.spawn() returns a ChildProcess; missing docker binary throws a descriptive error",
       "specFilePath": ".agent/tasks/TASK-51.json"
     },

@@ -344,3 +344,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-50 — Create src/lib/backends/claude.ts — Claude direct backend
 - **Outcome:** pass
 - **Summary:** Rewrote claude.ts to match spec: added checkClaudeBinary() preflight using execSync('which claude') with descriptive error and download URL, simplified spawn to use ['--model', 'opus', '-p', prompt] (removed stream-json/verbose/dangerously-skip-permissions flags), renamed backend to 'Claude (direct)', simplified parseOutput to match copilot pattern (plain text, not JSON). Created claude.test.ts with 12 tests covering: name, interface shape, binary check, missing binary error, spawn args/flags/cwd/return, parseOutput for empty/text/complete/blocked/decide. All 308 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-51
+- **Time:** 2026-03-26T22:57:00.000Z
+- **Task:** TASK-51 — Create src/lib/backends/docker.ts — Docker sandbox backend
+- **Outcome:** pass
+- **Summary:** Created docker.ts implementing AgentBackend for Docker sandbox. checkDockerBinary() uses execSync('which docker') with descriptive error and install URL. spawn() runs 'docker sandbox run claude . -- --model opus -p <prompt>' with cwd defaulting to process.cwd(). parseOutput() same as claude backend (text, complete, blocked, decide tags). Created docker.test.ts with 13 tests covering: name, interface shape, binary check, missing binary error, spawn args/cwd/default-cwd/return, parseOutput for empty/text/complete/blocked/decide. All 321 tests pass, tsc clean.
