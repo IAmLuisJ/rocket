@@ -482,7 +482,7 @@
       "title": "Write unit tests for tags.ts",
       "description": "Create src/lib/parser/tags.test.ts with Vitest tests covering: complete detection in mid-text, blocked with and without reason text, decide tag extraction, false positives (incomplete tags), case sensitivity.",
       "category": "testing",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm test passes all tags.test.ts cases with 100% coverage of tags.ts",
       "specFilePath": ".agent/tasks/TASK-54.json"
     },
