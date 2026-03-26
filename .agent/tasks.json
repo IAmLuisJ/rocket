@@ -491,7 +491,7 @@
       "title": "Create src/lib/parser/jsonStream.ts — output stream parser",
       "description": "Create jsonStream.ts that processes stdout lines from AI backends. For each line: try JSON.parse, if valid return parsed object, if not return { type: 'text', content: line }. Buffer partial JSON across multiple lines.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Parser correctly handles JSON lines, plain text lines, and partial JSON split across lines",
       "specFilePath": ".agent/tasks/TASK-55.json"
     },
