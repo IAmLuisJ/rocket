@@ -10,7 +10,7 @@ vi.mock('child_process', () => ({
 
 const mockedExecSync = vi.mocked(execSync)
 
-import { scaffold, sanitizeProjectName } from './scaffold.js'
+import { scaffold, sanitizeProjectName, featureFiles } from './scaffold.js'
 
 describe('scaffold webapp template', () => {
   let tmpDir: string
@@ -135,6 +135,73 @@ describe('scaffold webapp template', () => {
       'git init',
       expect.objectContaining({ cwd: projectDir }),
     )
+  })
+})
+
+describe('feature toggle exclusion', () => {
+  let tmpDir: string
+
+  beforeEach(async () => {
+    tmpDir = await mkdtemp(join(tmpdir(), 'rocket-feature-'))
+    mockedExecSync.mockReset()
+  })
+
+  afterEach(async () => {
+    await rm(tmpDir, { recursive: true, force: true })
+  })
+
+  it('includes auth files when auth is true', async () => {
+    const projectDir = join(tmpDir, 'test-app')
+    await scaffold('webapp', 'test-app', projectDir, { auth: true, email: true, pdf: true })
+
+    for (const file of featureFiles.auth) {
+      await access(join(projectDir, file))
+    }
+  })
+
+  it('excludes auth files when auth is false', async () => {
+    const projectDir = join(tmpDir, 'test-app')
+    await scaffold('webapp', 'test-app', projectDir, { auth: false })
+
+    for (const file of featureFiles.auth) {
+      await expect(access(join(projectDir, file))).rejects.toThrow()
+    }
+  })
+
+  it('excludes email files when email is false', async () => {
+    const projectDir = join(tmpDir, 'test-app')
+    await scaffold('webapp', 'test-app', projectDir, { email: false })
+
+    for (const file of featureFiles.email) {
+      await expect(access(join(projectDir, file))).rejects.toThrow()
+    }
+  })
+
+  it('excludes pdf files when pdf is false', async () => {
+    const projectDir = join(tmpDir, 'test-app')
+    await scaffold('webapp', 'test-app', projectDir, { pdf: false })
+
+    for (const file of featureFiles.pdf) {
+      await expect(access(join(projectDir, file))).rejects.toThrow()
+    }
+  })
+
+  it('keeps non-disabled features when only some are false', async () => {
+    const projectDir = join(tmpDir, 'test-app')
+    await scaffold('webapp', 'test-app', projectDir, { auth: false, email: true, pdf: true })
+
+    // Auth should be removed
+    for (const file of featureFiles.auth) {
+      await expect(access(join(projectDir, file))).rejects.toThrow()
+    }
+
+    // Email and PDF should still exist
+    for (const file of featureFiles.email) {
+      await access(join(projectDir, file))
+    }
+    for (const file of featureFiles.pdf) {
+      await access(join(projectDir, file))
+    }
   })
 })
 

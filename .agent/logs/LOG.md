@@ -290,3 +290,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-41 — Add success screen to NewProjectWizard
 - **Outcome:** pass
 - **Summary:** Extracted SuccessScreen component from NewProjectWizard with green ✅ indicator, project name (bold), template type (bold), and cyan "cd <name> && rocket loop" next steps. Uses useApp().exit() after 500ms delay. Added 4 unit tests for SuccessScreen covering content, next steps, green indicator, and website type. All 250 tests pass, tsc clean.
+
+## Session 2026-03-26 · TASK-42
+- **Time:** 2026-03-26T00:17:00.000Z
+- **Task:** TASK-42 — Wire feature toggles into scaffold options
+- **Outcome:** pass
+- **Summary:** Implemented feature file exclusion in scaffold.ts: added featureFiles map (auth: 3 files, email: 2 files, pdf: 1 file) and removeDisabledFeatureFiles() that deletes feature files when toggled off. Created 6 template files (auth middleware/route/jwt, mailer, email route, pdf lib). Wizard-to-scaffold wiring was already in place. Added 5 unit tests covering auth/email/pdf exclusion and mixed feature combinations. All 255 tests pass, tsc clean.

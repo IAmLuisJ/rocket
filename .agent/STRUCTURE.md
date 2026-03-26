@@ -53,5 +53,15 @@ src/
 
 templates/
   webapp/                # Web app template (React + Express)
+    server/src/
+      middleware/
+        auth.ts          # Auth middleware (feature toggle)
+      routes/
+        auth.ts          # Auth routes (feature toggle)
+        email.ts         # Email routes (feature toggle)
+      lib/
+        jwt.ts           # JWT utilities (feature toggle)
+        mailer.ts        # Email sender (feature toggle)
+        pdf.ts           # PDF generator (feature toggle)
   website/               # Website template (PHP + MySQL)
 ```

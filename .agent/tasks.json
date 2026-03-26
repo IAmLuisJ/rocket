@@ -374,7 +374,7 @@
       "title": "Wire feature toggles into scaffold options",
       "description": "Pass the user's feature toggle selections (auth, email, PDF) from NewProjectWizard through to scaffold.ts. scaffold.ts should conditionally include/exclude feature-specific files based on these options.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Selecting auth:false omits auth-related files from the scaffolded project",
       "specFilePath": ".agent/tasks/TASK-42.json"
     },

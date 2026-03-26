@@ -48,13 +48,8 @@ export async function scaffold(
   await processTemplate(templateDir, destPath, vars)
 
   // Post-copy cleanup for feature toggles
-  if (options?.auth === false) {
-    const authPath = join(destPath, 'server', 'src', 'middleware', 'auth.ts')
-    try {
-      await rm(authPath)
-    } catch {
-      // File may not exist in template — that's fine
-    }
+  if (options) {
+    await removeDisabledFeatureFiles(destPath, options)
   }
 
   // Create .agent/ structure
@@ -85,6 +80,29 @@ export async function scaffold(
   })
 
   onProgress?.('done')
+}
+
+export const featureFiles: Record<keyof ScaffoldOptions, string[]> = {
+  auth: ['server/src/middleware/auth.ts', 'server/src/routes/auth.ts', 'server/src/lib/jwt.ts'],
+  email: ['server/src/lib/mailer.ts', 'server/src/routes/email.ts'],
+  pdf: ['server/src/lib/pdf.ts'],
+}
+
+async function removeDisabledFeatureFiles(
+  destPath: string,
+  options: ScaffoldOptions,
+): Promise<void> {
+  for (const [feature, files] of Object.entries(featureFiles)) {
+    if (options[feature as keyof ScaffoldOptions] === false) {
+      for (const file of files) {
+        try {
+          await rm(join(destPath, file))
+        } catch {
+          // File may not exist in template — that's fine
+        }
+      }
+    }
+  }
 }
 
 async function createAgentStructure(projectPath: string, projectName: string): Promise<void> {
