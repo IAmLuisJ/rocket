@@ -500,7 +500,7 @@
       "title": "Write unit tests for jsonStream.ts",
       "description": "Create src/lib/parser/jsonStream.test.ts with Vitest tests: valid JSON line, invalid JSON line (passthrough), partial JSON buffering, empty line handling.",
       "category": "testing",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm test passes all jsonStream.test.ts cases",
       "specFilePath": ".agent/tasks/TASK-56.json"
     },
