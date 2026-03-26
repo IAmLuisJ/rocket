@@ -527,7 +527,7 @@
       "title": "Create src/lib/log.ts — progress log writer",
       "description": "Create log.ts with appendSessionLog(agentDir, sessionLog: SessionLog): void. Appends a markdown section to .agent/logs/LOG.md with: timestamp, task title, backend used, iteration count, outcome (complete/blocked/max-iterations), elapsed time.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "appendSessionLog creates LOG.md if missing and appends correct markdown content",
       "specFilePath": ".agent/tasks/TASK-59.json"
     },

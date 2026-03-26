@@ -9,7 +9,7 @@ import type { Task } from '../lib/tasks/schema.js'
 import { getIncompleteTasks } from '../lib/tasks/reader.js'
 import { buildLoopPrompt, getDefaultPromptContent } from '../lib/prompt.js'
 import { saveIteration } from '../lib/history.js'
-import { appendLogEntry } from '../lib/log.js'
+import { appendSessionLog } from '../lib/log.js'
 import {
   hasCompleteTag,
   hasBlockedTag,
@@ -169,16 +169,15 @@ export function RocketLoop({
 
           stats.push({ iteration: iter, durationMs: iterDuration })
 
-          appendLogEntry(
-            projectRoot,
-            sid,
-            iter,
-            currentTask?.id ?? null,
-            currentTask?.title ?? null,
-            exitOutcome ?? 'iteration',
-            fullOutput.slice(-300),
-            iterDuration,
-          )
+          void appendSessionLog(join(projectRoot, '.agent'), {
+            taskId: currentTask?.id ?? null,
+            taskTitle: currentTask?.title ?? null,
+            backend: backend.name,
+            iterations: iter,
+            outcome: exitOutcome ?? 'iteration',
+            elapsedMs: iterDuration,
+            timestamp: new Date(),
+          })
 
           if (exitOutcome && !cancelledRef.current) {
             setOutcome(exitOutcome)

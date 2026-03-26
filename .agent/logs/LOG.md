@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-26 · TASK-59
+- **Task:** Create src/lib/log.ts — progress log writer
+- **Summary:** Refactored log.ts to spec-compliant async API: `appendSessionLog(agentDir, sessionLog)` with `SessionLog` type using fs-extra. Updated RocketLoop.tsx consumer. 5 unit tests covering file creation, markdown fields, append preservation, null task handling, and elapsed formatting. All 358 project tests pass.
+
 ## 2026-03-26 · TASK-58
 - **Task:** Create src/lib/history.ts — iteration history writer
 - **Summary:** Refactored history.ts to spec-compliant API: async `saveIteration(agentDir, sessionId, iteration, rawOutput)` using strip-ansi and fs-extra. Updated RocketLoop.tsx consumer. 5 unit tests covering file creation, ANSI stripping, directory creation, empty output, and multiple iterations. All 353 project tests pass.
