@@ -635,7 +635,7 @@
       "title": "Create src/tui/components/DecideScreen.tsx",
       "description": "Create Ink component DecideScreen for when AI outputs <decide>. Shows: yellow header 'Decision Needed', the question text, a TextInput for user answer. On submit, writes the answer to .agent/decisions.md and resumes or exits loop.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Component shows question and accepts text input; submitting writes to .agent/decisions.md",
       "specFilePath": ".agent/tasks/TASK-71.json"
     },
