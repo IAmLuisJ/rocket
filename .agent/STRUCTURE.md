@@ -22,6 +22,7 @@ src/
     loop-runner.ts       # Core loop execution async generator
     preflight.ts         # Pre-loop validation checks
     prompt.ts            # Prompt builder for AI backends
+    prompt-builder.ts    # Async prompt constructor (PROMPT.md + PRD + task)
     scaffold.ts          # Project scaffolding
     template-engine.ts   # Template variable substitution
     backends/

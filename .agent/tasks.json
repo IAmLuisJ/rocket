@@ -554,7 +554,7 @@
       "title": "Build prompt constructor for loop runner",
       "description": "In loop-runner.ts or a separate src/lib/prompt-builder.ts, create buildPrompt(task, agentDir): string. Reads .agent/PROMPT.md, reads .agent/prd/PRD.md, and builds a prompt string combining them with the task details.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "buildPrompt returns a string containing task title, task description, and PROMPT.md content",
       "specFilePath": ".agent/tasks/TASK-62.json"
     },

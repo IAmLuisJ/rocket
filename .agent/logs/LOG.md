@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-62
+- **Task:** Build prompt constructor for loop runner
+- **Summary:** Created `src/lib/prompt-builder.ts` with async `buildPrompt(task, agentDir)` that reads PROMPT.md and PRD.md from the agent directory, falls back to a default prompt when PROMPT.md is missing, and assembles a full prompt string with task details (id, title, description, passCondition). 8 unit tests. All 378 project tests pass.
+
 ## 2026-03-27 · TASK-61
 - **Task:** Create src/lib/loop-runner.ts — core loop execution logic
 - **Summary:** Created `runLoop(options)` async generator that drives the AI backend through iterations and yields typed `LoopEvent` events (`iteration-start`, `output`, `complete`, `blocked`, `decide`, `max-reached`, `timing`). Detects exit tags via parser/tags.ts and terminates the generator on any exit condition. 7 unit tests. All 370 project tests pass.
