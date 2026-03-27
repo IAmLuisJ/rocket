@@ -680,7 +680,7 @@
       "title": "Create src/commands/loop.ts and wire RocketLoopApp",
       "description": "Create loop.ts command handler that: runs preflight checks, reads tasks, selects backend, then renders RocketLoopApp via Ink's render(). Pass tasks, backend, and maxIterations as props.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket loop renders the TUI and enters task selection state",
       "specFilePath": ".agent/tasks/TASK-76.json"
     },

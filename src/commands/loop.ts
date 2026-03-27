@@ -8,7 +8,7 @@ import { getBackend } from '../lib/backends/index.js'
 import { start as startCaffeinate, stop as stopCaffeinate } from '../lib/caffeinate.js'
 import { ensureLogFile } from '../lib/log.js'
 import { getDefaultPromptContent } from '../lib/prompt.js'
-import { RocketLoop } from '../tui/RocketLoop.js'
+import { RocketLoopApp } from '../tui/RocketLoopApp.js'
 
 export async function runLoop(opts: {
   claude?: boolean
@@ -91,13 +91,13 @@ export async function runLoop(opts: {
 
   // Start the Ink TUI
   const { waitUntilExit } = render(
-    React.createElement(RocketLoop, {
-      projectRoot,
-      projectName,
-      backend,
+    React.createElement(RocketLoopApp, {
       tasks: tasksFile.tasks,
+      backend,
+      backendName: backend.name,
+      projectName,
       maxIterations,
-      auto: opts.auto,
+      agentDir,
     }),
   )
 

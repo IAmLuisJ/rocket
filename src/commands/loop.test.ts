@@ -34,8 +34,8 @@ vi.mock('../lib/backends/index.js', () => ({
 }))
 
 vi.mock('../lib/caffeinate.js', () => ({
-  startCaffeinate: vi.fn(),
-  stopCaffeinate: vi.fn(),
+  start: vi.fn().mockReturnValue(null),
+  stop: vi.fn(),
 }))
 
 vi.mock('../lib/log.js', () => ({
@@ -46,8 +46,8 @@ vi.mock('../lib/prompt.js', () => ({
   getDefaultPromptContent: vi.fn().mockReturnValue('# Prompt'),
 }))
 
-vi.mock('../tui/RocketLoop.js', () => ({
-  RocketLoop: vi.fn(),
+vi.mock('../tui/RocketLoopApp.js', () => ({
+  RocketLoopApp: vi.fn(),
 }))
 
 describe('loop command --max-iterations validation', () => {
@@ -98,6 +98,97 @@ describe('loop command --max-iterations validation', () => {
     await expect(runLoop({ maxIterations: '5' })).rejects.toThrow('process.exit called')
     // The error should be about missing .agent/ dir, not about max-iterations
     expect(mockConsoleError).toHaveBeenCalledWith(expect.stringContaining('.agent/'))
+  })
+})
+
+describe('loop command renders RocketLoopApp', () => {
+  beforeEach(() => {
+    vi.spyOn(process, 'exit').mockImplementation(() => {
+      throw new Error('process.exit called')
+    })
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.spyOn(console, 'log').mockImplementation(() => {})
+  })
+
+  it('renders RocketLoopApp with correct props when preflight passes', async () => {
+    const { existsSync } = await import('fs')
+    vi.mocked(existsSync).mockReturnValue(true)
+    const { readTasks, getIncompleteTasks } = await import('../lib/tasks/reader.js')
+    const fakeTasks = [{ id: 1, title: 'Test', passes: false }]
+    vi.mocked(readTasks).mockReturnValue({ tasks: fakeTasks } as ReturnType<typeof readTasks>)
+    vi.mocked(getIncompleteTasks).mockReturnValue(
+      fakeTasks as ReturnType<typeof getIncompleteTasks>,
+    )
+    const fakeBackend = { name: 'Copilot CLI', spawn: vi.fn(), parseOutput: vi.fn() }
+    const { getBackend } = await import('../lib/backends/index.js')
+    vi.mocked(getBackend).mockReturnValue(fakeBackend as ReturnType<typeof getBackend>)
+    const React = await import('react')
+    const createSpy = vi.spyOn(React.default, 'createElement')
+
+    const { runLoop } = await import('./loop.js')
+    await runLoop({ maxIterations: '3' })
+
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        tasks: fakeTasks,
+        backend: fakeBackend,
+        backendName: 'Copilot CLI',
+        maxIterations: 3,
+      }),
+    )
+  })
+
+  it('passes agentDir prop to RocketLoopApp', async () => {
+    const { existsSync } = await import('fs')
+    vi.mocked(existsSync).mockReturnValue(true)
+    const { readTasks, getIncompleteTasks } = await import('../lib/tasks/reader.js')
+    const fakeTasks = [{ id: 1, title: 'Test', passes: false }]
+    vi.mocked(readTasks).mockReturnValue({ tasks: fakeTasks } as ReturnType<typeof readTasks>)
+    vi.mocked(getIncompleteTasks).mockReturnValue(
+      fakeTasks as ReturnType<typeof getIncompleteTasks>,
+    )
+    const fakeBackend = { name: 'Copilot CLI', spawn: vi.fn(), parseOutput: vi.fn() }
+    const { getBackend } = await import('../lib/backends/index.js')
+    vi.mocked(getBackend).mockReturnValue(fakeBackend as ReturnType<typeof getBackend>)
+    const React = await import('react')
+    const createSpy = vi.spyOn(React.default, 'createElement')
+
+    const { runLoop } = await import('./loop.js')
+    await runLoop({ maxIterations: '5' })
+
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        agentDir: expect.stringContaining('.agent'),
+      }),
+    )
+  })
+
+  it('defaults maxIterations to 10 when not specified', async () => {
+    const { existsSync } = await import('fs')
+    vi.mocked(existsSync).mockReturnValue(true)
+    const { readTasks, getIncompleteTasks } = await import('../lib/tasks/reader.js')
+    const fakeTasks = [{ id: 1, title: 'Test', passes: false }]
+    vi.mocked(readTasks).mockReturnValue({ tasks: fakeTasks } as ReturnType<typeof readTasks>)
+    vi.mocked(getIncompleteTasks).mockReturnValue(
+      fakeTasks as ReturnType<typeof getIncompleteTasks>,
+    )
+    const fakeBackend = { name: 'Copilot CLI', spawn: vi.fn(), parseOutput: vi.fn() }
+    const { getBackend } = await import('../lib/backends/index.js')
+    vi.mocked(getBackend).mockReturnValue(fakeBackend as ReturnType<typeof getBackend>)
+    const React = await import('react')
+    const createSpy = vi.spyOn(React.default, 'createElement')
+
+    const { runLoop } = await import('./loop.js')
+    await runLoop({})
+
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        maxIterations: 10,
+      }),
+    )
   })
 })
 

@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-76
+- **Task:** Create src/commands/loop.ts and wire RocketLoopApp
+- **Summary:** Replaced RocketLoop with RocketLoopApp in loop.ts command handler. Now passes tasks, backend, backendName, projectName, maxIterations, and agentDir as props to RocketLoopApp. Updated mock in tests from RocketLoop to RocketLoopApp. Fixed caffeinate mock exports. Added 3 new tests verifying correct props, agentDir, and default maxIterations. All 459 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-75
 - **Task:** Add keyboard shortcut handler to RocketLoopApp
 - **Summary:** Added keyboard shortcuts to RocketLoopApp: 'q' for graceful quit (stop + exit), 'p' for pause/resume toggle with yellow indicator, 's' to skip current iteration by killing child process. Shortcuts only active in 'running' state. Extended useLoopRunner hook with togglePause, skip, and paused state. Added onChild callback to loop-runner for child process access. Paused indicator and shortcut hints shown in running view. 11 unit tests (6 new keyboard shortcut tests). All 456 project tests pass, tsc clean.
