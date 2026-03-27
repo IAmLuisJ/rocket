@@ -752,7 +752,7 @@
       "title": "Create src/commands/init.ts handler",
       "description": "Create init.ts command handler that calls createAgentStructure(process.cwd()). Print success message listing created files. If .agent/ already exists, show a warning and ask for confirmation before proceeding.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket init creates .agent/ structure in cwd; running twice asks for confirmation",
       "specFilePath": ".agent/tasks/TASK-84.json"
     },

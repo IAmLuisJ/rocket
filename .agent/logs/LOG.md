@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-84
+- **Task:** Create src/commands/init.ts handler
+- **Summary:** Implemented full init command: checks if .agent/ exists and prompts for confirmation (y/N) before proceeding, calls createAgentStructure, prints success message listing all created files. Added 5 unit tests covering: fresh init, confirmation prompt on existing dir, user confirms with y, file list output, and error handling. All 487 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-83
 - **Task:** Create src/lib/agent-init.ts — .agent/ structure creator
 - **Summary:** Refactored createAgentStructure to be idempotent using writeIfAbsent helper — no longer throws if .agent/ already exists. Extracted default file contents into named constants. Updated test to verify existing files are not overwritten on second run. All 482 project tests pass, tsc clean.
