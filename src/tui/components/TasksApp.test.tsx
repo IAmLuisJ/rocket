@@ -116,11 +116,32 @@ describe('TasksApp', () => {
     expect(lastFrame()).toContain('Filter: all')
   })
 
-  it('accepts initialFilter prop', () => {
+  it('accepts initialFilter="incomplete" prop', () => {
     const { lastFrame } = render(<TasksApp tasks={makeTasks()} initialFilter="incomplete" />)
     const frame = lastFrame()!
     expect(frame).toContain('Filter: incomplete')
     expect(frame).toContain('2/3')
+  })
+
+  it('accepts initialFilter="complete" prop', () => {
+    const { lastFrame } = render(<TasksApp tasks={makeTasks()} initialFilter="complete" />)
+    const frame = lastFrame()!
+    expect(frame).toContain('Filter: complete')
+    expect(frame).toContain('1/3')
+  })
+
+  it('accepts initialFilter="blocked" prop', () => {
+    const { lastFrame } = render(<TasksApp tasks={makeTasks()} initialFilter="blocked" />)
+    const frame = lastFrame()!
+    expect(frame).toContain('Filter: blocked')
+    expect(frame).toContain('1/3')
+  })
+
+  it('defaults to "all" filter when no initialFilter is provided', () => {
+    const { lastFrame } = render(<TasksApp tasks={makeTasks()} />)
+    const frame = lastFrame()!
+    expect(frame).toContain('Filter: all')
+    expect(frame).toContain('3/3')
   })
 
   it('shows empty detail panel placeholder before selection', () => {

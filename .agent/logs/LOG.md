@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-81
+- **Task:** Apply --filter flag from Commander to TasksApp
+- **Summary:** Verified --filter flag wiring was already complete: Commander passes --filter option to runTasks, which passes it as initialFilter prop to TasksApp, which initializes filter state from it. Added 3 new tests covering initialFilter="complete", initialFilter="blocked", and default "all" filter. All 478 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-80
 - **Task:** Add 'mark complete' action to TasksApp
 - **Summary:** Added internal tasks state management, flash message with 2s auto-clear, and task list refresh on mark complete. Pressing 'm' on incomplete selected task updates internal state, shows green flash "Task #N marked complete", refreshes list icons, and fires onMarkComplete callback. No effect on already-complete tasks. Added 3 new tests (flash message, list icon update, no-op on complete task). All 475 project tests pass, tsc clean.

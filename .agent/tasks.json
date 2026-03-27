@@ -725,7 +725,7 @@
       "title": "Apply --filter flag from Commander to TasksApp",
       "description": "In src/commands/tasks.ts, read the --filter option and pass it as the initial filter state to TasksApp. If --filter is provided, TasksApp starts with that filter pre-applied.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket tasks --filter incomplete starts with the Incomplete filter active",
       "specFilePath": ".agent/tasks/TASK-81.json"
     },
