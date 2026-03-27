@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-70
+- **Task:** Create src/tui/components/BlockedScreen.tsx
+- **Summary:** Created BlockedScreen Ink component showing red "Loop Blocked" header, reason text, and fix instructions. Exits on any keypress via useApp/useInput hooks. 5 unit tests covering header, reason display, instructions, keypress exit, and emoji rendering. All 421 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-69
 - **Task:** Create src/tui/components/CompletionReport.tsx
 - **Summary:** Added per-iteration timing breakdown to the existing CompletionReport component (complete outcome). Created 9 unit tests covering all four outcomes (complete, blocked, decide, max-iterations), task display, time formatting, per-iteration list, and null task handling. All 416 project tests pass, tsc clean.

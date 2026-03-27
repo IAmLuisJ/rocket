@@ -626,7 +626,7 @@
       "title": "Create src/tui/components/BlockedScreen.tsx",
       "description": "Create Ink component BlockedScreen for when the AI outputs <blocked>. Shows: red header 'Loop Blocked', the blocked reason text, instructions 'Fix the issue and run rocket loop again'. Renders and then exits the process after a keypress.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Component displays reason and instructions; exits on any keypress",
       "specFilePath": ".agent/tasks/TASK-70.json"
     },
