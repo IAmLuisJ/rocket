@@ -31,16 +31,37 @@ export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> 
   const loopStartMs = Date.now()
   let outcome: SessionLog['outcome'] = 'max-iterations'
   let completedIterations = 0
+  let currentChild: import('child_process').ChildProcess | null = null
+  let aborted = false
 
   const caffProc = caffeinate.start()
+
+  const handleSignal = () => {
+    aborted = true
+    if (currentChild) {
+      try {
+        currentChild.kill('SIGTERM')
+      } catch {
+        /* already exited */
+      }
+      currentChild = null
+    }
+  }
+
+  process.on('SIGINT', handleSignal)
+  process.on('SIGTERM', handleSignal)
+
   try {
     for (let i = 1; i <= maxIterations; i++) {
+      if (aborted) break
+
       yield { type: 'iteration-start', n: i }
 
       const prompt = buildLoopPrompt(agentDir, task)
       const startMs = Date.now()
 
       const child = backend.spawn(prompt, { prompt })
+      currentChild = child
       options.onChild?.(child)
       let accumulated = ''
 
@@ -61,6 +82,10 @@ export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> 
           child.on('close', () => resolve())
         }
       })
+
+      currentChild = null
+
+      if (aborted) break
 
       const elapsedMs = Date.now() - startMs
       yield { type: 'timing', iterationN: i, elapsedMs }
@@ -90,8 +115,15 @@ export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> 
       }
     }
 
-    yield { type: 'max-reached' }
+    if (!aborted) {
+      yield { type: 'max-reached' }
+    }
   } finally {
+    process.removeListener('SIGINT', handleSignal)
+    process.removeListener('SIGTERM', handleSignal)
+    if (aborted) {
+      outcome = 'error'
+    }
     caffeinate.stop(caffProc)
     await appendSessionLog(agentDir, {
       taskId: task.id,

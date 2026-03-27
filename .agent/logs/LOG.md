@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-88
+- **Task:** Add process cleanup on SIGINT/SIGTERM in loop runner
+- **Summary:** Added signal cleanup handlers to loop-runner.ts: tracks `currentChild` reference, registers SIGINT/SIGTERM handlers that kill the AI child process and set an `aborted` flag, removes listeners in finally block, stops caffeinate and writes partial session log with 'error' outcome on abort. Added 5 new tests covering: SIGINT kills child, SIGTERM kills child, partial log on signal, no max-reached after abort, and listener cleanup after normal exit. All 499 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-87
 - **Task:** Ensure no hardcoded credentials in website template
 - **Summary:** Removed fallback defaults for DB_USER (`'root'`) and DB_PASS (`''`) in config/database.php — now throws RuntimeException if env vars are unset. Added 3 website security tests to template-security.test.ts: verifies getenv() usage without credential fallbacks, scans PHP files for hardcoded passwords, and validates .env.example uses placeholder values. Updated placeholder allowlist to match underscore-separated patterns. All 494 project tests pass, tsc clean.

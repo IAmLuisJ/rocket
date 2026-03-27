@@ -329,13 +329,16 @@ describe('loop-runner', () => {
     await collectEvents(runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }))
 
     expect(mockAppendSessionLog).toHaveBeenCalledOnce()
-    expect(mockAppendSessionLog).toHaveBeenCalledWith('/tmp/test', expect.objectContaining({
-      taskId: 42,
-      taskTitle: 'My task',
-      backend: 'mock',
-      iterations: 1,
-      outcome: 'complete',
-    }))
+    expect(mockAppendSessionLog).toHaveBeenCalledWith(
+      '/tmp/test',
+      expect.objectContaining({
+        taskId: 42,
+        taskTitle: 'My task',
+        backend: 'mock',
+        iterations: 1,
+        outcome: 'complete',
+      }),
+    )
   })
 
   it('calls appendSessionLog with outcome "blocked" on <blocked> exit', async () => {
@@ -346,13 +349,16 @@ describe('loop-runner', () => {
     await collectEvents(runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }))
 
     expect(mockAppendSessionLog).toHaveBeenCalledOnce()
-    expect(mockAppendSessionLog).toHaveBeenCalledWith('/tmp/test', expect.objectContaining({
-      taskId: 10,
-      taskTitle: 'Blocked task',
-      backend: 'mock',
-      iterations: 1,
-      outcome: 'blocked',
-    }))
+    expect(mockAppendSessionLog).toHaveBeenCalledWith(
+      '/tmp/test',
+      expect.objectContaining({
+        taskId: 10,
+        taskTitle: 'Blocked task',
+        backend: 'mock',
+        iterations: 1,
+        outcome: 'blocked',
+      }),
+    )
   })
 
   it('calls appendSessionLog with outcome "max-iterations" when max reached', async () => {
@@ -363,13 +369,16 @@ describe('loop-runner', () => {
     await collectEvents(runLoop({ task, backend, maxIterations: 2, agentDir: '/tmp/test' }))
 
     expect(mockAppendSessionLog).toHaveBeenCalledOnce()
-    expect(mockAppendSessionLog).toHaveBeenCalledWith('/tmp/test', expect.objectContaining({
-      taskId: 5,
-      taskTitle: 'Long task',
-      backend: 'mock',
-      iterations: 2,
-      outcome: 'max-iterations',
-    }))
+    expect(mockAppendSessionLog).toHaveBeenCalledWith(
+      '/tmp/test',
+      expect.objectContaining({
+        taskId: 5,
+        taskTitle: 'Long task',
+        backend: 'mock',
+        iterations: 2,
+        outcome: 'max-iterations',
+      }),
+    )
   })
 
   it('session log includes elapsedMs and timestamp', async () => {
@@ -393,12 +402,201 @@ describe('loop-runner', () => {
     await collectEvents(runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }))
 
     expect(mockAppendSessionLog).toHaveBeenCalledOnce()
-    expect(mockAppendSessionLog).toHaveBeenCalledWith('/tmp/test', expect.objectContaining({
-      taskId: 7,
-      taskTitle: 'API task',
-      backend: 'mock',
-      iterations: 1,
-      outcome: 'decide',
-    }))
+    expect(mockAppendSessionLog).toHaveBeenCalledWith(
+      '/tmp/test',
+      expect.objectContaining({
+        taskId: 7,
+        taskTitle: 'API task',
+        backend: 'mock',
+        iterations: 1,
+        outcome: 'decide',
+      }),
+    )
+  })
+
+  describe('signal cleanup (SIGINT/SIGTERM)', () => {
+    function createSlowMockChild(): ChildProcess & { finish: () => void } {
+      const stdout = new PassThrough()
+      const stderr = new PassThrough()
+      const stdin = new PassThrough()
+
+      const child = Object.assign(new EventEmitter(), {
+        stdout,
+        stderr,
+        stdin,
+        pid: 5678,
+        killed: false,
+        connected: false,
+        exitCode: null as number | null,
+        signalCode: null as string | null,
+        kill: vi.fn(() => {
+          // Simulate kill: close stdout and emit close
+          stdout.end()
+          setTimeout(() => {
+            ;(child as unknown as { exitCode: number }).exitCode = 1
+            child.emit('close', 1)
+          }, 5)
+        }),
+        send: vi.fn(),
+        disconnect: vi.fn(),
+        unref: vi.fn(),
+        ref: vi.fn(),
+        stdio: [stdin, stdout, stderr, null, null] as ChildProcess['stdio'],
+        [Symbol.dispose]: vi.fn(),
+      }) as unknown as ChildProcess & { finish: () => void }
+
+      // Write a line but don't end stdout — simulates a long-running process
+      process.nextTick(() => {
+        stdout.write('Working...\n')
+      })
+
+      child.finish = () => {
+        stdout.end()
+        setTimeout(() => {
+          ;(child as unknown as { exitCode: number }).exitCode = 0
+          child.emit('close', 0)
+        }, 5)
+      }
+
+      return child
+    }
+
+    it('SIGINT kills the AI child process and stops caffeinate', async () => {
+      const { runLoop } = await import('./loop-runner.js')
+      const slowChild = createSlowMockChild()
+      const backend: AgentBackend = {
+        name: 'mock',
+        spawn: vi.fn(() => slowChild),
+        parseOutput: vi.fn(() => null),
+      }
+      const task = createMockTask({ id: 99, title: 'Signal task' })
+
+      const gen = runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' })
+      const events: unknown[] = []
+
+      // Consume events until we get the first output, then fire SIGINT
+      for await (const event of gen) {
+        events.push(event)
+        if ((event as { type: string }).type === 'output') {
+          process.emit('SIGINT', 'SIGINT')
+          break
+        }
+      }
+
+      // Drain remaining events (generator should terminate)
+      for await (const event of gen) {
+        events.push(event)
+      }
+
+      expect(slowChild.kill).toHaveBeenCalledWith('SIGTERM')
+      expect(mockStop).toHaveBeenCalledOnce()
+    })
+
+    it('SIGTERM kills the AI child process and stops caffeinate', async () => {
+      const { runLoop } = await import('./loop-runner.js')
+      const slowChild = createSlowMockChild()
+      const backend: AgentBackend = {
+        name: 'mock',
+        spawn: vi.fn(() => slowChild),
+        parseOutput: vi.fn(() => null),
+      }
+      const task = createMockTask({ id: 100, title: 'Term task' })
+
+      const gen = runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' })
+      const events: unknown[] = []
+
+      for await (const event of gen) {
+        events.push(event)
+        if ((event as { type: string }).type === 'output') {
+          process.emit('SIGTERM', 'SIGTERM')
+          break
+        }
+      }
+
+      for await (const event of gen) {
+        events.push(event)
+      }
+
+      expect(slowChild.kill).toHaveBeenCalledWith('SIGTERM')
+      expect(mockStop).toHaveBeenCalledOnce()
+    })
+
+    it('writes partial session log with error outcome on SIGINT', async () => {
+      const { runLoop } = await import('./loop-runner.js')
+      const slowChild = createSlowMockChild()
+      const backend: AgentBackend = {
+        name: 'mock',
+        spawn: vi.fn(() => slowChild),
+        parseOutput: vi.fn(() => null),
+      }
+      const task = createMockTask({ id: 101, title: 'Log task' })
+
+      const gen = runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' })
+
+      for await (const event of gen) {
+        if ((event as { type: string }).type === 'output') {
+          process.emit('SIGINT', 'SIGINT')
+          break
+        }
+      }
+
+      // Drain
+      for await (const _event of gen) {
+        /* drain */
+      }
+
+      expect(mockAppendSessionLog).toHaveBeenCalledOnce()
+      expect(mockAppendSessionLog).toHaveBeenCalledWith(
+        '/tmp/test',
+        expect.objectContaining({
+          taskId: 101,
+          taskTitle: 'Log task',
+          backend: 'mock',
+          outcome: 'error',
+        }),
+      )
+    })
+
+    it('does not yield max-reached after SIGINT abort', async () => {
+      const { runLoop } = await import('./loop-runner.js')
+      const slowChild = createSlowMockChild()
+      const backend: AgentBackend = {
+        name: 'mock',
+        spawn: vi.fn(() => slowChild),
+        parseOutput: vi.fn(() => null),
+      }
+      const task = createMockTask()
+
+      const gen = runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' })
+      const events: unknown[] = []
+
+      for await (const event of gen) {
+        events.push(event)
+        if ((event as { type: string }).type === 'output') {
+          process.emit('SIGINT', 'SIGINT')
+          break
+        }
+      }
+
+      for await (const event of gen) {
+        events.push(event)
+      }
+
+      expect(events).not.toContainEqual({ type: 'max-reached' })
+    })
+
+    it('removes signal listeners after loop completes normally', async () => {
+      const { runLoop } = await import('./loop-runner.js')
+      const backend = createMockBackend(['<complete>'])
+      const task = createMockTask()
+
+      const sigintBefore = process.listenerCount('SIGINT')
+      const sigtermBefore = process.listenerCount('SIGTERM')
+
+      await collectEvents(runLoop({ task, backend, maxIterations: 1, agentDir: '/tmp/test' }))
+
+      expect(process.listenerCount('SIGINT')).toBe(sigintBefore)
+      expect(process.listenerCount('SIGTERM')).toBe(sigtermBefore)
+    })
   })
 })

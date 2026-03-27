@@ -788,7 +788,7 @@
       "title": "Add process cleanup on SIGINT/SIGTERM in loop runner",
       "description": "In loop-runner.ts, register SIGINT and SIGTERM handlers that: kill the active AI backend child process, stop caffeinate, write partial session log, then re-raise the signal to allow normal exit.",
       "category": "security",
-      "passes": false,
+      "passes": true,
       "passCondition": "Pressing Ctrl+C during loop kills the AI process and caffeinate without leaving orphan processes",
       "specFilePath": ".agent/tasks/TASK-88.json"
     },
