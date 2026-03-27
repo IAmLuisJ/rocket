@@ -5,6 +5,7 @@ import { buildLoopPrompt } from './prompt.js'
 import { detectComplete, detectBlocked, detectDecide } from './parser/tags.js'
 import * as caffeinate from './caffeinate.js'
 import { saveIteration } from './history.js'
+import { appendSessionLog, type SessionLog } from './log.js'
 
 export type LoopOptions = {
   task: Task
@@ -26,6 +27,10 @@ export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> 
   const { task, backend, maxIterations, agentDir } = options
 
   const sessionId = Date.now().toString()
+  const loopStartMs = Date.now()
+  let outcome: SessionLog['outcome'] = 'max-iterations'
+  let completedIterations = 0
+
   const caffProc = caffeinate.start()
   try {
     for (let i = 1; i <= maxIterations; i++) {
@@ -58,21 +63,26 @@ export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> 
       const elapsedMs = Date.now() - startMs
       yield { type: 'timing', iterationN: i, elapsedMs }
 
+      completedIterations = i
+
       await saveIteration(agentDir, sessionId, i, accumulated)
 
       if (detectComplete(accumulated)) {
+        outcome = 'complete'
         yield { type: 'complete' }
         return
       }
 
       const blocked = detectBlocked(accumulated)
       if (blocked) {
+        outcome = 'blocked'
         yield { type: 'blocked', reason: blocked.reason }
         return
       }
 
       const decide = detectDecide(accumulated)
       if (decide) {
+        outcome = 'decide'
         yield { type: 'decide', question: decide.question }
         return
       }
@@ -81,5 +91,14 @@ export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> 
     yield { type: 'max-reached' }
   } finally {
     caffeinate.stop(caffProc)
+    await appendSessionLog(agentDir, {
+      taskId: task.id,
+      taskTitle: task.title,
+      backend: backend.name,
+      iterations: completedIterations,
+      outcome,
+      elapsedMs: Date.now() - loopStartMs,
+      timestamp: new Date(),
+    })
   }
 }

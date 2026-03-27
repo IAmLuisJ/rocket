@@ -581,7 +581,7 @@
       "title": "Integrate log writing into loop runner",
       "description": "In loop-runner.ts, after the loop ends (any exit condition), call log.appendSessionLog() with the session summary: task title, backend, iterations completed, outcome, total time elapsed.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "After loop exits, .agent/logs/LOG.md is updated with the session summary",
       "specFilePath": ".agent/tasks/TASK-65.json"
     },

@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-65
+- **Task:** Integrate log writing into loop runner
+- **Summary:** Added `appendSessionLog()` call in loop-runner.ts finally block after each loop session. Tracks `loopStartMs`, `outcome`, and `completedIterations` throughout the loop. Outcome is set to 'complete', 'blocked', 'decide', or defaults to 'max-iterations'. 5 new tests verify log is called with correct outcome for complete, blocked, decide, and max-iterations exits, plus elapsedMs/timestamp fields. All 390 project tests pass.
+
 ## 2026-03-27 · TASK-64
 - **Task:** Integrate history saving into loop runner
 - **Summary:** Added `saveIteration()` call in loop-runner.ts after each iteration completes, with a `sessionId` generated via `Date.now()` at loop start. 3 new tests verify saveIteration is called per iteration with consistent sessionId, called before exit tag checks, and uses Date.now() for sessionId. All 385 project tests pass.

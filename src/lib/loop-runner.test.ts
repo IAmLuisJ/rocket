@@ -14,6 +14,11 @@ vi.mock('./history.js', () => ({
   saveIteration: (...args: unknown[]) => mockSaveIteration(...args),
 }))
 
+const mockAppendSessionLog = vi.fn()
+vi.mock('./log.js', () => ({
+  appendSessionLog: (...args: unknown[]) => mockAppendSessionLog(...args),
+}))
+
 const mockCaffProc = { kill: vi.fn(), pid: 9999 }
 const mockStart = vi.fn(() => mockCaffProc)
 const mockStop = vi.fn()
@@ -95,6 +100,7 @@ describe('loop-runner', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockSaveIteration.mockResolvedValue(undefined)
+    mockAppendSessionLog.mockResolvedValue(undefined)
   })
 
   it('yields iteration-start and output events', async () => {
@@ -313,5 +319,86 @@ describe('loop-runner', () => {
 
     expect(mockSaveIteration).toHaveBeenCalledWith('/tmp/test', now.toString(), 1, 'Done\n')
     vi.restoreAllMocks()
+  })
+
+  it('calls appendSessionLog with outcome "complete" on <complete> exit', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['<complete>'])
+    const task = createMockTask({ id: 42, title: 'My task' })
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }))
+
+    expect(mockAppendSessionLog).toHaveBeenCalledOnce()
+    expect(mockAppendSessionLog).toHaveBeenCalledWith('/tmp/test', expect.objectContaining({
+      taskId: 42,
+      taskTitle: 'My task',
+      backend: 'mock',
+      iterations: 1,
+      outcome: 'complete',
+    }))
+  })
+
+  it('calls appendSessionLog with outcome "blocked" on <blocked> exit', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['<blocked>No access</blocked>'])
+    const task = createMockTask({ id: 10, title: 'Blocked task' })
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }))
+
+    expect(mockAppendSessionLog).toHaveBeenCalledOnce()
+    expect(mockAppendSessionLog).toHaveBeenCalledWith('/tmp/test', expect.objectContaining({
+      taskId: 10,
+      taskTitle: 'Blocked task',
+      backend: 'mock',
+      iterations: 1,
+      outcome: 'blocked',
+    }))
+  })
+
+  it('calls appendSessionLog with outcome "max-iterations" when max reached', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['Working...'])
+    const task = createMockTask({ id: 5, title: 'Long task' })
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 2, agentDir: '/tmp/test' }))
+
+    expect(mockAppendSessionLog).toHaveBeenCalledOnce()
+    expect(mockAppendSessionLog).toHaveBeenCalledWith('/tmp/test', expect.objectContaining({
+      taskId: 5,
+      taskTitle: 'Long task',
+      backend: 'mock',
+      iterations: 2,
+      outcome: 'max-iterations',
+    }))
+  })
+
+  it('session log includes elapsedMs and timestamp', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['<complete>'])
+    const task = createMockTask()
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 1, agentDir: '/tmp/test' }))
+
+    const logArg = mockAppendSessionLog.mock.calls[0]![1]
+    expect(typeof logArg.elapsedMs).toBe('number')
+    expect(logArg.elapsedMs).toBeGreaterThanOrEqual(0)
+    expect(logArg.timestamp).toBeInstanceOf(Date)
+  })
+
+  it('calls appendSessionLog with outcome "decide" on <decide> exit', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['<decide>REST or GraphQL?</decide>'])
+    const task = createMockTask({ id: 7, title: 'API task' })
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }))
+
+    expect(mockAppendSessionLog).toHaveBeenCalledOnce()
+    expect(mockAppendSessionLog).toHaveBeenCalledWith('/tmp/test', expect.objectContaining({
+      taskId: 7,
+      taskTitle: 'API task',
+      backend: 'mock',
+      iterations: 1,
+      outcome: 'decide',
+    }))
   })
 })
