@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-82
+- **Task:** Create src/commands/tasks.ts and wire TasksApp
+- **Summary:** Added missing tasks.json existence check (prints helpful error and exits), empty task list handling (prints "No tasks found"), and removed erroneous `await` on synchronous readTasks/writeTasks calls. Added 4 unit tests covering: TUI rendering, missing tasks.json error, empty task list message, and initialFilter passthrough. All 482 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-81
 - **Task:** Apply --filter flag from Commander to TasksApp
 - **Summary:** Verified --filter flag wiring was already complete: Commander passes --filter option to runTasks, which passes it as initialFilter prop to TasksApp, which initializes filter state from it. Added 3 new tests covering initialFilter="complete", initialFilter="blocked", and default "all" filter. All 478 project tests pass, tsc clean.

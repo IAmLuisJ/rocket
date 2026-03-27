@@ -734,7 +734,7 @@
       "title": "Create src/commands/tasks.ts and wire TasksApp",
       "description": "Create tasks.ts command handler. Check that .agent/tasks.json exists (print helpful error if not). Read tasks, render TasksApp with tasks and initial filter. Handle empty task list gracefully.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket tasks renders the TUI; missing tasks.json shows a helpful error; empty task list shows 'No tasks found' message",
       "specFilePath": ".agent/tasks/TASK-82.json"
     },
