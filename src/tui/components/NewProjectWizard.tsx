@@ -3,7 +3,7 @@ import { Box, Text, useApp } from 'ink'
 import TextInput from 'ink-text-input'
 import SelectInput from 'ink-select-input'
 import Spinner from 'ink-spinner'
-import { scaffold } from '../../lib/scaffold.js'
+import { scaffold, sanitizeProjectName } from '../../lib/scaffold.js'
 import type { ScaffoldOptions, ScaffoldProgress } from '../../lib/scaffold.js'
 import { join } from 'path'
 
@@ -63,11 +63,36 @@ const FEATURE_TOGGLES = [
   { label: 'PDF Renderer', key: 'pdf' },
 ]
 
+function trySanitize(input: string | undefined): {
+  name: string
+  notice: string
+  error: string
+} {
+  if (!input) return { name: '', notice: '', error: '' }
+  try {
+    const sanitized = sanitizeProjectName(input)
+    const notice =
+      sanitized !== input ? `Using project name: ${sanitized} (sanitized from: ${input})` : ''
+    return { name: sanitized, notice, error: '' }
+  } catch (err) {
+    return { name: '', notice: '', error: err instanceof Error ? err.message : String(err) }
+  }
+}
+
 export function NewProjectWizard({ initialName, initialType }: Props) {
   const { exit } = useApp()
 
-  const [step, setStep] = useState<Step>(initialName ? (initialType ? 'features' : 'type') : 'name')
-  const [name, setName] = useState(initialName ?? '')
+  const initial = trySanitize(initialName)
+  const initialStep: Step = initial.error
+    ? 'error'
+    : initialName
+      ? initialType
+        ? 'features'
+        : 'type'
+      : 'name'
+
+  const [step, setStep] = useState<Step>(initialStep)
+  const [name, setName] = useState(initial.name)
   const [nameInput, setNameInput] = useState('')
   const [projectType, setProjectType] = useState(initialType ?? '')
   const [features, setFeatures] = useState<ScaffoldOptions>({
@@ -75,14 +100,24 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
     email: false,
     pdf: false,
   })
+  const [sanitizedNotice, setSanitizedNotice] = useState(initial.notice)
   const [progressStep, setProgressStep] = useState<ScaffoldProgress | null>(null)
-  const [errorMsg, setErrorMsg] = useState('')
+  const [errorMsg, setErrorMsg] = useState(initial.error)
 
   const handleNameSubmit = (value: string) => {
     const trimmed = value.trim()
     if (!trimmed) return
-    setName(trimmed)
-    setStep('type')
+    try {
+      const sanitized = sanitizeProjectName(trimmed)
+      if (sanitized !== trimmed) {
+        setSanitizedNotice(`Using project name: ${sanitized} (sanitized from: ${trimmed})`)
+      }
+      setName(sanitized)
+      setStep('type')
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : String(err))
+      setStep('error')
+    }
   }
 
   const handleTypeSelect = (item: { value: string }) => {
@@ -139,6 +174,7 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
           Rocket — New Project
         </Text>
         <Text dimColor>Project: {name}</Text>
+        {sanitizedNotice ? <Text color="yellow">{sanitizedNotice}</Text> : null}
         <Box marginTop={1} flexDirection="column">
           <Text>Select project type:</Text>
           <SelectInput items={PROJECT_TYPES} onSelect={handleTypeSelect} />
@@ -156,6 +192,7 @@ export function NewProjectWizard({ initialName, initialType }: Props) {
         <Text dimColor>
           Project: {name} ({projectType})
         </Text>
+        {sanitizedNotice ? <Text color="yellow">{sanitizedNotice}</Text> : null}
         <Box marginTop={1} flexDirection="column">
           <Text>Feature toggles:</Text>
           {FEATURE_TOGGLES.map((f) => {

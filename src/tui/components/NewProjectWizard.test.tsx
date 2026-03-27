@@ -2,9 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from 'ink-testing-library'
 import { NewProjectWizard, ProgressStep, SuccessScreen } from './NewProjectWizard.js'
 
-vi.mock('../../lib/scaffold.js', () => ({
-  scaffold: vi.fn().mockResolvedValue(undefined),
-}))
+vi.mock('../../lib/scaffold.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../lib/scaffold.js')>()
+  return {
+    ...actual,
+    scaffold: vi.fn().mockResolvedValue(undefined),
+  }
+})
 
 describe('NewProjectWizard', () => {
   beforeEach(() => {
@@ -66,6 +70,33 @@ describe('NewProjectWizard', () => {
     const frame = lastFrame()
     expect(frame).toContain('my-app')
     expect(frame).toContain('webapp')
+  })
+})
+
+describe('NewProjectWizard sanitization', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('sanitizes initialName and shows notice when name changes', () => {
+    const { lastFrame } = render(<NewProjectWizard initialName="My App!" />)
+    const frame = lastFrame()
+    expect(frame).toContain('my-app')
+    expect(frame).toContain('sanitized from: My App!')
+  })
+
+  it('shows error when initialName is all invalid characters', () => {
+    const { lastFrame } = render(<NewProjectWizard initialName="!!!" />)
+    const frame = lastFrame()
+    expect(frame).toContain('Error')
+    expect(frame).toContain('empty after sanitization')
+  })
+
+  it('does not show sanitization notice when name is already valid', () => {
+    const { lastFrame } = render(<NewProjectWizard initialName="valid-name" />)
+    const frame = lastFrame()
+    expect(frame).toContain('valid-name')
+    expect(frame).not.toContain('sanitized from')
   })
 })
 

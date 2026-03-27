@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-90
+- **Task:** Sanitize user-provided project name in rocket new
+- **Summary:** Applied `sanitizeProjectName` in NewProjectWizard: sanitizes both `initialName` prop and interactive name input, shows yellow notice when name is modified (e.g. "My App!" → "my-app"), shows error screen when name is empty after sanitization. Added `trySanitize` helper for initialName handling. Added 3 new wizard tests (sanitized notice, invalid name error, clean name no notice) and 4 new sanitizeProjectName unit tests (whitespace stripping, passthrough, My App!, underscores). All 510 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-89
 - **Task:** Validate tasks.json on loop startup
 - **Summary:** Added ZodError catching in `runPreflight`: catches validation errors from `readTasks`, formats each issue with its field path and message, and throws a user-friendly `Invalid tasks.json` error. Added 4 new tests covering: invalid schema detection, field path in error message, valid tasks.json passes, and non-ZodError re-throw. All 503 project tests pass, tsc clean.

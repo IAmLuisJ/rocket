@@ -217,4 +217,20 @@ describe('sanitizeProjectName', () => {
   it('throws on empty result', () => {
     expect(() => sanitizeProjectName('!!!')).toThrow('empty after sanitization')
   })
+
+  it('strips leading and trailing whitespace', () => {
+    expect(sanitizeProjectName('  hello world  ')).toBe('hello-world')
+  })
+
+  it('passes through valid names unchanged', () => {
+    expect(sanitizeProjectName('valid-name')).toBe('valid-name')
+  })
+
+  it('handles My App! → my-app', () => {
+    expect(sanitizeProjectName('My App!')).toBe('my-app')
+  })
+
+  it('preserves underscores', () => {
+    expect(sanitizeProjectName('my_app')).toBe('my_app')
+  })
 })

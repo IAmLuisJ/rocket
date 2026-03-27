@@ -806,7 +806,7 @@
       "title": "Sanitize user-provided project name in rocket new",
       "description": "In new.ts or scaffold.ts, sanitize the project name: strip leading/trailing whitespace, replace spaces with hyphens, remove characters not in [a-z0-9-_]. Show an error if the name is empty after sanitization.",
       "category": "security",
-      "passes": false,
+      "passes": true,
       "passCondition": "'My App!' becomes 'my-app'; empty string after sanitization shows an error message",
       "specFilePath": ".agent/tasks/TASK-90.json"
     },
