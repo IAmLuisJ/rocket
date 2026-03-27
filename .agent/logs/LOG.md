@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-67
+- **Task:** Create src/tui/components/IterationHeader.tsx
+- **Summary:** Created IterationHeader Ink component that renders three-line header with thick ▓ bars and yellow-colored iteration number and task ID. Bar width is responsive: uses terminal columns capped at 60, defaults to 40. 5 unit tests covering rendering, content, width capping, default width, and narrow terminals. All 402 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-66
 - **Task:** Create src/tui/components/TaskSelector.tsx
 - **Summary:** TaskSelector component and 7 unit tests already existed. Fixed unused imports (React in component, vi in tests) to resolve TypeScript errors. Ran eslint/prettier. All 397 project tests pass, tsc clean.

@@ -599,7 +599,7 @@
       "title": "Create src/tui/components/IterationHeader.tsx",
       "description": "Create Ink component IterationHeader that renders the thick-bar iteration header: '▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', '↪ Iteration {n} of {max} · Task #{id}', '▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓'. Use yellow for iteration number and task id.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Component renders three lines with thick bars and yellow-colored iteration/task numbers",
       "specFilePath": ".agent/tasks/TASK-67.json"
     },
