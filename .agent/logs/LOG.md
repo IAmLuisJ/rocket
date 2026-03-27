@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-61
+- **Task:** Create src/lib/loop-runner.ts — core loop execution logic
+- **Summary:** Created `runLoop(options)` async generator that drives the AI backend through iterations and yields typed `LoopEvent` events (`iteration-start`, `output`, `complete`, `blocked`, `decide`, `max-reached`, `timing`). Detects exit tags via parser/tags.ts and terminates the generator on any exit condition. 7 unit tests. All 370 project tests pass.
+
 ## 2026-03-26 · TASK-60
 - **Task:** Create src/lib/preflight.ts — pre-loop checks
 - **Summary:** Added `runPreflight(agentDir, backend)` async function to existing preflight.ts. Checks tasks.json exists, has incomplete tasks, and backend binary is in PATH. Maps backend names to binaries via lookup table. 5 new unit tests (9 total). All 363 project tests pass.

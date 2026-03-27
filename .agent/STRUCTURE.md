@@ -19,6 +19,7 @@ src/
     caffeinate.ts        # macOS caffeinate wrapper
     history.ts           # Iteration history management
     log.ts               # Log file utilities
+    loop-runner.ts       # Core loop execution async generator
     preflight.ts         # Pre-loop validation checks
     prompt.ts            # Prompt builder for AI backends
     scaffold.ts          # Project scaffolding

@@ -545,7 +545,7 @@
       "title": "Create src/lib/loop-runner.ts — core loop execution logic",
       "description": "Create loop-runner.ts with runLoop(options: LoopOptions): AsyncGenerator<LoopEvent>. LoopOptions includes: task, backend, maxIterations, agentDir. Yields events: { type: 'iteration-start', n }, { type: 'output', line }, { type: 'complete' }, { type: 'blocked', reason }, { type: 'decide', question }, { type: 'max-reached' }.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "runLoop yields correct event sequence; stops on <complete> tag detection; stops at maxIterations",
       "specFilePath": ".agent/tasks/TASK-61.json"
     },

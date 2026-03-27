@@ -1,0 +1,194 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { PassThrough } from 'stream'
+import { EventEmitter } from 'events'
+import type { ChildProcess } from 'child_process'
+import type { AgentBackend } from './backends/types.js'
+import type { Task } from './tasks/schema.js'
+
+vi.mock('./prompt.js', () => ({
+  buildLoopPrompt: vi.fn(() => 'mocked prompt'),
+}))
+
+function createMockTask(overrides: Partial<Task> = {}): Task {
+  return {
+    id: 1,
+    title: 'Test task',
+    description: 'A test task',
+    category: 'functional',
+    passes: false,
+    passCondition: 'Tests pass',
+    ...overrides,
+  }
+}
+
+function createMockChild(lines: string[]): ChildProcess {
+  const stdout = new PassThrough()
+  const stderr = new PassThrough()
+  const stdin = new PassThrough()
+
+  const child = Object.assign(new EventEmitter(), {
+    stdout,
+    stderr,
+    stdin,
+    pid: 1234,
+    killed: false,
+    connected: false,
+    exitCode: null as number | null,
+    signalCode: null as string | null,
+    kill: vi.fn(),
+    send: vi.fn(),
+    disconnect: vi.fn(),
+    unref: vi.fn(),
+    ref: vi.fn(),
+    stdio: [stdin, stdout, stderr, null, null] as ChildProcess['stdio'],
+    [Symbol.dispose]: vi.fn(),
+  }) as unknown as ChildProcess
+
+  // Push lines then close stdout; emit 'close' when stdout finishes draining
+  process.nextTick(() => {
+    for (const line of lines) {
+      stdout.write(line + '\n')
+    }
+    stdout.end()
+  })
+
+  stdout.on('end', () => {
+    setTimeout(() => {
+      ;(child as unknown as { exitCode: number }).exitCode = 0
+      child.emit('close', 0)
+    }, 5)
+  })
+
+  return child
+}
+
+function createMockBackend(lines: string[]): AgentBackend {
+  return {
+    name: 'mock',
+    spawn: vi.fn(() => createMockChild(lines)),
+    parseOutput: vi.fn(() => null),
+  }
+}
+
+async function collectEvents(gen: AsyncGenerator<unknown>): Promise<unknown[]> {
+  const events: unknown[] = []
+  for await (const event of gen) {
+    events.push(event)
+  }
+  return events
+}
+
+describe('loop-runner', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('yields iteration-start and output events', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['Hello world', 'Line 2'])
+    const task = createMockTask()
+
+    const events = await collectEvents(
+      runLoop({ task, backend, maxIterations: 1, agentDir: '/tmp/test' }),
+    )
+
+    expect(events[0]).toEqual({ type: 'iteration-start', n: 1 })
+    expect(events[1]).toEqual({ type: 'output', line: 'Hello world' })
+    expect(events[2]).toEqual({ type: 'output', line: 'Line 2' })
+    expect(events).toContainEqual(expect.objectContaining({ type: 'timing', iterationN: 1 }))
+    expect(events[events.length - 1]).toEqual({ type: 'max-reached' })
+  })
+
+  it('yields complete when <complete> tag detected', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['Working...', '<complete>'])
+    const task = createMockTask()
+
+    const events = await collectEvents(
+      runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }),
+    )
+
+    expect(events).toContainEqual({ type: 'complete' })
+    // Should not reach max-reached
+    expect(events).not.toContainEqual({ type: 'max-reached' })
+  })
+
+  it('yields blocked with reason when <blocked> tag detected', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['Need help', '<blocked>Missing API key</blocked>'])
+    const task = createMockTask()
+
+    const events = await collectEvents(
+      runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }),
+    )
+
+    expect(events).toContainEqual({
+      type: 'blocked',
+      reason: 'Missing API key',
+    })
+    expect(events).not.toContainEqual({ type: 'max-reached' })
+  })
+
+  it('yields decide with question when <decide> tag detected', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['Thinking...', '<decide>Use REST or GraphQL?</decide>'])
+    const task = createMockTask()
+
+    const events = await collectEvents(
+      runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }),
+    )
+
+    expect(events).toContainEqual({
+      type: 'decide',
+      question: 'Use REST or GraphQL?',
+    })
+    expect(events).not.toContainEqual({ type: 'max-reached' })
+  })
+
+  it('yields max-reached after all iterations with no exit tags', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['Working...'])
+    const task = createMockTask()
+
+    const events = await collectEvents(
+      runLoop({ task, backend, maxIterations: 2, agentDir: '/tmp/test' }),
+    )
+
+    // Should have 2 iteration-starts
+    const starts = events.filter((e) => (e as { type: string }).type === 'iteration-start')
+    expect(starts).toHaveLength(2)
+    expect(events[events.length - 1]).toEqual({ type: 'max-reached' })
+  })
+
+  it('terminates generator after complete event', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['<complete>'])
+    const task = createMockTask()
+
+    const events = await collectEvents(
+      runLoop({ task, backend, maxIterations: 10, agentDir: '/tmp/test' }),
+    )
+
+    // Should only have 1 iteration-start (stopped after first iteration)
+    const starts = events.filter((e) => (e as { type: string }).type === 'iteration-start')
+    expect(starts).toHaveLength(1)
+  })
+
+  it('yields timing event with elapsed milliseconds', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['Done'])
+    const task = createMockTask()
+
+    const events = await collectEvents(
+      runLoop({ task, backend, maxIterations: 1, agentDir: '/tmp/test' }),
+    )
+
+    const timing = events.find((e) => (e as { type: string }).type === 'timing') as
+      | { type: string; iterationN: number; elapsedMs: number }
+      | undefined
+    expect(timing).toBeDefined()
+    expect(timing!.iterationN).toBe(1)
+    expect(typeof timing!.elapsedMs).toBe('number')
+    expect(timing!.elapsedMs).toBeGreaterThanOrEqual(0)
+  })
+})
