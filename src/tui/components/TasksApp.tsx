@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Box, Text, useApp, useInput } from 'ink'
 import SelectInput from 'ink-select-input'
 import type { Task } from '../../lib/tasks/schema.js'
@@ -49,10 +49,22 @@ function TaskDetail({ task }: { task: Task | null }) {
   )
 }
 
-export function TasksApp({ tasks, initialFilter, onMarkComplete }: Props) {
+export function TasksApp({ tasks: initialTasks, initialFilter, onMarkComplete }: Props) {
   const { exit } = useApp()
+  const [taskList, setTaskList] = useState<Task[]>(initialTasks)
   const [filter, setFilter] = useState<FilterMode>((initialFilter as FilterMode) ?? 'all')
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+  const [flash, setFlash] = useState<string | null>(null)
+
+  const showFlash = useCallback((msg: string) => {
+    setFlash(msg)
+  }, [])
+
+  useEffect(() => {
+    if (!flash) return
+    const timer = setTimeout(() => setFlash(null), 2000)
+    return () => clearTimeout(timer)
+  }, [flash])
 
   useInput((input) => {
     if (input === 'q') exit()
@@ -64,13 +76,16 @@ export function TasksApp({ tasks, initialFilter, onMarkComplete }: Props) {
     if (input === 'b' && selectedTask) {
       setSelectedTask(null)
     }
-    if (input === 'm' && selectedTask && !selectedTask.passes && onMarkComplete) {
-      onMarkComplete(selectedTask.id)
+    if (input === 'm' && selectedTask && !selectedTask.passes) {
+      const updated = taskList.map((t) => (t.id === selectedTask.id ? { ...t, passes: true } : t))
+      setTaskList(updated)
       setSelectedTask({ ...selectedTask, passes: true })
+      showFlash(`Task #${selectedTask.id} marked complete`)
+      if (onMarkComplete) onMarkComplete(selectedTask.id)
     }
   })
 
-  const filtered = tasks.filter((t) => {
+  const filtered = taskList.filter((t) => {
     if (filter === 'incomplete') return !t.passes
     if (filter === 'complete') return t.passes
     if (filter === 'blocked') return !!t.blockedReason
@@ -88,7 +103,7 @@ export function TasksApp({ tasks, initialFilter, onMarkComplete }: Props) {
         Rocket Tasks
       </Text>
       <Text dimColor>
-        Filter: {filter} ({filtered.length}/{tasks.length}) · [f] toggle filter [m] mark complete
+        Filter: {filter} ({filtered.length}/{taskList.length}) · [f] toggle filter [m] mark complete
         [q] quit
       </Text>
       <Box marginTop={1}>
@@ -96,13 +111,18 @@ export function TasksApp({ tasks, initialFilter, onMarkComplete }: Props) {
           <SelectInput
             items={items}
             onSelect={(item) => {
-              const task = tasks.find((t) => String(t.id) === item.value)
+              const task = taskList.find((t) => String(t.id) === item.value)
               if (task) setSelectedTask(task)
             }}
           />
         </Box>
         <TaskDetail task={selectedTask} />
       </Box>
+      {flash && (
+        <Text color="green" bold>
+          {flash}
+        </Text>
+      )}
     </Box>
   )
 }

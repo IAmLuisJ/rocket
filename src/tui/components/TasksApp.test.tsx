@@ -175,6 +175,52 @@ describe('TasksApp', () => {
     expect(lastFrame()).toContain('Complete')
   })
 
+  it('shows flash message after marking task complete', async () => {
+    const onMark = vi.fn()
+    const { lastFrame, stdin } = render(<TasksApp tasks={makeTasks()} onMarkComplete={onMark} />)
+    await delay()
+    stdin.write('\x1B[B') // arrow down
+    await delay()
+    stdin.write('\r') // select task #2
+    await delay()
+    stdin.write('m')
+    await delay()
+    expect(lastFrame()).toContain('Task #2 marked complete')
+  })
+
+  it('updates task list icon after marking complete', async () => {
+    const onMark = vi.fn()
+    const { lastFrame, stdin } = render(<TasksApp tasks={makeTasks()} onMarkComplete={onMark} />)
+    await delay()
+    // Initially task #2 shows ○
+    expect(lastFrame()).toContain('○')
+    expect(lastFrame()).toContain('[#2]')
+    stdin.write('\x1B[B') // arrow down to task #2
+    await delay()
+    stdin.write('\r') // select
+    await delay()
+    stdin.write('m') // mark complete
+    await delay()
+    // Task #2 should now show ✓ in the list
+    const frame = lastFrame()!
+    // Both task 1 and task 2 should be ✓ now
+    const checkmarks = frame.match(/✓/g) || []
+    expect(checkmarks.length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('does not fire onMarkComplete on already-complete task', async () => {
+    const onMark = vi.fn()
+    const { lastFrame, stdin } = render(<TasksApp tasks={makeTasks()} onMarkComplete={onMark} />)
+    await delay()
+    stdin.write('\r') // select task #1 (already complete)
+    await delay()
+    expect(lastFrame()).toContain('#1 Setup project')
+    expect(lastFrame()).toContain('Complete')
+    stdin.write('m')
+    await delay()
+    expect(onMark).not.toHaveBeenCalled()
+  })
+
   it('shows blocked reason in detail panel', async () => {
     const { lastFrame, stdin } = render(<TasksApp tasks={makeTasks()} />)
     await delay()

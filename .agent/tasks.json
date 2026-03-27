@@ -716,7 +716,7 @@
       "title": "Add 'mark complete' action to TasksApp",
       "description": "In TasksApp, add keyboard shortcut 'm' on a selected task to mark it complete (passes: true). Write the updated tasks back to tasks.json via reader.writeTasks(). Show a success flash message.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Pressing 'm' on an incomplete task sets passes:true in tasks.json and refreshes the list",
       "specFilePath": ".agent/tasks/TASK-80.json"
     },

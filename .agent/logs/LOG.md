@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-80
+- **Task:** Add 'mark complete' action to TasksApp
+- **Summary:** Added internal tasks state management, flash message with 2s auto-clear, and task list refresh on mark complete. Pressing 'm' on incomplete selected task updates internal state, shows green flash "Task #N marked complete", refreshes list icons, and fires onMarkComplete callback. No effect on already-complete tasks. Added 3 new tests (flash message, list icon update, no-op on complete task). All 475 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-79
 - **Task:** Add filter toggle to TasksApp
 - **Summary:** Filter toggle was already fully implemented in TasksApp.tsx: 'f' key cycles through All/Incomplete/Complete/Blocked filters, header shows current filter with task count, filtered task list updates accordingly. All 13 unit tests pass covering all acceptance criteria. All 472 project tests pass, tsc clean.
