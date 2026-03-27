@@ -10,8 +10,12 @@ function getDB(): PDO
 
     $host = getenv('DB_HOST') ?: 'localhost';
     $name = getenv('DB_NAME') ?: 'app';
-    $user = getenv('DB_USER') ?: 'root';
-    $pass = getenv('DB_PASS') ?: '';
+    $user = getenv('DB_USER');
+    $pass = getenv('DB_PASS');
+
+    if ($user === false || $pass === false) {
+        throw new RuntimeException('DB_USER and DB_PASS environment variables are required');
+    }
 
     $dsn = "mysql:host={$host};dbname={$name};charset=utf8mb4";
 

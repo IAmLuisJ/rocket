@@ -4,6 +4,7 @@ import { join } from 'path'
 import { glob } from 'glob'
 
 const WEBAPP_DIR = join(import.meta.dirname, '../../templates/webapp')
+const WEBSITE_DIR = join(import.meta.dirname, '../../templates/website')
 
 /**
  * Patterns that indicate a hardcoded secret value.
@@ -20,7 +21,7 @@ const SECRET_PATTERNS = [
 ]
 
 // Patterns allowed in .env.example files (placeholder text)
-const PLACEHOLDER_ALLOWLIST = [/your-/i, /change[-_]me/i, /example\.com/i, /placeholder/i]
+const PLACEHOLDER_ALLOWLIST = [/your[-_]/i, /change[-_]me/i, /example\.com/i, /placeholder/i]
 
 function isPlaceholder(line: string): boolean {
   return PLACEHOLDER_ALLOWLIST.some((p) => p.test(line))
@@ -129,6 +130,81 @@ describe('webapp template security — no hardcoded credentials', () => {
     expect(
       violations,
       `Source files with hardcoded secret fallbacks:\n${violations.join('\n')}`,
+    ).toEqual([])
+  })
+})
+
+describe('website template security — no hardcoded credentials', () => {
+  it('config/database.php uses getenv() for all credentials and has no fallback for user/pass', async () => {
+    const content = await readFile(join(WEBSITE_DIR, 'config/database.php'), 'utf-8')
+
+    // Must use getenv() for all DB_* vars
+    expect(content).toContain("getenv('DB_HOST')")
+    expect(content).toContain("getenv('DB_NAME')")
+    expect(content).toContain("getenv('DB_USER')")
+    expect(content).toContain("getenv('DB_PASS')")
+
+    // DB_USER and DB_PASS must NOT have ?: fallback defaults
+    expect(content).not.toMatch(/getenv\('DB_USER'\)\s*\?:\s*'/)
+    expect(content).not.toMatch(/getenv\('DB_PASS'\)\s*\?:\s*'/)
+  })
+
+  it('PHP template files contain no hardcoded passwords or credentials', async () => {
+    const files = await glob('**/*.php', {
+      cwd: WEBSITE_DIR,
+      nodir: true,
+    })
+
+    const violations: string[] = []
+    const credentialPatterns = [
+      // password = 'literal' (not placeholder text)
+      /(?:password|passwd)\s*[:=]\s*['"](?!your[-_]|change[-_]me|<|CHANGE|TODO|example|placeholder)\w+['"]/i,
+      // Inline password in connection strings
+      /:\/\/\w+:(?!your[-_]|change[-_]me|<|CHANGE|TODO|example|placeholder)\w+@/i,
+    ]
+
+    for (const rel of files) {
+      const abs = join(WEBSITE_DIR, rel)
+      const content = await readFile(abs, 'utf-8')
+      const lines = content.split('\n')
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i]
+        if (/^\s*(\/\/|#|\/\*)/.test(line)) continue
+
+        for (const pattern of credentialPatterns) {
+          if (pattern.test(line) && !isPlaceholder(line)) {
+            violations.push(`${rel}:${i + 1} → ${line.trim()}`)
+          }
+        }
+      }
+    }
+
+    expect(violations, `Hardcoded secrets found:\n${violations.join('\n')}`).toEqual([])
+  })
+
+  it('.env.example uses only placeholder values for DB credentials', async () => {
+    const content = await readFile(join(WEBSITE_DIR, '.env.example'), 'utf-8')
+    const lines = content.split('\n')
+
+    const violations: string[] = []
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      if (!line.trim() || line.startsWith('#')) continue
+
+      const match = line.match(/^(DB_PASS|DB_USER|DB_NAME)\s*=\s*(.+)/i)
+      if (match) {
+        const value = match[2].trim()
+        if (!isPlaceholder(value)) {
+          violations.push(`line ${i + 1}: ${line.trim()}`)
+        }
+      }
+    }
+
+    expect(
+      violations,
+      `Non-placeholder secrets in .env.example:\n${violations.join('\n')}`,
     ).toEqual([])
   })
 })

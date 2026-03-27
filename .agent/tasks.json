@@ -779,7 +779,7 @@
       "title": "Ensure no hardcoded credentials in website template",
       "description": "Audit all files in src/templates/website/ and confirm no hardcoded DB passwords, MySQL credentials, or API keys. config/database.php must use $_ENV or getenv().",
       "category": "security",
-      "passes": false,
+      "passes": true,
       "passCondition": "config/database.php uses getenv() for all credentials; no hardcoded passwords in any template file",
       "specFilePath": ".agent/tasks/TASK-87.json"
     },

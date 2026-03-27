@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-87
+- **Task:** Ensure no hardcoded credentials in website template
+- **Summary:** Removed fallback defaults for DB_USER (`'root'`) and DB_PASS (`''`) in config/database.php — now throws RuntimeException if env vars are unset. Added 3 website security tests to template-security.test.ts: verifies getenv() usage without credential fallbacks, scans PHP files for hardcoded passwords, and validates .env.example uses placeholder values. Updated placeholder allowlist to match underscore-separated patterns. All 494 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-86
 - **Task:** Ensure no hardcoded credentials in webapp template
 - **Summary:** Replaced hardcoded `password` in .env.example with placeholder text, removed `'change-me-in-production'` fallbacks from jwt.ts and auth.ts (now throws if JWT_SECRET unset), changed docker-compose.yml to require POSTGRES_PASSWORD via `?:` syntax. Added 3-test security suite (template-security.test.ts) that scans for hardcoded secrets, validates .env.example placeholders, and checks for process.env fallbacks. All 491 project tests pass, tsc clean.
