@@ -608,7 +608,7 @@
       "title": "Create src/tui/components/SpinnerPreview.tsx",
       "description": "Create Ink component SpinnerPreview that shows: an ink-spinner on the left, then the last 3-5 lines of AI output on the right, truncated to terminal width. Update as new output lines arrive. Use a dimmed color for output preview text.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Component shows spinner + rolling preview; truncates long lines to terminal width",
       "specFilePath": ".agent/tasks/TASK-68.json"
     },

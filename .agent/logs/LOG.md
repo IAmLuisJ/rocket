@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-68
+- **Task:** Create src/tui/components/SpinnerPreview.tsx
+- **Summary:** Created SpinnerPreview Ink component showing ink-spinner on the left with last 5 lines of AI output on the right, dimmed and truncated to terminal width minus 4. 5 unit tests covering rendering, line slicing, truncation, empty lines, and default columns. All 407 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-67
 - **Task:** Create src/tui/components/IterationHeader.tsx
 - **Summary:** Created IterationHeader Ink component that renders three-line header with thick ▓ bars and yellow-colored iteration number and task ID. Bar width is responsive: uses terminal columns capped at 60, defaults to 40. 5 unit tests covering rendering, content, width capping, default width, and narrow terminals. All 402 project tests pass, tsc clean.
