@@ -797,7 +797,7 @@
       "title": "Validate tasks.json on loop startup",
       "description": "In preflight.ts or loop-runner.ts, validate tasks.json against TaskSchema before starting the loop. If validation fails, print a detailed Zod error message showing which task and field is invalid, then exit.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "A tasks.json with a missing 'title' field causes a clear validation error before the loop starts",
       "specFilePath": ".agent/tasks/TASK-89.json"
     },

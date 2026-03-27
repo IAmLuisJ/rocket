@@ -2,6 +2,7 @@ import { existsSync } from 'fs'
 import { join, dirname } from 'path'
 import { execSync } from 'child_process'
 import { pathExists } from 'fs-extra'
+import { z } from 'zod'
 import { readTasks, getIncompleteTasks } from './tasks/reader.js'
 import type { AgentBackend } from './backends/types.js'
 
@@ -82,7 +83,18 @@ export async function runPreflight(agentDir: string, backend: AgentBackend): Pro
   }
 
   const projectRoot = dirname(agentDir)
-  const tasks = readTasks(projectRoot)
+  let tasks
+  try {
+    tasks = readTasks(projectRoot)
+  } catch (e) {
+    if (e instanceof z.ZodError) {
+      const lines = e.errors.map(
+        (err) => `  Path: ${err.path.join('.')}, Error: ${err.message}`,
+      )
+      throw new Error(`Invalid tasks.json:\n${lines.join('\n')}`)
+    }
+    throw e
+  }
   if (getIncompleteTasks(tasks.tasks).length === 0) {
     throw new Error('All tasks are complete! Nothing to loop on.')
   }

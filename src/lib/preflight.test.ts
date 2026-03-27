@@ -156,6 +156,80 @@ describe('runPreflight', () => {
     mockedExecSync.mockRestore()
   })
 
+  it('throws with detailed message when tasks.json has invalid schema', async () => {
+    await mkdir(agentDir, { recursive: true })
+    const invalidData = {
+      tasks: [
+        {
+          id: 1,
+          description: 'Missing title field',
+          category: 'functional',
+          passes: false,
+          passCondition: 'passes',
+        },
+      ],
+    }
+    await writeFile(join(agentDir, 'tasks.json'), JSON.stringify(invalidData))
+
+    const { runPreflight } = await import('./preflight.js')
+    await expect(runPreflight(agentDir, fakeBackend)).rejects.toThrow('Invalid tasks.json')
+  })
+
+  it('shows field path in validation error message', async () => {
+    await mkdir(agentDir, { recursive: true })
+    const invalidData = {
+      tasks: [
+        {
+          id: 1,
+          title: '',
+          description: 'Empty title',
+          category: 'functional',
+          passes: false,
+          passCondition: 'passes',
+        },
+      ],
+    }
+    await writeFile(join(agentDir, 'tasks.json'), JSON.stringify(invalidData))
+
+    const { runPreflight } = await import('./preflight.js')
+    await expect(runPreflight(agentDir, fakeBackend)).rejects.toThrow('Path: tasks.0.title')
+  })
+
+  it('passes validation with a valid tasks.json', async () => {
+    await mkdir(agentDir, { recursive: true })
+    const validData = {
+      tasks: [
+        {
+          id: 1,
+          title: 'Valid task',
+          description: 'Desc',
+          category: 'functional',
+          passes: false,
+          passCondition: 'passes',
+        },
+      ],
+    }
+    await writeFile(join(agentDir, 'tasks.json'), JSON.stringify(validData))
+
+    const { execSync } = await import('child_process')
+    const mockedExecSync = vi.mocked(execSync)
+    mockedExecSync.mockReturnValue(Buffer.from('/usr/bin/copilot'))
+
+    const { runPreflight } = await import('./preflight.js')
+    await expect(runPreflight(agentDir, fakeBackend)).resolves.toBeUndefined()
+    mockedExecSync.mockRestore()
+  })
+
+  it('re-throws non-ZodError errors from readTasks', async () => {
+    await mkdir(agentDir, { recursive: true })
+    await writeFile(join(agentDir, 'tasks.json'), 'not valid json{{{')
+
+    const { runPreflight } = await import('./preflight.js')
+    await expect(runPreflight(agentDir, fakeBackend)).rejects.toThrow()
+    // Should not contain "Invalid tasks.json" since it's a JSON parse error, not ZodError
+    await expect(runPreflight(agentDir, fakeBackend)).rejects.not.toThrow('Invalid tasks.json')
+  })
+
   it('checks correct binary for each backend', async () => {
     await mkdir(agentDir, { recursive: true })
     const tasksData = {

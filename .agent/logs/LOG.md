@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-89
+- **Task:** Validate tasks.json on loop startup
+- **Summary:** Added ZodError catching in `runPreflight`: catches validation errors from `readTasks`, formats each issue with its field path and message, and throws a user-friendly `Invalid tasks.json` error. Added 4 new tests covering: invalid schema detection, field path in error message, valid tasks.json passes, and non-ZodError re-throw. All 503 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-88
 - **Task:** Add process cleanup on SIGINT/SIGTERM in loop runner
 - **Summary:** Added signal cleanup handlers to loop-runner.ts: tracks `currentChild` reference, registers SIGINT/SIGTERM handlers that kill the AI child process and set an `aborted` flag, removes listeners in finally block, stops caffeinate and writes partial session log with 'error' outcome on abort. Added 5 new tests covering: SIGINT kills child, SIGTERM kills child, partial log on signal, no max-reached after abort, and listener cleanup after normal exit. All 499 project tests pass, tsc clean.
