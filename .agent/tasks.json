@@ -653,7 +653,7 @@
       "title": "Create src/tui/RocketLoopApp.tsx — main loop TUI orchestrator",
       "description": "Create RocketLoopApp.tsx as the root Ink component for rocket loop. Manages state machine: 'selecting' → TaskSelector, 'running' → IterationHeader + SpinnerPreview, 'complete' → CompletionReport, 'blocked' → BlockedScreen, 'decide' → DecideScreen.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Component starts in 'selecting' state; transitions to 'running' on task selection; transitions to 'complete' when loop emits complete event",
       "specFilePath": ".agent/tasks/TASK-73.json"
     },

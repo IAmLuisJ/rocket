@@ -49,6 +49,7 @@ src/
       schema.ts          # Task Zod schemas
   tui/
     RocketLoop.tsx       # Main loop TUI component
+    RocketLoopApp.tsx    # Loop TUI orchestrator (state machine)
     components/          # Reusable TUI components
     themes/
       colors.ts          # Color definitions

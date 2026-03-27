@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-73
+- **Task:** Create src/tui/RocketLoopApp.tsx — main loop TUI orchestrator
+- **Summary:** Created RocketLoopApp.tsx with 5-state machine (selecting/running/complete/blocked/decide). Uses single StateData object for all state. Selecting renders TaskSelector, running renders IterationHeader+SpinnerPreview, complete renders CompletionReport, blocked renders BlockedScreen, decide renders DecideScreen. 5 unit tests. All 439 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-72
 - **Task:** Create src/tui/themes/colors.ts
 - **Summary:** Added `colors` object export (as const) with all six palette entries (brand/cyan, timing/yellow, success/green, error/red, highlight/magenta, dim/gray) plus individual named exports. Updated CompletionReport and TaskSelector to import and use `brand` and `success` from colors.ts. 8 unit tests. All 434 project tests pass, tsc clean.
