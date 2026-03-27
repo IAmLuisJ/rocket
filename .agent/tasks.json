@@ -572,7 +572,7 @@
       "title": "Integrate history saving into loop runner",
       "description": "In loop-runner.ts, after each iteration completes, call history.saveIteration() with the accumulated output for that iteration. Generate a sessionId using Date.now() at the start of the loop.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "After each iteration, a file exists at .agent/history/ITERATION-{sessionId}-{n}.txt with the iteration output",
       "specFilePath": ".agent/tasks/TASK-64.json"
     },

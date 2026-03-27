@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-64
+- **Task:** Integrate history saving into loop runner
+- **Summary:** Added `saveIteration()` call in loop-runner.ts after each iteration completes, with a `sessionId` generated via `Date.now()` at loop start. 3 new tests verify saveIteration is called per iteration with consistent sessionId, called before exit tag checks, and uses Date.now() for sessionId. All 385 project tests pass.
+
 ## 2026-03-27 · TASK-63
 - **Task:** Integrate caffeinate into loop runner
 - **Summary:** Added caffeinate.start() before the loop and caffeinate.stop() in a finally block in loop-runner.ts. 4 new tests verify caffeinate starts/stops on normal exit, max iterations, early break, and blocked tag. All 382 project tests pass.

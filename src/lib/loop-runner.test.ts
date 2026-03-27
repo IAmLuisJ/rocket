@@ -9,6 +9,11 @@ vi.mock('./prompt.js', () => ({
   buildLoopPrompt: vi.fn(() => 'mocked prompt'),
 }))
 
+const mockSaveIteration = vi.fn()
+vi.mock('./history.js', () => ({
+  saveIteration: (...args: unknown[]) => mockSaveIteration(...args),
+}))
+
 const mockCaffProc = { kill: vi.fn(), pid: 9999 }
 const mockStart = vi.fn(() => mockCaffProc)
 const mockStop = vi.fn()
@@ -89,6 +94,7 @@ async function collectEvents(gen: AsyncGenerator<unknown>): Promise<unknown[]> {
 describe('loop-runner', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockSaveIteration.mockResolvedValue(undefined)
   })
 
   it('yields iteration-start and output events', async () => {
@@ -247,5 +253,65 @@ describe('loop-runner', () => {
 
     expect(mockStart).toHaveBeenCalledOnce()
     expect(mockStop).toHaveBeenCalledOnce()
+  })
+
+  it('generates sessionId and calls saveIteration after each iteration', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['Hello', 'World'])
+    const task = createMockTask()
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 2, agentDir: '/tmp/test' }))
+
+    expect(mockSaveIteration).toHaveBeenCalledTimes(2)
+    // First call: iteration 1
+    expect(mockSaveIteration).toHaveBeenNthCalledWith(
+      1,
+      '/tmp/test',
+      expect.any(String),
+      1,
+      'Hello\nWorld\n',
+    )
+    // Second call: iteration 2, same sessionId
+    expect(mockSaveIteration).toHaveBeenNthCalledWith(
+      2,
+      '/tmp/test',
+      expect.any(String),
+      2,
+      'Hello\nWorld\n',
+    )
+    // SessionId should be the same across iterations
+    const sid1 = mockSaveIteration.mock.calls[0]![1]
+    const sid2 = mockSaveIteration.mock.calls[1]![1]
+    expect(sid1).toBe(sid2)
+  })
+
+  it('calls saveIteration before checking exit tags', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['<complete>'])
+    const task = createMockTask()
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }))
+
+    // saveIteration should still be called even though loop exits on complete
+    expect(mockSaveIteration).toHaveBeenCalledOnce()
+    expect(mockSaveIteration).toHaveBeenCalledWith(
+      '/tmp/test',
+      expect.any(String),
+      1,
+      '<complete>\n',
+    )
+  })
+
+  it('uses Date.now() as sessionId', async () => {
+    const now = 1700000000000
+    vi.spyOn(Date, 'now').mockReturnValueOnce(now)
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['Done'])
+    const task = createMockTask()
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 1, agentDir: '/tmp/test' }))
+
+    expect(mockSaveIteration).toHaveBeenCalledWith('/tmp/test', now.toString(), 1, 'Done\n')
+    vi.restoreAllMocks()
   })
 })
