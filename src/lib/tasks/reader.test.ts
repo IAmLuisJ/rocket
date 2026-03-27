@@ -154,8 +154,34 @@ describe('task reader', () => {
     expect(() => readTasks(tmpDir)).toThrow(/tasks\.json/)
   })
 
-  it('readTasks throws on invalid tasks.json', async () => {
-    await writeFile(join(tmpDir, '.agent', 'tasks.json'), '{"tasks": [{"bad": true}]}')
+  it('readTasks throws on invalid JSON', async () => {
+    await writeFile(join(tmpDir, '.agent', 'tasks.json'), '{not valid json!!!')
     expect(() => readTasks(tmpDir)).toThrow()
+  })
+
+  it('readTasks throws ZodError on invalid schema', async () => {
+    const { ZodError } = await import('zod')
+    await writeFile(join(tmpDir, '.agent', 'tasks.json'), '{"tasks": [{"bad": true}]}')
+    expect(() => readTasks(tmpDir)).toThrow(ZodError)
+  })
+
+  it('writeTasks uses 2-space indentation', async () => {
+    const { readFile } = await import('fs/promises')
+    const data = {
+      tasks: [
+        {
+          id: 1,
+          title: 'Task',
+          description: 'Desc',
+          category: 'functional' as const,
+          passes: false,
+          passCondition: 'Works',
+        },
+      ],
+    }
+    writeTasks(tmpDir, data)
+    const raw = await readFile(join(tmpDir, '.agent', 'tasks.json'), 'utf-8')
+    expect(raw).toContain('  "tasks"')
+    expect(raw).not.toContain('    "tasks"')
   })
 })

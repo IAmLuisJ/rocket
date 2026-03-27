@@ -824,7 +824,7 @@
       "title": "Write unit tests for task reader.ts",
       "description": "Create src/lib/tasks/reader.test.ts with Vitest tests for: readTasks (valid file, missing file, invalid JSON, invalid schema), writeTasks (writes correctly), getIncompleteTasks (filters by passes:false), markTaskComplete (sets passes:true).",
       "category": "testing",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm test passes all reader.test.ts cases; edge cases are covered",
       "specFilePath": ".agent/tasks/TASK-92.json"
     },

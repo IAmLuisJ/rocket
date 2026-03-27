@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-92
+- **Task:** Write unit tests for task reader.ts
+- **Summary:** Added 3 missing tests to reader.test.ts: invalid JSON throws error, invalid schema throws ZodError specifically, and writeTasks uses 2-space indentation. Total of 11 tests covering readTasks (valid, missing, invalid JSON, invalid schema), writeTasks (persistence, indentation), getIncompleteTasks, getMaxTaskId (with values and empty array), markTaskComplete (match, no-match). All 515 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-91
 - **Task:** Add shell injection protection to backend spawn calls
 - **Summary:** Audited all three backends (copilot.ts, claude.ts, docker.ts) — all already use `spawn()` with args arrays, no `exec()` or `shell:true`. Added security comments near each spawn call explaining the rationale. Added 3 new shell injection tests (one per backend) verifying that prompts containing shell metacharacters (`;`, `&&`, `rm -rf`) are passed as literal args without shell interpretation and that no `shell` option is set. All 513 project tests pass, tsc clean.
