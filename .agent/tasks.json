@@ -707,7 +707,7 @@
       "title": "Add filter toggle to TasksApp",
       "description": "Add keyboard shortcut 'f' to cycle filter in TasksApp: All → Incomplete → Complete → Blocked → All. Show current filter label in the header. Re-render task list based on active filter.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Pressing 'f' cycles through filters; task list updates to show only matching tasks",
       "specFilePath": ".agent/tasks/TASK-79.json"
     },

@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-79
+- **Task:** Add filter toggle to TasksApp
+- **Summary:** Filter toggle was already fully implemented in TasksApp.tsx: 'f' key cycles through All/Incomplete/Complete/Blocked filters, header shows current filter with task count, filtered task list updates accordingly. All 13 unit tests pass covering all acceptance criteria. All 472 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-78
 - **Task:** Add task detail panel to TasksApp
 - **Summary:** Refactored TasksApp from full-screen detail replacement to side-by-side layout: task list (40% width) on left, detail panel (60% width) on right with round Box border. Created inline TaskDetail component showing task title, description, passCondition, blockedReason, category, and status. Empty state shows "Select a task to view details". Updated 13 unit tests covering all acceptance criteria including border rendering, panel content, and layout. All 472 project tests pass, tsc clean.
