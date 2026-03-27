@@ -87,6 +87,21 @@ describe('runInit', () => {
     logSpy.mockRestore()
   })
 
+  it('prints next-step instructions after creation', async () => {
+    vi.mocked(access).mockRejectedValue(new Error('ENOENT'))
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+
+    await runInit()
+
+    const logCalls = logSpy.mock.calls.map((c) => c[0])
+    expect(logCalls).toContain('Next steps:')
+    expect(logCalls).toContain('  📝 Edit .agent/prd/PRD.md with your project requirements')
+    expect(logCalls).toContain('  📋 Edit .agent/tasks.json with your task list')
+    expect(logCalls).toContain(`  ▶ Then run: \x1b[36mrocket loop\x1b[0m`)
+
+    logSpy.mockRestore()
+  })
+
   it('handles createAgentStructure errors gracefully', async () => {
     vi.mocked(access).mockRejectedValue(new Error('ENOENT'))
     vi.mocked(createAgentStructure).mockRejectedValue(new Error('Permission denied'))

@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-85
+- **Task:** Add post-init instructions output in rocket init
+- **Summary:** Added styled next-step instructions after init success: "Edit .agent/prd/PRD.md", "Edit .agent/tasks.json", and "Then run: rocket loop" (with cyan ANSI color). Added 1 new test verifying all instruction lines are printed. All 488 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-84
 - **Task:** Create src/commands/init.ts handler
 - **Summary:** Implemented full init command: checks if .agent/ exists and prompts for confirmation (y/N) before proceeding, calls createAgentStructure, prints success message listing all created files. Added 5 unit tests covering: fresh init, confirmation prompt on existing dir, user confirms with y, file list output, and error handling. All 487 project tests pass, tsc clean.

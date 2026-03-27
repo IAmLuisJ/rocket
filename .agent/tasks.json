@@ -761,7 +761,7 @@
       "title": "Add post-init instructions output in rocket init",
       "description": "After creating the .agent/ structure, print styled next-step instructions: '📝 Edit .agent/prd/PRD.md', '📋 Edit .agent/tasks.json', '▶ Then run: rocket loop'. Use the Rocket color palette.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket init prints all three next-step instructions after creating the structure",
       "specFilePath": ".agent/tasks/TASK-85.json"
     },

@@ -47,6 +47,11 @@ export async function runInit(): Promise<void> {
     for (const file of CREATED_FILES) {
       console.log(`  ${file}`)
     }
+    console.log('')
+    console.log('Next steps:')
+    console.log('  📝 Edit .agent/prd/PRD.md with your project requirements')
+    console.log('  📋 Edit .agent/tasks.json with your task list')
+    console.log(`  ▶ Then run: \x1b[36mrocket loop\x1b[0m`)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     console.error(`Error: ${message}`)
