@@ -23,6 +23,7 @@ export const copilotBackend: AgentBackend = {
 
   spawn(prompt: string, options: BackendOptions): ChildProcess {
     checkCopilotBinary()
+    // SECURITY: prompt passed as separate arg to prevent shell injection. Do not switch to exec() or shell:true.
     return spawn('copilot', ['--autopilot', '--prompt', prompt], {
       cwd: options.cwd,
       stdio: ['ignore', 'pipe', 'pipe'],

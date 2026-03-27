@@ -23,6 +23,7 @@ export const claudeBackend: AgentBackend = {
 
   spawn(prompt: string, options: BackendOptions): ChildProcess {
     checkClaudeBinary()
+    // SECURITY: prompt passed as separate arg to prevent shell injection. Do not switch to exec() or shell:true.
     return spawn('claude', ['--model', 'opus', '-p', prompt], {
       cwd: options.cwd,
       stdio: ['ignore', 'pipe', 'pipe'],

@@ -72,6 +72,17 @@ describe('claudeBackend', () => {
       )
     })
 
+    it('passes shell metacharacters as literal arg without injection', () => {
+      mockedExecSync.mockReturnValue(Buffer.from(''))
+      const malicious = 'test; rm -rf /tmp/test-injection && echo pwned'
+      claudeBackend.spawn(malicious, { prompt: malicious })
+      const args = mockedSpawn.mock.calls[0][1] as string[]
+      expect(args).toContain(malicious)
+      expect(args[args.length - 1]).toBe(malicious)
+      const spawnOpts = mockedSpawn.mock.calls[0][2] as Record<string, unknown>
+      expect(spawnOpts).not.toHaveProperty('shell')
+    })
+
     it('returns a ChildProcess', () => {
       mockedExecSync.mockReturnValue(Buffer.from(''))
       const result = claudeBackend.spawn('test', { prompt: 'test' })

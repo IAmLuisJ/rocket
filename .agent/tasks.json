@@ -815,7 +815,7 @@
       "title": "Add shell injection protection to backend spawn calls",
       "description": "Ensure all backend spawn calls use spawn() with an args array (not exec() with a shell string). The prompt string must be passed as an argument, not interpolated into a shell command string.",
       "category": "security",
-      "passes": false,
+      "passes": true,
       "passCondition": "All three backends use spawn(cmd, [args]) not exec('cmd string'); a prompt containing shell metacharacters does not cause injection",
       "specFilePath": ".agent/tasks/TASK-91.json"
     },

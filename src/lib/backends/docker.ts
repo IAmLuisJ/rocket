@@ -21,6 +21,7 @@ export const dockerBackend: AgentBackend = {
 
   spawn(prompt: string, options: BackendOptions): ChildProcess {
     checkDockerBinary()
+    // SECURITY: prompt passed as separate arg to prevent shell injection. Do not switch to exec() or shell:true.
     return spawn(
       'docker',
       ['sandbox', 'run', 'claude', '.', '--', '--model', 'opus', '-p', prompt],

@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-91
+- **Task:** Add shell injection protection to backend spawn calls
+- **Summary:** Audited all three backends (copilot.ts, claude.ts, docker.ts) — all already use `spawn()` with args arrays, no `exec()` or `shell:true`. Added security comments near each spawn call explaining the rationale. Added 3 new shell injection tests (one per backend) verifying that prompts containing shell metacharacters (`;`, `&&`, `rm -rf`) are passed as literal args without shell interpretation and that no `shell` option is set. All 513 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-90
 - **Task:** Sanitize user-provided project name in rocket new
 - **Summary:** Applied `sanitizeProjectName` in NewProjectWizard: sanitizes both `initialName` prop and interactive name input, shows yellow notice when name is modified (e.g. "My App!" → "my-app"), shows error screen when name is empty after sanitization. Added `trySanitize` helper for initialName handling. Added 3 new wizard tests (sanitized notice, invalid name error, clean name no notice) and 4 new sanitizeProjectName unit tests (whitespace stripping, passthrough, My App!, underscores). All 510 project tests pass, tsc clean.
