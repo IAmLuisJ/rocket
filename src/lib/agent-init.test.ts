@@ -105,8 +105,19 @@ describe('createAgentStructure', () => {
     expect(prompt).toContain('Commit')
   })
 
-  it('throws if .agent/ already exists', async () => {
+  it('does not overwrite existing files when run twice', async () => {
     await createAgentStructure(tmpDir)
-    await expect(createAgentStructure(tmpDir)).rejects.toThrow('.agent/ already exists')
+
+    // Modify a file to verify it is not overwritten
+    const prdPath = join(tmpDir, '.agent', 'prd', 'PRD.md')
+    const customContent = '# My Custom PRD\n'
+    const { writeFile: wf } = await import('fs/promises')
+    await wf(prdPath, customContent, 'utf-8')
+
+    // Run again — should not throw and should not overwrite
+    await createAgentStructure(tmpDir)
+
+    const prd = await readFile(prdPath, 'utf-8')
+    expect(prd).toBe(customContent)
   })
 })

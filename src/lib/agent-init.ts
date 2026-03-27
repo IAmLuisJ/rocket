@@ -1,24 +1,18 @@
 import { mkdir, writeFile, access } from 'fs/promises'
-import { join } from 'path'
+import { join, dirname } from 'path'
 
-export async function createAgentStructure(projectRoot: string): Promise<void> {
-  const agentDir = join(projectRoot, '.agent')
-
-  // Check if already initialized
+async function writeIfAbsent(filePath: string, content: string): Promise<void> {
   try {
-    await access(join(agentDir, 'tasks.json'))
-    throw new Error('.agent/ already exists. Use rocket loop to start the development loop.')
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err
+    await access(filePath)
+    return // file exists, do not overwrite
+  } catch {
+    // file does not exist, create it
   }
+  await mkdir(dirname(filePath), { recursive: true })
+  await writeFile(filePath, content, 'utf-8')
+}
 
-  await mkdir(join(agentDir, 'prd'), { recursive: true })
-  await mkdir(join(agentDir, 'logs'), { recursive: true })
-  await mkdir(join(agentDir, 'history'), { recursive: true })
-
-  await writeFile(
-    join(agentDir, 'prd', 'PRD.md'),
-    `<!-- Edit this file with your project requirements. rocket loop reads this to understand what to build. -->
+const DEFAULT_PRD_MD = `<!-- Edit this file with your project requirements. rocket loop reads this to understand what to build. -->
 
 # Project Name PRD
 
@@ -40,22 +34,16 @@ Your project overview goes here. Explain what problem this project solves and wh
 - Runtime: Node.js 22+
 - Language: TypeScript
 - Add your technical requirements here
-`,
-  )
+`
 
-  await writeFile(
-    join(agentDir, 'prd', 'SUMMARY.md'),
-    `# Project Summary
+const DEFAULT_SUMMARY_MD = `# Project Summary
 
 <!-- A brief summary of the project for context -->
-`,
-  )
+`
 
-  await writeFile(join(agentDir, 'logs', 'LOG.md'), '# Development Log\n')
+const DEFAULT_LOG_MD = '# Development Log\n'
 
-  await writeFile(
-    join(agentDir, 'PROMPT.md'),
-    `# Rocket Loop Prompt
+const DEFAULT_PROMPT_MD = `# Rocket Loop Prompt
 
 You are an autonomous coding agent working on this project.
 
@@ -85,8 +73,18 @@ When you finish or need help, output exactly one of these tags:
 2. After completing the task, update \`.agent/tasks.json\` and set \`"passes": true\`
 3. Run existing tests to make sure nothing is broken
 4. Follow the existing code style and conventions in the project
-`,
-  )
+`
 
-  await writeFile(join(agentDir, 'tasks.json'), JSON.stringify({ tasks: [] }, null, 2) + '\n')
+const EMPTY_TASKS_JSON = JSON.stringify({ tasks: [] }, null, 2) + '\n'
+
+export async function createAgentStructure(projectPath: string): Promise<void> {
+  const agentDir = join(projectPath, '.agent')
+
+  await mkdir(join(agentDir, 'history'), { recursive: true })
+
+  await writeIfAbsent(join(agentDir, 'prd', 'PRD.md'), DEFAULT_PRD_MD)
+  await writeIfAbsent(join(agentDir, 'prd', 'SUMMARY.md'), DEFAULT_SUMMARY_MD)
+  await writeIfAbsent(join(agentDir, 'logs', 'LOG.md'), DEFAULT_LOG_MD)
+  await writeIfAbsent(join(agentDir, 'PROMPT.md'), DEFAULT_PROMPT_MD)
+  await writeIfAbsent(join(agentDir, 'tasks.json'), EMPTY_TASKS_JSON)
 }

@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-83
+- **Task:** Create src/lib/agent-init.ts — .agent/ structure creator
+- **Summary:** Refactored createAgentStructure to be idempotent using writeIfAbsent helper — no longer throws if .agent/ already exists. Extracted default file contents into named constants. Updated test to verify existing files are not overwritten on second run. All 482 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-82
 - **Task:** Create src/commands/tasks.ts and wire TasksApp
 - **Summary:** Added missing tasks.json existence check (prints helpful error and exits), empty task list handling (prints "No tasks found"), and removed erroneous `await` on synchronous readTasks/writeTasks calls. Added 4 unit tests covering: TUI rendering, missing tasks.json error, empty task list message, and initialFilter passthrough. All 482 project tests pass, tsc clean.

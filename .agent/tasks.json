@@ -743,7 +743,7 @@
       "title": "Create src/lib/agent-init.ts — .agent/ structure creator",
       "description": "Create agent-init.ts with createAgentStructure(projectPath: string): void. Creates all required .agent/ subdirectories and files: prd/PRD.md, prd/SUMMARY.md, logs/LOG.md, history/, PROMPT.md, tasks.json. Does not overwrite existing files.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "createAgentStructure creates all dirs/files; running it twice does not overwrite existing content",
       "specFilePath": ".agent/tasks/TASK-83.json"
     },
