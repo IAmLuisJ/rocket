@@ -1,4 +1,5 @@
 import { useReducer, useEffect, useRef, useCallback } from 'react'
+import type { ChildProcess } from 'child_process'
 import { runLoop, type LoopOptions, type LoopEvent } from '../../lib/loop-runner.js'
 import type { IterationStats } from '../RocketLoopApp.js'
 
@@ -59,26 +60,58 @@ export interface UseLoopRunnerResult {
   state: LoopState
   start: (options: LoopOptions) => void
   stop: () => void
+  togglePause: () => void
+  skip: () => void
+  paused: boolean
 }
 
 export function useLoopRunner(): UseLoopRunnerResult {
   const [state, dispatch] = useReducer(reducer, initialState)
   const abortRef = useRef(false)
+  const pausedRef = useRef(false)
+  const [paused, setPaused] = useReducer((s: boolean) => !s, false)
   const runningRef = useRef(false)
+  const childRef = useRef<ChildProcess | null>(null)
 
   const stop = useCallback(() => {
     abortRef.current = true
+    if (childRef.current) {
+      childRef.current.kill()
+      childRef.current = null
+    }
+  }, [])
+
+  const togglePause = useCallback(() => {
+    pausedRef.current = !pausedRef.current
+    setPaused()
+  }, [])
+
+  const skip = useCallback(() => {
+    if (childRef.current) {
+      childRef.current.kill()
+      childRef.current = null
+    }
   }, [])
 
   const start = useCallback((options: LoopOptions) => {
     if (runningRef.current) return
     runningRef.current = true
     abortRef.current = false
+    pausedRef.current = false
     dispatch({ type: 'start' })
     ;(async () => {
       try {
-        const gen = runLoop(options)
+        const gen = runLoop({
+          ...options,
+          onChild: (proc) => {
+            childRef.current = proc
+          },
+        })
         for await (const event of gen) {
+          // Wait while paused
+          while (pausedRef.current && !abortRef.current) {
+            await new Promise((resolve) => setTimeout(resolve, 100))
+          }
           if (abortRef.current) {
             await gen.return(undefined)
             break
@@ -87,6 +120,7 @@ export function useLoopRunner(): UseLoopRunnerResult {
         }
       } finally {
         runningRef.current = false
+        childRef.current = null
       }
     })()
   }, [])
@@ -95,8 +129,12 @@ export function useLoopRunner(): UseLoopRunnerResult {
   useEffect(() => {
     return () => {
       abortRef.current = true
+      if (childRef.current) {
+        childRef.current.kill()
+        childRef.current = null
+      }
     }
   }, [])
 
-  return { state, start, stop }
+  return { state, start, stop, togglePause, skip, paused }
 }

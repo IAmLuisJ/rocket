@@ -12,6 +12,7 @@ export type LoopOptions = {
   backend: AgentBackend
   maxIterations: number
   agentDir: string
+  onChild?: (proc: import('child_process').ChildProcess) => void
 }
 
 export type LoopEvent =
@@ -40,6 +41,7 @@ export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> 
       const startMs = Date.now()
 
       const child = backend.spawn(prompt, { prompt })
+      options.onChild?.(child)
       let accumulated = ''
 
       if (child.stdout) {

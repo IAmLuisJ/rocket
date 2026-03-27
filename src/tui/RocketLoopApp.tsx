@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Box } from 'ink'
+import { Box, Text, useApp, useInput } from 'ink'
 import type { Task } from '../lib/tasks/schema.js'
 import type { AgentBackend } from '../lib/backends/types.js'
 import { TaskSelector } from './components/TaskSelector.js'
@@ -35,7 +35,8 @@ export function RocketLoopApp({
   agentDir,
 }: RocketLoopAppProps) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
-  const { state: loopState, start } = useLoopRunner()
+  const { state: loopState, start, stop, togglePause, skip, paused } = useLoopRunner()
+  const { exit } = useApp()
 
   const phase: AppState =
     selectedTask === null
@@ -45,6 +46,20 @@ export function RocketLoopApp({
         : loopState.phase === 'max-reached'
           ? 'complete'
           : (loopState.phase as AppState)
+
+  useInput((input) => {
+    if (phase !== 'running') return
+    if (input === 'q') {
+      stop()
+      exit()
+    }
+    if (input === 'p') {
+      togglePause()
+    }
+    if (input === 's') {
+      skip()
+    }
+  })
 
   useEffect(() => {
     if (selectedTask && loopState.phase === 'idle') {
@@ -90,6 +105,16 @@ export function RocketLoopApp({
       <Box flexDirection="column">
         <IterationHeader n={loopState.currentIteration} max={maxIterations} taskId={taskId} />
         <SpinnerPreview lines={loopState.outputLines} />
+        {paused && (
+          <Box marginTop={1}>
+            <Text color="yellow" bold>
+              ⏸ Paused — press p to resume
+            </Text>
+          </Box>
+        )}
+        <Box marginTop={1}>
+          <Text dimColor>q quit · p pause · s skip</Text>
+        </Box>
       </Box>
     )
   }

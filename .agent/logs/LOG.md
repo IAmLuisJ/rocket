@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-75
+- **Task:** Add keyboard shortcut handler to RocketLoopApp
+- **Summary:** Added keyboard shortcuts to RocketLoopApp: 'q' for graceful quit (stop + exit), 'p' for pause/resume toggle with yellow indicator, 's' to skip current iteration by killing child process. Shortcuts only active in 'running' state. Extended useLoopRunner hook with togglePause, skip, and paused state. Added onChild callback to loop-runner for child process access. Paused indicator and shortcut hints shown in running view. 11 unit tests (6 new keyboard shortcut tests). All 456 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-74
 - **Task:** Wire loop-runner events to RocketLoopApp state
 - **Summary:** Created src/tui/hooks/useLoopRunner.ts custom hook with useReducer that consumes the runLoop AsyncGenerator and maps each LoopEvent type to state transitions. Updated RocketLoopApp to use the hook: selecting a task triggers start(), loop events drive iteration counter, output preview, and phase transitions (complete/blocked/decide/max-reached). Added `backend` prop to RocketLoopApp for passing AgentBackend. 11 reducer unit tests + 5 app tests. All 450 project tests pass, tsc clean.

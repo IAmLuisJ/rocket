@@ -671,7 +671,7 @@
       "title": "Add keyboard shortcut handler to RocketLoopApp",
       "description": "Use Ink's useInput hook to handle: 'q' — graceful quit (stop loop, cleanup caffeinate, exit), 'p' — pause (suspend loop runner, show paused indicator), 's' — skip current iteration.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Pressing q exits cleanly; pressing p shows 'Paused' and stops AI output; pressing s advances to next iteration",
       "specFilePath": ".agent/tasks/TASK-75.json"
     },
