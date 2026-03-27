@@ -63,6 +63,19 @@ export function CompletionReport({
           {'  ·  Avg: '}
           <Text color="yellow">{formatMs(avgMs)}</Text>
         </Text>
+        {iterationStats.length > 0 ? (
+          <Box flexDirection="column" marginTop={1}>
+            <Text bold>{'  Per-iteration timing:'}</Text>
+            {iterationStats.map((s) => (
+              <Text key={s.iteration}>
+                {'    Iteration '}
+                {s.iteration}
+                {': '}
+                <Text color="yellow">{formatMs(s.durationMs)}</Text>
+              </Text>
+            ))}
+          </Box>
+        ) : null}
         {summary ? (
           <Text>
             {'  📋 '}

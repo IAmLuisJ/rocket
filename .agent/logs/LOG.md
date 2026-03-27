@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-69
+- **Task:** Create src/tui/components/CompletionReport.tsx
+- **Summary:** Added per-iteration timing breakdown to the existing CompletionReport component (complete outcome). Created 9 unit tests covering all four outcomes (complete, blocked, decide, max-iterations), task display, time formatting, per-iteration list, and null task handling. All 416 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-68
 - **Task:** Create src/tui/components/SpinnerPreview.tsx
 - **Summary:** Created SpinnerPreview Ink component showing ink-spinner on the left with last 5 lines of AI output on the right, dimmed and truncated to terminal width minus 4. 5 unit tests covering rendering, line slicing, truncation, empty lines, and default columns. All 407 project tests pass, tsc clean.
