@@ -698,7 +698,7 @@
       "title": "Add task detail panel to TasksApp",
       "description": "When a task is selected in TasksApp, show a detail panel on the right (or below) with: task title, full description, passCondition, blockedReason (if any). Use a box border rendered with Ink Box component.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Selecting a task shows its full details in the detail panel",
       "specFilePath": ".agent/tasks/TASK-78.json"
     },

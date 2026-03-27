@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-78
+- **Task:** Add task detail panel to TasksApp
+- **Summary:** Refactored TasksApp from full-screen detail replacement to side-by-side layout: task list (40% width) on left, detail panel (60% width) on right with round Box border. Created inline TaskDetail component showing task title, description, passCondition, blockedReason, category, and status. Empty state shows "Select a task to view details". Updated 13 unit tests covering all acceptance criteria including border rendering, panel content, and layout. All 472 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-77
 - **Task:** Create src/tui/TasksApp.tsx — rocket tasks TUI
 - **Summary:** TasksApp.tsx already existed with full functionality (task list with ✓/○ status icons, filter cycling, detail view, mark complete, blocked reason display). Added 11 unit tests covering all acceptance criteria: status icons, header/filter display, keyboard shortcuts, filter cycling, detail view navigation, mark complete callback, blocked reason, and shortcut hints. All 470 project tests pass, tsc clean.

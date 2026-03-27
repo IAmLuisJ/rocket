@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Box, Text, useApp, useInput } from 'ink'
 import SelectInput from 'ink-select-input'
 import type { Task } from '../../lib/tasks/schema.js'
-import { brand, success, error, dim } from '../themes/colors.js'
+import { brand, success, error } from '../themes/colors.js'
 
 interface Props {
   tasks: Task[]
@@ -11,6 +11,43 @@ interface Props {
 }
 
 type FilterMode = 'all' | 'incomplete' | 'complete' | 'blocked'
+
+function TaskDetail({ task }: { task: Task | null }) {
+  if (!task) {
+    return (
+      <Box borderStyle="round" paddingX={1} flexGrow={1}>
+        <Text dimColor>Select a task to view details</Text>
+      </Box>
+    )
+  }
+
+  return (
+    <Box borderStyle="round" paddingX={1} flexDirection="column" flexGrow={1}>
+      <Text bold color={brand}>
+        #{task.id} {task.title}
+      </Text>
+      <Box marginTop={1}>
+        <Text>{task.description}</Text>
+      </Box>
+      <Box marginTop={1}>
+        <Text color="cyan">Pass condition: {task.passCondition}</Text>
+      </Box>
+      {task.blockedReason && (
+        <Box>
+          <Text color={error}>Blocked: {task.blockedReason}</Text>
+        </Box>
+      )}
+      <Box marginTop={1}>
+        <Text dimColor>Category: </Text>
+        <Text>{task.category}</Text>
+      </Box>
+      <Box>
+        <Text dimColor>Status: </Text>
+        <Text color={task.passes ? success : error}>{task.passes ? 'Complete' : 'Incomplete'}</Text>
+      </Box>
+    </Box>
+  )
+}
 
 export function TasksApp({ tasks, initialFilter, onMarkComplete }: Props) {
   const { exit } = useApp()
@@ -40,43 +77,6 @@ export function TasksApp({ tasks, initialFilter, onMarkComplete }: Props) {
     return true
   })
 
-  if (selectedTask) {
-    return (
-      <Box flexDirection="column" padding={1}>
-        <Text bold color={brand}>
-          Task #{selectedTask.id}
-        </Text>
-        <Text bold>{selectedTask.title}</Text>
-        <Box marginTop={1}>
-          <Text>{selectedTask.description}</Text>
-        </Box>
-        <Box marginTop={1}>
-          <Text dimColor>Category: </Text>
-          <Text>{selectedTask.category}</Text>
-        </Box>
-        <Box>
-          <Text dimColor>Status: </Text>
-          <Text color={selectedTask.passes ? success : error}>
-            {selectedTask.passes ? 'Complete' : 'Incomplete'}
-          </Text>
-        </Box>
-        <Box>
-          <Text dimColor>Pass condition: </Text>
-          <Text>{selectedTask.passCondition}</Text>
-        </Box>
-        {selectedTask.blockedReason && (
-          <Box>
-            <Text dimColor>Blocked: </Text>
-            <Text color={error}>{selectedTask.blockedReason}</Text>
-          </Box>
-        )}
-        <Box marginTop={1}>
-          <Text color={dim}>[b] back [m] mark complete [q] quit</Text>
-        </Box>
-      </Box>
-    )
-  }
-
   const items = filtered.map((t) => ({
     label: `${t.passes ? '✓' : '○'} [#${t.id}] ${t.title}`,
     value: String(t.id),
@@ -88,16 +88,20 @@ export function TasksApp({ tasks, initialFilter, onMarkComplete }: Props) {
         Rocket Tasks
       </Text>
       <Text dimColor>
-        Filter: {filter} ({filtered.length}/{tasks.length}) · [f] toggle filter [q] quit
+        Filter: {filter} ({filtered.length}/{tasks.length}) · [f] toggle filter [m] mark complete
+        [q] quit
       </Text>
-      <Box marginTop={1} flexDirection="column">
-        <SelectInput
-          items={items}
-          onSelect={(item) => {
-            const task = tasks.find((t) => String(t.id) === item.value)
-            if (task) setSelectedTask(task)
-          }}
-        />
+      <Box marginTop={1}>
+        <Box width="40%" flexDirection="column">
+          <SelectInput
+            items={items}
+            onSelect={(item) => {
+              const task = tasks.find((t) => String(t.id) === item.value)
+              if (task) setSelectedTask(task)
+            }}
+          />
+        </Box>
+        <TaskDetail task={selectedTask} />
       </Box>
     </Box>
   )

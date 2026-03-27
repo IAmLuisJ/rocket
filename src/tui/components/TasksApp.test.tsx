@@ -87,6 +87,7 @@ describe('TasksApp', () => {
     const frame = lastFrame()!
     expect(frame).toContain('[f] toggle filter')
     expect(frame).toContain('[q] quit')
+    expect(frame).toContain('[m] mark complete')
   })
 
   it('cycles filter on f keypress', async () => {
@@ -122,31 +123,40 @@ describe('TasksApp', () => {
     expect(frame).toContain('2/3')
   })
 
-  it('shows task detail when a task is selected via enter', async () => {
+  it('shows empty detail panel placeholder before selection', () => {
+    const { lastFrame } = render(<TasksApp tasks={makeTasks()} />)
+    const frame = lastFrame()!
+    expect(frame).toContain('Select a task to view details')
+  })
+
+  it('shows task detail panel when a task is selected via enter', async () => {
     const { lastFrame, stdin } = render(<TasksApp tasks={makeTasks()} />)
     await delay()
     stdin.write('\r')
     await delay()
     const frame = lastFrame()!
-    expect(frame).toContain('Task #1')
-    expect(frame).toContain('Setup project')
+    // Detail panel shows task info
+    expect(frame).toContain('#1 Setup project')
     expect(frame).toContain('Initialize the project structure')
+    expect(frame).toContain('Pass condition: project builds')
     expect(frame).toContain('Category:')
     expect(frame).toContain('config')
     expect(frame).toContain('Status:')
     expect(frame).toContain('Complete')
+    // Task list is still visible (side-by-side layout)
+    expect(frame).toContain('Rocket Tasks')
   })
 
-  it('returns to list on b keypress from detail view', async () => {
+  it('clears detail panel on b keypress', async () => {
     const { lastFrame, stdin } = render(<TasksApp tasks={makeTasks()} />)
     await delay()
     stdin.write('\r')
     await delay()
-    expect(lastFrame()).toContain('Task #1')
+    expect(lastFrame()).toContain('#1 Setup project')
     stdin.write('b')
     await delay()
+    expect(lastFrame()).toContain('Select a task to view details')
     expect(lastFrame()).toContain('Rocket Tasks')
-    expect(lastFrame()).toContain('Filter: all')
   })
 
   it('calls onMarkComplete when m is pressed on incomplete task', async () => {
@@ -157,7 +167,7 @@ describe('TasksApp', () => {
     await delay()
     stdin.write('\r') // select
     await delay()
-    expect(lastFrame()).toContain('Task #2')
+    expect(lastFrame()).toContain('#2 Build login')
     expect(lastFrame()).toContain('Incomplete')
     stdin.write('m')
     await delay()
@@ -165,7 +175,7 @@ describe('TasksApp', () => {
     expect(lastFrame()).toContain('Complete')
   })
 
-  it('shows blocked reason in detail view', async () => {
+  it('shows blocked reason in detail panel', async () => {
     const { lastFrame, stdin } = render(<TasksApp tasks={makeTasks()} />)
     await delay()
     stdin.write('\x1B[B') // down
@@ -174,19 +184,25 @@ describe('TasksApp', () => {
     await delay()
     stdin.write('\r') // select
     await delay()
-    expect(lastFrame()).toContain('Task #3')
+    expect(lastFrame()).toContain('#3 Add styling')
     expect(lastFrame()).toContain('Blocked:')
     expect(lastFrame()).toContain('Waiting on design specs')
   })
 
-  it('shows detail shortcuts including back and mark', async () => {
+  it('detail panel uses Box border for visual separation', async () => {
     const { lastFrame, stdin } = render(<TasksApp tasks={makeTasks()} />)
     await delay()
     stdin.write('\r')
     await delay()
     const frame = lastFrame()!
-    expect(frame).toContain('[b] back')
-    expect(frame).toContain('[m] mark complete')
-    expect(frame).toContain('[q] quit')
+    // Round border uses ╭ ╮ ╰ ╯ characters
+    expect(frame).toMatch(/[╭╮╰╯]/)
+  })
+
+  it('shows detail panel with border even when no task selected', () => {
+    const { lastFrame } = render(<TasksApp tasks={makeTasks()} />)
+    const frame = lastFrame()!
+    // Round border characters present for the empty detail panel
+    expect(frame).toMatch(/[╭╮╰╯]/)
   })
 })
