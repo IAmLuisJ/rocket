@@ -9,6 +9,14 @@ vi.mock('./prompt.js', () => ({
   buildLoopPrompt: vi.fn(() => 'mocked prompt'),
 }))
 
+const mockCaffProc = { kill: vi.fn(), pid: 9999 }
+const mockStart = vi.fn(() => mockCaffProc)
+const mockStop = vi.fn()
+vi.mock('./caffeinate.js', () => ({
+  start: () => mockStart(),
+  stop: (proc: unknown) => mockStop(proc),
+}))
+
 function createMockTask(overrides: Partial<Task> = {}): Task {
   return {
     id: 1,
@@ -190,5 +198,54 @@ describe('loop-runner', () => {
     expect(timing!.iterationN).toBe(1)
     expect(typeof timing!.elapsedMs).toBe('number')
     expect(timing!.elapsedMs).toBeGreaterThanOrEqual(0)
+  })
+
+  it('starts caffeinate before loop and stops after normal exit', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['<complete>'])
+    const task = createMockTask()
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 1, agentDir: '/tmp/test' }))
+
+    expect(mockStart).toHaveBeenCalledOnce()
+    expect(mockStop).toHaveBeenCalledOnce()
+    expect(mockStop).toHaveBeenCalledWith(mockStart.mock.results[0]!.value)
+  })
+
+  it('stops caffeinate even when loop reaches max iterations', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['Working...'])
+    const task = createMockTask()
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 2, agentDir: '/tmp/test' }))
+
+    expect(mockStart).toHaveBeenCalledOnce()
+    expect(mockStop).toHaveBeenCalledOnce()
+  })
+
+  it('stops caffeinate when consumer breaks out of generator early', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['line1', 'line2', 'line3'])
+    const task = createMockTask()
+
+    const gen = runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' })
+    // Consume only the first event then break
+    for await (const event of gen) {
+      if ((event as { type: string }).type === 'iteration-start') break
+    }
+
+    expect(mockStart).toHaveBeenCalledOnce()
+    expect(mockStop).toHaveBeenCalledOnce()
+  })
+
+  it('stops caffeinate when loop encounters a blocked tag', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['<blocked>No access</blocked>'])
+    const task = createMockTask()
+
+    await collectEvents(runLoop({ task, backend, maxIterations: 5, agentDir: '/tmp/test' }))
+
+    expect(mockStart).toHaveBeenCalledOnce()
+    expect(mockStop).toHaveBeenCalledOnce()
   })
 })

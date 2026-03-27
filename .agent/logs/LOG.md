@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-63
+- **Task:** Integrate caffeinate into loop runner
+- **Summary:** Added caffeinate.start() before the loop and caffeinate.stop() in a finally block in loop-runner.ts. 4 new tests verify caffeinate starts/stops on normal exit, max iterations, early break, and blocked tag. All 382 project tests pass.
+
 ## 2026-03-27 · TASK-62
 - **Task:** Build prompt constructor for loop runner
 - **Summary:** Created `src/lib/prompt-builder.ts` with async `buildPrompt(task, agentDir)` that reads PROMPT.md and PRD.md from the agent directory, falls back to a default prompt when PROMPT.md is missing, and assembles a full prompt string with task details (id, title, description, passCondition). 8 unit tests. All 378 project tests pass.

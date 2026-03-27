@@ -563,7 +563,7 @@
       "title": "Integrate caffeinate into loop runner",
       "description": "In loop-runner.ts, call caffeinate.start() before the first iteration and caffeinate.stop() in a finally block after the loop ends (whether by completion, error, or interrupt).",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "caffeinate process starts when loop starts and is always terminated when loop exits",
       "specFilePath": ".agent/tasks/TASK-63.json"
     },

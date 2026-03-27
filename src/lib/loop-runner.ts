@@ -3,6 +3,7 @@ import type { AgentBackend } from './backends/types.js'
 import type { Task } from './tasks/schema.js'
 import { buildLoopPrompt } from './prompt.js'
 import { detectComplete, detectBlocked, detectDecide } from './parser/tags.js'
+import * as caffeinate from './caffeinate.js'
 
 export type LoopOptions = {
   task: Task
@@ -23,6 +24,8 @@ export type LoopEvent =
 export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> {
   const { task, backend, maxIterations, agentDir } = options
 
+  const caffProc = caffeinate.start()
+  try {
   for (let i = 1; i <= maxIterations; i++) {
     yield { type: 'iteration-start', n: i }
 
@@ -72,4 +75,7 @@ export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> 
   }
 
   yield { type: 'max-reached' }
+  } finally {
+    caffeinate.stop(caffProc)
+  }
 }
