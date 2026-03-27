@@ -770,7 +770,7 @@
       "title": "Ensure no hardcoded credentials in webapp template",
       "description": "Audit all files in src/templates/webapp/ and confirm: no JWT_SECRET values, no database passwords, no API keys. All sensitive config uses process.env or {{PLACEHOLDER}} tokens. Add a template test to enforce this.",
       "category": "security",
-      "passes": false,
+      "passes": true,
       "passCondition": "grep for common secret patterns (password=, secret=, apikey=) in template files returns no hardcoded values",
       "specFilePath": ".agent/tasks/TASK-86.json"
     },

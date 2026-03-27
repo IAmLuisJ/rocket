@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-86
+- **Task:** Ensure no hardcoded credentials in webapp template
+- **Summary:** Replaced hardcoded `password` in .env.example with placeholder text, removed `'change-me-in-production'` fallbacks from jwt.ts and auth.ts (now throws if JWT_SECRET unset), changed docker-compose.yml to require POSTGRES_PASSWORD via `?:` syntax. Added 3-test security suite (template-security.test.ts) that scans for hardcoded secrets, validates .env.example placeholders, and checks for process.env fallbacks. All 491 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-85
 - **Task:** Add post-init instructions output in rocket init
 - **Summary:** Added styled next-step instructions after init success: "Edit .agent/prd/PRD.md", "Edit .agent/tasks.json", and "Then run: rocket loop" (with cyan ANSI color). Added 1 new test verifying all instruction lines are printed. All 488 project tests pass, tsc clean.
