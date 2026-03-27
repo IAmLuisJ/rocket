@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Box } from 'ink'
 import type { Task } from '../lib/tasks/schema.js'
+import type { AgentBackend } from '../lib/backends/types.js'
 import { TaskSelector } from './components/TaskSelector.js'
 import { IterationHeader } from './components/IterationHeader.js'
 import { SpinnerPreview } from './components/SpinnerPreview.js'
 import { CompletionReport } from './components/CompletionReport.js'
 import { BlockedScreen } from './components/BlockedScreen.js'
 import { DecideScreen } from './components/DecideScreen.js'
+import { useLoopRunner } from './hooks/useLoopRunner.js'
 
 export type AppState = 'selecting' | 'running' | 'complete' | 'blocked' | 'decide'
 
@@ -15,21 +17,9 @@ export interface IterationStats {
   durationMs: number
 }
 
-interface StateData {
-  phase: AppState
-  selectedTask: Task | null
-  currentIteration: number
-  outputLines: string[]
-  iterations: number
-  totalMs: number
-  iterationStats: IterationStats[]
-  summary: string
-  blockedReason?: string
-  decideQuestion?: string
-}
-
 export interface RocketLoopAppProps {
   tasks: Task[]
+  backend: AgentBackend
   backendName: string
   projectName: string
   maxIterations: number
@@ -38,31 +28,52 @@ export interface RocketLoopAppProps {
 
 export function RocketLoopApp({
   tasks,
+  backend,
   backendName,
   projectName,
   maxIterations,
   agentDir,
 }: RocketLoopAppProps) {
-  const [data, setData] = useState<StateData>({
-    phase: 'selecting',
-    selectedTask: null,
-    currentIteration: 1,
-    outputLines: [],
-    iterations: 0,
-    totalMs: 0,
-    iterationStats: [],
-    summary: '',
-  })
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+  const { state: loopState, start } = useLoopRunner()
+
+  const phase: AppState =
+    selectedTask === null
+      ? 'selecting'
+      : loopState.phase === 'idle' || loopState.phase === 'running'
+        ? 'running'
+        : loopState.phase === 'max-reached'
+          ? 'complete'
+          : (loopState.phase as AppState)
+
+  useEffect(() => {
+    if (selectedTask && loopState.phase === 'idle') {
+      start({
+        task: selectedTask,
+        backend,
+        maxIterations,
+        agentDir,
+      })
+    }
+  }, [selectedTask, loopState.phase, start, backend, maxIterations, agentDir])
 
   function handleTaskSelect(task: Task | null) {
-    setData((prev) => ({ ...prev, phase: 'running' as const, selectedTask: task }))
+    setSelectedTask(task)
   }
 
   function handleDecideAnswer(_answer: string) {
-    setData((prev) => ({ ...prev, phase: 'running' as const }))
+    // After a decision, restart the loop
+    if (selectedTask) {
+      start({
+        task: selectedTask,
+        backend,
+        maxIterations,
+        agentDir,
+      })
+    }
   }
 
-  if (data.phase === 'selecting') {
+  if (phase === 'selecting') {
     return (
       <TaskSelector
         tasks={tasks}
@@ -73,37 +84,38 @@ export function RocketLoopApp({
     )
   }
 
-  if (data.phase === 'running') {
-    const taskId = data.selectedTask?.id ?? 0
+  if (phase === 'running') {
+    const taskId = selectedTask?.id ?? 0
     return (
       <Box flexDirection="column">
-        <IterationHeader n={data.currentIteration} max={maxIterations} taskId={taskId} />
-        <SpinnerPreview lines={data.outputLines} />
+        <IterationHeader n={loopState.currentIteration} max={maxIterations} taskId={taskId} />
+        <SpinnerPreview lines={loopState.outputLines} />
       </Box>
     )
   }
 
-  if (data.phase === 'complete') {
+  if (phase === 'complete') {
+    const outcome = loopState.phase === 'max-reached' ? 'max-iterations' : 'complete'
     return (
       <CompletionReport
-        outcome="complete"
-        task={data.selectedTask}
-        iterations={data.iterations}
-        totalMs={data.totalMs}
-        iterationStats={data.iterationStats}
-        summary={data.summary}
+        outcome={outcome}
+        task={selectedTask}
+        iterations={loopState.iterations}
+        totalMs={loopState.totalMs}
+        iterationStats={loopState.iterationStats}
+        summary=""
       />
     )
   }
 
-  if (data.phase === 'blocked') {
-    return <BlockedScreen reason={data.blockedReason ?? 'Unknown reason'} />
+  if (phase === 'blocked') {
+    return <BlockedScreen reason={loopState.blockedReason ?? 'Unknown reason'} />
   }
 
   // phase === 'decide'
   return (
     <DecideScreen
-      question={data.decideQuestion ?? 'No question provided'}
+      question={loopState.decideQuestion ?? 'No question provided'}
       agentDir={agentDir}
       onDecide={handleDecideAnswer}
     />

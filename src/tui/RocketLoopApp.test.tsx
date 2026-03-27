@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render } from 'ink-testing-library'
 import { RocketLoopApp } from './RocketLoopApp.js'
 import type { Task } from '../lib/tasks/schema.js'
+import type { AgentBackend } from '../lib/backends/types.js'
 
 // Mock useApp so BlockedScreen/DecideScreen don't try to exit the real app
 const mockExit = vi.fn()
@@ -12,6 +13,22 @@ vi.mock('ink', async () => {
     useApp: () => ({ exit: mockExit }),
   }
 })
+
+// Mock the loop runner hook so we don't actually run the loop
+vi.mock('./hooks/useLoopRunner.js', () => ({
+  useLoopRunner: () => ({
+    state: {
+      phase: 'idle',
+      currentIteration: 0,
+      outputLines: [],
+      iterations: 0,
+      totalMs: 0,
+      iterationStats: [],
+    },
+    start: vi.fn(),
+    stop: vi.fn(),
+  }),
+}))
 
 function makeTasks(): Task[] {
   return [
@@ -42,8 +59,13 @@ function makeTasks(): Task[] {
   ]
 }
 
+function makeBackend(): AgentBackend {
+  return { name: 'copilot', spawn: vi.fn(), parseOutput: vi.fn() }
+}
+
 const defaultProps = {
   tasks: makeTasks(),
+  backend: makeBackend(),
   backendName: 'copilot',
   projectName: 'test-project',
   maxIterations: 5,

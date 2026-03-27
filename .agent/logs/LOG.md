@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-74
+- **Task:** Wire loop-runner events to RocketLoopApp state
+- **Summary:** Created src/tui/hooks/useLoopRunner.ts custom hook with useReducer that consumes the runLoop AsyncGenerator and maps each LoopEvent type to state transitions. Updated RocketLoopApp to use the hook: selecting a task triggers start(), loop events drive iteration counter, output preview, and phase transitions (complete/blocked/decide/max-reached). Added `backend` prop to RocketLoopApp for passing AgentBackend. 11 reducer unit tests + 5 app tests. All 450 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-73
 - **Task:** Create src/tui/RocketLoopApp.tsx — main loop TUI orchestrator
 - **Summary:** Created RocketLoopApp.tsx with 5-state machine (selecting/running/complete/blocked/decide). Uses single StateData object for all state. Selecting renders TaskSelector, running renders IterationHeader+SpinnerPreview, complete renders CompletionReport, blocked renders BlockedScreen, decide renders DecideScreen. 5 unit tests. All 439 project tests pass, tsc clean.

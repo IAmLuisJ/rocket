@@ -662,7 +662,7 @@
       "title": "Wire loop-runner events to RocketLoopApp state",
       "description": "In RocketLoopApp.tsx, consume the AsyncGenerator from loop-runner.ts via useEffect or a custom hook. Map each LoopEvent type to the corresponding state transition in the TUI state machine.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "iteration-start event updates iteration counter; output events update preview; complete/blocked/decide events trigger state transitions",
       "specFilePath": ".agent/tasks/TASK-74.json"
     },

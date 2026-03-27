@@ -51,6 +51,8 @@ src/
     RocketLoop.tsx       # Main loop TUI component
     RocketLoopApp.tsx    # Loop TUI orchestrator (state machine)
     components/          # Reusable TUI components
+    hooks/
+      useLoopRunner.ts   # Custom hook: consumes loop-runner AsyncGenerator
     themes/
       colors.ts          # Color definitions
 
