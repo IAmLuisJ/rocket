@@ -689,7 +689,7 @@
       "title": "Create src/tui/TasksApp.tsx — rocket tasks TUI",
       "description": "Create TasksApp.tsx as the root Ink component for rocket tasks. Shows a paginated list of tasks from tasks.json with status indicators: ✓ (complete), ○ (incomplete), ✕ (blocked). Highlight selected task in cyan.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Component renders task list with correct status icons; navigation works with arrow keys",
       "specFilePath": ".agent/tasks/TASK-77.json"
     },

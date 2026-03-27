@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-77
+- **Task:** Create src/tui/TasksApp.tsx — rocket tasks TUI
+- **Summary:** TasksApp.tsx already existed with full functionality (task list with ✓/○ status icons, filter cycling, detail view, mark complete, blocked reason display). Added 11 unit tests covering all acceptance criteria: status icons, header/filter display, keyboard shortcuts, filter cycling, detail view navigation, mark complete callback, blocked reason, and shortcut hints. All 470 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-76
 - **Task:** Create src/commands/loop.ts and wire RocketLoopApp
 - **Summary:** Replaced RocketLoop with RocketLoopApp in loop.ts command handler. Now passes tasks, backend, backendName, projectName, maxIterations, and agentDir as props to RocketLoopApp. Updated mock in tests from RocketLoop to RocketLoopApp. Fixed caffeinate mock exports. Added 3 new tests verifying correct props, agentDir, and default maxIterations. All 459 project tests pass, tsc clean.
