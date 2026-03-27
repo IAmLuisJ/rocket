@@ -1,6 +1,7 @@
 import { Box, Text } from 'ink'
 import SelectInput from 'ink-select-input'
 import type { Task } from '../../lib/tasks/schema.js'
+import { brand } from '../themes/colors.js'
 
 interface Props {
   tasks: Task[]
@@ -10,7 +11,7 @@ interface Props {
 }
 
 function CyanItem({ isSelected = false, label }: { isSelected?: boolean; label: string }) {
-  return <Text color={isSelected ? 'cyan' : undefined}>{label}</Text>
+  return <Text color={isSelected ? brand : undefined}>{label}</Text>
 }
 
 export function TaskSelector({ tasks, backendName, projectName, onSelect }: Props) {
@@ -38,11 +39,11 @@ export function TaskSelector({ tasks, backendName, projectName, onSelect }: Prop
       <Box
         flexDirection="column"
         borderStyle="round"
-        borderColor="cyan"
+        borderColor={brand}
         paddingX={1}
         marginBottom={1}
       >
-        <Text color="cyan" bold>
+        <Text color={brand} bold>
           🚀 Rocket Loop
         </Text>
         <Text dimColor>
@@ -54,7 +55,7 @@ export function TaskSelector({ tasks, backendName, projectName, onSelect }: Prop
         </Text>
       </Box>
       <Box flexDirection="column" marginBottom={1}>
-        <Text bold color="cyan">
+        <Text bold color={brand}>
           Select task to focus on:
         </Text>
       </Box>

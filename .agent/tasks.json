@@ -644,7 +644,7 @@
       "title": "Create src/tui/themes/colors.ts",
       "description": "Create colors.ts exporting the Rocket color palette as constants: brand (cyan), timing (yellow), success (green), error (red), highlight (magenta), dim (gray). These should be chalk color strings or Ink color names.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "colors.ts exports all six named colors; at least brand and success are used in at least one other component",
       "specFilePath": ".agent/tasks/TASK-72.json"
     },

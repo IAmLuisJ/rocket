@@ -1,5 +1,6 @@
 import { Box, Text } from 'ink'
 import type { Task } from '../../lib/tasks/schema.js'
+import { brand, success } from '../themes/colors.js'
 
 interface IterationStats {
   iteration: number
@@ -41,16 +42,16 @@ export function CompletionReport({
   if (outcome === 'complete') {
     return (
       <Box flexDirection="column" marginTop={1}>
-        <Text color="green">{BORDER}</Text>
+        <Text color={success}>{BORDER}</Text>
         <Text>
           {'  🎉 '}
-          <Text color="green" bold>
+          <Text color={success} bold>
             Task complete!
           </Text>
         </Text>
         <Text>
           {'  ✅ Task: '}
-          <Text color="cyan">{taskLabel}</Text>
+          <Text color={brand}>{taskLabel}</Text>
         </Text>
         <Text>
           {'  ⚡ Finished in '}
@@ -83,7 +84,7 @@ export function CompletionReport({
           </Text>
         ) : null}
         <Text dimColor>{'  Run `rocket status` to see overall progress'}</Text>
-        <Text color="green">{BORDER}</Text>
+        <Text color={success}>{BORDER}</Text>
       </Box>
     )
   }
@@ -100,7 +101,7 @@ export function CompletionReport({
         </Text>
         <Text>
           {'  📌 Task: '}
-          <Text color="cyan">{taskLabel}</Text>
+          <Text color={brand}>{taskLabel}</Text>
         </Text>
         <Text>
           {'  💬 Reason: '}
@@ -129,7 +130,7 @@ export function CompletionReport({
         </Text>
         <Text>
           {'  📌 Task: '}
-          <Text color="cyan">{taskLabel}</Text>
+          <Text color={brand}>{taskLabel}</Text>
         </Text>
         <Text>
           {'  💬 Question: '}
@@ -158,7 +159,7 @@ export function CompletionReport({
       </Text>
       <Text>
         {'  📌 Task: '}
-        <Text color="cyan">{taskLabel}</Text>
+        <Text color={brand}>{taskLabel}</Text>
       </Text>
       <Text>
         {'  ⏱  Total: '}

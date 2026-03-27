@@ -1,6 +1,10 @@
-export const brand = 'cyan'
-export const timing = 'yellow'
-export const success = 'green'
-export const error = 'red'
-export const highlight = 'magenta'
-export const dim = 'gray'
+export const colors = {
+  brand: 'cyan',
+  timing: 'yellow',
+  success: 'green',
+  error: 'red',
+  highlight: 'magenta',
+  dim: 'gray',
+} as const
+
+export const { brand, timing, success, error, highlight, dim } = colors

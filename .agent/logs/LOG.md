@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-27 · TASK-72
+- **Task:** Create src/tui/themes/colors.ts
+- **Summary:** Added `colors` object export (as const) with all six palette entries (brand/cyan, timing/yellow, success/green, error/red, highlight/magenta, dim/gray) plus individual named exports. Updated CompletionReport and TaskSelector to import and use `brand` and `success` from colors.ts. 8 unit tests. All 434 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-71
 - **Task:** Create src/tui/components/DecideScreen.tsx
 - **Summary:** Created DecideScreen Ink component showing yellow "Decision Needed" header, question text, and TextInput for user answer. On submit, appends decision to .agent/decisions.md and calls onDecide callback. 5 unit tests covering header, question display, emoji, input prompt, and submit behavior. All 426 project tests pass, tsc clean.
