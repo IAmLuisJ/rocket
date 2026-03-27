@@ -590,7 +590,7 @@
       "title": "Create src/tui/components/TaskSelector.tsx",
       "description": "Create Ink component TaskSelector that receives Task[] and an onSelect callback. Renders a SelectInput list showing: 'Auto — pick next incomplete' at the top, then each incomplete task as '[#id] title'. Highlights selected item in cyan.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Component renders task list with Auto option first; selecting a task calls onSelect with the task (or null for Auto)",
       "specFilePath": ".agent/tasks/TASK-66.json"
     },

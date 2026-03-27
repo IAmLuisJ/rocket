@@ -9,13 +9,17 @@ interface Props {
   onSelect: (task: Task | null) => void
 }
 
+function CyanItem({ isSelected = false, label }: { isSelected?: boolean; label: string }) {
+  return <Text color={isSelected ? 'cyan' : undefined}>{label}</Text>
+}
+
 export function TaskSelector({ tasks, backendName, projectName, onSelect }: Props) {
   const incomplete = tasks.filter((t) => !t.passes)
 
   const items = [
-    { label: 'Auto — pick next incomplete task', value: 'auto' },
+    { label: 'Auto — pick next incomplete', value: 'auto' },
     ...incomplete.map((t) => ({
-      label: `[#${t.id}] ${t.title}  (${t.category})`,
+      label: `[#${t.id}] ${t.title}`,
       value: String(t.id),
     })),
   ]
@@ -50,9 +54,11 @@ export function TaskSelector({ tasks, backendName, projectName, onSelect }: Prop
         </Text>
       </Box>
       <Box flexDirection="column" marginBottom={1}>
-        <Text bold>Select task to focus on:</Text>
+        <Text bold color="cyan">
+          Select task to focus on:
+        </Text>
       </Box>
-      <SelectInput items={items} onSelect={handleSelect} />
+      <SelectInput items={items} itemComponent={CyanItem} onSelect={handleSelect} />
     </Box>
   )
 }
