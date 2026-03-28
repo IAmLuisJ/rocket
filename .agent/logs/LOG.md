@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-28 · TASK-95
+- **Task:** Write integration test for rocket init
+- **Summary:** Verified existing agent-init.test.ts with 5 integration tests: creates all expected directories (.agent, prd, logs, history), creates all expected files with correct content (tasks.json, PROMPT.md, PRD.md, SUMMARY.md, LOG.md), PRD.md has placeholder sections and instructional comments, PROMPT.md contains exit tag instructions and PRD reference, idempotency test (does not overwrite existing files). All 515 project tests pass, tsc clean.
+
 ## 2026-03-28 · TASK-94
 - **Task:** Write unit tests for scaffold template-engine.ts
 - **Summary:** Verified existing template-engine.test.ts with 8 tests: token replacement in text files, unknown tokens left unchanged, .tmpl extension stripping, nested directories, multiple token occurrences, binary file copy (PNG header), .gitignore.tmpl renaming, and export check. All 515 project tests pass, tsc clean.

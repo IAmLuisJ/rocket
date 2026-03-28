@@ -851,7 +851,7 @@
       "title": "Write integration test for rocket init",
       "description": "Create a test that runs createAgentStructure() against a temp directory and verifies all expected files and directories are created with correct content. Use Vitest with a tmp dir fixture.",
       "category": "testing",
-      "passes": false,
+      "passes": true,
       "passCondition": "Integration test verifies all .agent/ files are created correctly",
       "specFilePath": ".agent/tasks/TASK-95.json"
     },
