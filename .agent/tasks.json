@@ -968,7 +968,7 @@
       "title": "Handle tasks.json with all tasks complete in rocket loop",
       "description": "In preflight.ts, if tasks.json exists but all tasks have passes:true, show a success message 'All tasks are already complete!' with a list of completed task titles, and exit gracefully without starting the loop.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Running rocket loop when all tasks are complete shows the success message and exits with code 0",
       "specFilePath": ".agent/tasks/TASK-108.json"
     },
