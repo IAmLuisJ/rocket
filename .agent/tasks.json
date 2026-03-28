@@ -878,7 +878,7 @@
       "title": "Configure npm publish settings in package.json",
       "description": "Add 'files' field to package.json including: ['dist/', 'bin/', 'src/templates/', 'README.md']. Set 'publishConfig' with access: public. Ensure 'prepublishOnly' script runs the build first.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm pack --dry-run shows only the files listed in 'files' field plus package.json and README",
       "specFilePath": ".agent/tasks/TASK-98.json"
     },

@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-28 · TASK-98
+- **Task:** Configure npm publish settings in package.json
+- **Summary:** Added CHANGELOG.md to the files whitelist in package.json (dist/, bin/, templates/, README.md, CHANGELOG.md were already present or added). publishConfig with access: public and prepublishOnly script were already configured. Verified with npm pack --dry-run: no .test.ts files, no .agent/, no raw src/ files included. Added 4 unit tests validating files field entries, publishConfig, prepublishOnly, and exclusion of test/.agent paths. All 519 tests pass, tsc clean.
+
 ## 2026-03-28 · TASK-97
 - **Task:** Create README.md
 - **Summary:** Verified existing README.md already covers all acceptance criteria: project overview, installation (npm install -g rocket-cli), quick start (rocket new + rocket loop), all 6 commands (new, loop, init, tasks, feature, status) with flags and examples, AI backends table (Copilot, Claude, Docker), templates (webapp, website), loop signals, .agent/ structure, and database setup. Requirements (Node.js 22+) documented. All 515 project tests pass, tsc clean.
