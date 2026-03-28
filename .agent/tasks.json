@@ -833,7 +833,7 @@
       "title": "Write unit tests for caffeinate.ts",
       "description": "Create src/lib/caffeinate.test.ts. Mock process.platform and child_process.spawn. Test: start() on darwin spawns caffeinate -i; start() on linux returns null; stop() with a process calls kill().",
       "category": "testing",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm test passes all caffeinate.test.ts cases with platform mocking",
       "specFilePath": ".agent/tasks/TASK-93.json"
     },

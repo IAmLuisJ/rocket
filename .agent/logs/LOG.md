@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-28 · TASK-93
+- **Task:** Write unit tests for caffeinate.ts
+- **Summary:** Verified existing caffeinate.test.ts with 5 tests: start() spawns caffeinate -i on darwin, start() returns null on linux, stop(proc) kills with SIGTERM, stop(null) is a no-op, stop() handles already-exited process gracefully. All 515 project tests pass, tsc clean.
+
 ## 2026-03-27 · TASK-92
 - **Task:** Write unit tests for task reader.ts
 - **Summary:** Added 3 missing tests to reader.test.ts: invalid JSON throws error, invalid schema throws ZodError specifically, and writeTasks uses 2-space indentation. Total of 11 tests covering readTasks (valid, missing, invalid JSON, invalid schema), writeTasks (persistence, indentation), getIncompleteTasks, getMaxTaskId (with values and empty array), markTaskComplete (match, no-match). All 515 project tests pass, tsc clean.
