@@ -869,7 +869,7 @@
       "title": "Create README.md",
       "description": "Write README.md covering: what Rocket is, installation (npm install -g rocket-cli), quick start (rocket new my-app, rocket loop), commands reference (new, loop, init, tasks), backends (Copilot, Claude, Docker), and requirements (Node 22+).",
       "category": "docs",
-      "passes": false,
+      "passes": true,
       "passCondition": "README.md exists with all sections; installation and quick start are accurate",
       "specFilePath": ".agent/tasks/TASK-97.json"
     },

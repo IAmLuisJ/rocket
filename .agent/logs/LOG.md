@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-28 · TASK-97
+- **Task:** Create README.md
+- **Summary:** Verified existing README.md already covers all acceptance criteria: project overview, installation (npm install -g rocket-cli), quick start (rocket new + rocket loop), all 6 commands (new, loop, init, tasks, feature, status) with flags and examples, AI backends table (Copilot, Claude, Docker), templates (webapp, website), loop signals, .agent/ structure, and database setup. Requirements (Node.js 22+) documented. All 515 project tests pass, tsc clean.
+
 ## 2026-03-28 · TASK-96
 - **Task:** Write integration test for rocket new (webapp template)
 - **Summary:** Verified and enhanced existing scaffold.test.ts: updated main integration test to use `{auth: true}` option per spec, added `.env.example` existence check in server directory, and confirmed all 19 scaffold tests pass covering: full directory structure with auth enabled, .agent/ structure creation, npm install execution, git init/add/commit, PROJECT_NAME substitution, onProgress callbacks, npm install failure handling, feature toggle inclusion/exclusion (auth, email, pdf), and sanitizeProjectName edge cases. All 515 project tests pass, tsc clean.
