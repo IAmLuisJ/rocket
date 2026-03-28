@@ -1004,7 +1004,7 @@
       "title": "Create src/lib/feature/clarifier.ts — AI-powered question generation",
       "description": "Create src/lib/feature/clarifier.ts. It reads the existing .agent/prd/PRD.md and accepts a feature description string. It sends both to the configured AI backend with a prompt instructing the AI to generate 3–5 targeted clarifying questions about the feature (scope, UI needs, API changes, dependencies on existing tasks, edge cases). Returns an array of question strings. Seed questions if AI is unavailable: 'What problem does this feature solve?', 'Who is the primary user?', 'Are UI components needed or is this backend-only?', 'Does this depend on any existing tasks?', 'Any known edge cases or constraints?'",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "clarifier.ts exports a generateQuestions(prdContent: string, featureDescription: string, backend: AgentBackend) => Promise<string[]> function that returns between 3 and 5 question strings",
       "specFilePath": ".agent/tasks/TASK-112.json"
     },
