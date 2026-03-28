@@ -941,7 +941,7 @@
       "title": "Add 'check backend in PATH' helper to preflight",
       "description": "In preflight.ts, create checkBinaryInPath(binary: string): boolean using 'which' on Linux/macOS via child_process.execSync. Return true if found, false if not. Use this in runPreflight for all three backends.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "checkBinaryInPath('node') returns true; checkBinaryInPath('nonexistent-binary-xyz') returns false",
       "specFilePath": ".agent/tasks/TASK-105.json"
     },

@@ -9,6 +9,38 @@ vi.mock('child_process', async (importOriginal) => {
   return { ...actual, execSync: vi.fn(actual.execSync) }
 })
 
+describe('checkBinaryInPath', () => {
+  it('returns true when binary exists in PATH', async () => {
+    const { checkBinaryInPath } = await import('./preflight.js')
+    expect(checkBinaryInPath('node')).toBe(true)
+  })
+
+  it('returns false when binary does not exist in PATH', async () => {
+    const { checkBinaryInPath } = await import('./preflight.js')
+    expect(checkBinaryInPath('nonexistent-binary-xyz-12345')).toBe(false)
+  })
+
+  it('is exported', async () => {
+    const mod = await import('./preflight.js')
+    expect(typeof mod.checkBinaryInPath).toBe('function')
+  })
+})
+
+describe('checkBackendAvailability', () => {
+  it('returns object with copilot, claude, and docker boolean properties', async () => {
+    const { checkBackendAvailability } = await import('./preflight.js')
+    const availability = checkBackendAvailability()
+    expect(typeof availability.copilot).toBe('boolean')
+    expect(typeof availability.claude).toBe('boolean')
+    expect(typeof availability.docker).toBe('boolean')
+  })
+
+  it('is exported', async () => {
+    const mod = await import('./preflight.js')
+    expect(typeof mod.checkBackendAvailability).toBe('function')
+  })
+})
+
 describe('checkNodeVersion', () => {
   const originalVersion = process.version
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
