@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-28 · TASK-94
+- **Task:** Write unit tests for scaffold template-engine.ts
+- **Summary:** Verified existing template-engine.test.ts with 8 tests: token replacement in text files, unknown tokens left unchanged, .tmpl extension stripping, nested directories, multiple token occurrences, binary file copy (PNG header), .gitignore.tmpl renaming, and export check. All 515 project tests pass, tsc clean.
+
 ## 2026-03-28 · TASK-93
 - **Task:** Write unit tests for caffeinate.ts
 - **Summary:** Verified existing caffeinate.test.ts with 5 tests: start() spawns caffeinate -i on darwin, start() returns null on linux, stop(proc) kills with SIGTERM, stop(null) is a no-op, stop() handles already-exited process gracefully. All 515 project tests pass, tsc clean.

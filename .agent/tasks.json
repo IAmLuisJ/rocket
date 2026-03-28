@@ -842,7 +842,7 @@
       "title": "Write unit tests for scaffold template-engine.ts",
       "description": "Create src/lib/template-engine.test.ts. Test: token replacement in text files, no-op on binary files, nested directory creation, {{TOKEN}} with no replacement value is left unchanged.",
       "category": "testing",
-      "passes": false,
+      "passes": true,
       "passCondition": "npm test passes all template-engine.test.ts cases",
       "specFilePath": ".agent/tasks/TASK-94.json"
     },
