@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-28 · TASK-99
+- **Task:** Create .npmignore
+- **Summary:** Verified existing .npmignore already excludes src/, *.test.ts, .agent/, .github/, coverage/, docs/, and config files. npm pack --dry-run confirms no test or .agent files included. Added 6 unit tests for .npmignore (existence, src/ exclusion, *.test.ts exclusion, .agent/ exclusion, .github/ exclusion, coverage/ exclusion). All 525 tests pass, tsc clean.
+
 ## 2026-03-28 · TASK-98
 - **Task:** Configure npm publish settings in package.json
 - **Summary:** Added CHANGELOG.md to the files whitelist in package.json (dist/, bin/, templates/, README.md, CHANGELOG.md were already present or added). publishConfig with access: public and prepublishOnly script were already configured. Verified with npm pack --dry-run: no .test.ts files, no .agent/, no raw src/ files included. Added 4 unit tests validating files field entries, publishConfig, prepublishOnly, and exclusion of test/.agent paths. All 519 tests pass, tsc clean.

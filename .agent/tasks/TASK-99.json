@@ -16,13 +16,13 @@
       "step": 1,
       "description": "Create .npmignore",
       "details": "Create .npmignore with: .agent/ .github/ coverage/ docs/ *.test.ts tsconfig*.json eslint.config.js vitest.config.ts .prettierrc .prettierignore",
-      "pass": false
+      "pass": true
     },
     {
       "step": 2,
       "description": "Verify with npm pack --dry-run",
       "details": "Run `npm pack --dry-run` and confirm no .test.ts files or .agent/ directory appear in the file list.",
-      "pass": false
+      "pass": true
     }
   ],
   "dependencies": ["TASK-1", "TASK-98"],

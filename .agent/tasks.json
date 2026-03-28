@@ -887,7 +887,7 @@
       "title": "Create .npmignore",
       "description": "Create .npmignore excluding: src/ (except templates), test files, .agent/, .github/, docs/, coverage/, *.test.ts, tsconfig.json, eslint.config.js.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": ".npmignore exists; npm pack --dry-run does not include .test.ts files or .agent/ directory",
       "specFilePath": ".agent/tasks/TASK-99.json"
     },
