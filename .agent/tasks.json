@@ -995,7 +995,7 @@
       "title": "Create src/commands/feature.ts with Commander subcommand",
       "description": "Create src/commands/feature.ts that registers a 'feature' subcommand with Commander. Accept an optional positional argument for the feature description. Register flags: --no-questions (skip clarification loop), --dry-run (preview only, no file writes), --backend <name> (override AI backend: copilot | claude | docker). If no description argument is provided, launch an interactive ink-text-input prompt to collect it.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket feature --help prints usage with all three flags; rocket feature 'test' runs without crashing",
       "specFilePath": ".agent/tasks/TASK-111.json"
     },
