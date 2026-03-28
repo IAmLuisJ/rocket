@@ -923,7 +923,7 @@
       "title": "Display per-step timing in iteration header",
       "description": "Track start time at the beginning of each iteration in loop-runner.ts. Yield a timing event with elapsed time when the iteration ends. Display elapsed time in the IterationHeader or a timing line below it in yellow.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "Each iteration shows elapsed time (e.g., '⏱ 45s') in yellow after completion",
       "specFilePath": ".agent/tasks/TASK-103.json"
     },

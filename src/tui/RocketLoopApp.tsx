@@ -9,6 +9,7 @@ import { CompletionReport } from './components/CompletionReport.js'
 import { BlockedScreen } from './components/BlockedScreen.js'
 import { DecideScreen } from './components/DecideScreen.js'
 import { useLoopRunner } from './hooks/useLoopRunner.js'
+import { formatTime } from './utils/formatTime.js'
 
 export type AppState = 'selecting' | 'running' | 'complete' | 'blocked' | 'decide' | 'all-complete'
 
@@ -103,9 +104,15 @@ export function RocketLoopApp({
 
   if (phase === 'running') {
     const taskId = selectedTask?.id ?? 0
+    const lastStats = loopState.iterationStats[loopState.iterationStats.length - 1]
+    const lastIterationTiming = lastStats ? formatTime(lastStats.durationMs) : null
+
     return (
       <Box flexDirection="column">
         <IterationHeader n={loopState.currentIteration} max={maxIterations} taskId={taskId} />
+        {lastIterationTiming && loopState.currentIteration > 0 && (
+          <Text color="yellow">⏱ {lastIterationTiming}</Text>
+        )}
         <SpinnerPreview lines={loopState.outputLines} />
         {paused && (
           <Box marginTop={1}>
