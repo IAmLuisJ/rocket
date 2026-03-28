@@ -950,7 +950,7 @@
       "title": "Add --no-caffeinate flag to rocket loop",
       "description": "Add optional --no-caffeinate flag to the loop command. When passed, skip the caffeinate.start() call even on macOS. Useful for CI environments or when the user does not want sleep prevention.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "rocket loop --no-caffeinate runs without starting caffeinate; caffeinate is not listed as a running process",
       "specFilePath": ".agent/tasks/TASK-106.json"
     },
