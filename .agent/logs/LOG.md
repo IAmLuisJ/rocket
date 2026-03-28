@@ -4,6 +4,10 @@ Started: 2026-03-21T19:57:36.000Z
 
 ---
 
+## 2026-03-28 · TASK-96
+- **Task:** Write integration test for rocket new (webapp template)
+- **Summary:** Verified and enhanced existing scaffold.test.ts: updated main integration test to use `{auth: true}` option per spec, added `.env.example` existence check in server directory, and confirmed all 19 scaffold tests pass covering: full directory structure with auth enabled, .agent/ structure creation, npm install execution, git init/add/commit, PROJECT_NAME substitution, onProgress callbacks, npm install failure handling, feature toggle inclusion/exclusion (auth, email, pdf), and sanitizeProjectName edge cases. All 515 project tests pass, tsc clean.
+
 ## 2026-03-28 · TASK-95
 - **Task:** Write integration test for rocket init
 - **Summary:** Verified existing agent-init.test.ts with 5 integration tests: creates all expected directories (.agent, prd, logs, history), creates all expected files with correct content (tasks.json, PROMPT.md, PRD.md, SUMMARY.md, LOG.md), PRD.md has placeholder sections and instructional comments, PROMPT.md contains exit tag instructions and PRD reference, idempotency test (does not overwrite existing files). All 515 project tests pass, tsc clean.

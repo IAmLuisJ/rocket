@@ -860,7 +860,7 @@
       "title": "Write integration test for rocket new (webapp template)",
       "description": "Create a test that calls scaffold('webapp', 'test-app', tmpDir, {auth:true}) and verifies: directory structure, package.json contents, .env.example exists, .gitignore exists, .agent/ structure created.",
       "category": "testing",
-      "passes": false,
+      "passes": true,
       "passCondition": "Integration test passes verifying all expected scaffolded files exist",
       "specFilePath": ".agent/tasks/TASK-96.json"
     },

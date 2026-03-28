@@ -24,9 +24,9 @@ describe('scaffold webapp template', () => {
     await rm(tmpDir, { recursive: true, force: true })
   })
 
-  it('creates full webapp directory structure', async () => {
+  it('creates full webapp directory structure with auth enabled', async () => {
     const projectDir = join(tmpDir, 'test-app')
-    await scaffold('webapp', 'test-app', projectDir, {})
+    await scaffold('webapp', 'test-app', projectDir, { auth: true })
 
     // Verify top-level files
     await access(join(projectDir, 'package.json'))
@@ -48,6 +48,7 @@ describe('scaffold webapp template', () => {
     const serverDir = join(projectDir, 'server')
     await access(join(serverDir, 'package.json'))
     await access(join(serverDir, 'src', 'index.ts'))
+    await access(join(serverDir, '.env.example'))
   })
 
   it('creates .agent/ structure in scaffolded project', async () => {
