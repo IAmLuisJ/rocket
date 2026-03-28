@@ -3,7 +3,14 @@ import type { ChildProcess } from 'child_process'
 import { runLoop, type LoopOptions, type LoopEvent } from '../../lib/loop-runner.js'
 import type { IterationStats } from '../RocketLoopApp.js'
 
-export type LoopPhase = 'idle' | 'running' | 'complete' | 'blocked' | 'decide' | 'max-reached'
+export type LoopPhase =
+  | 'idle'
+  | 'running'
+  | 'complete'
+  | 'blocked'
+  | 'decide'
+  | 'max-reached'
+  | 'all-tasks-complete'
 
 export interface LoopState {
   phase: LoopPhase
@@ -41,6 +48,8 @@ function reducer(state: LoopState, event: LoopEvent | { type: 'start' }): LoopSt
       return { ...state, phase: 'decide', decideQuestion: event.question }
     case 'max-reached':
       return { ...state, phase: 'max-reached' }
+    case 'all-tasks-complete':
+      return { ...state, phase: 'all-tasks-complete' }
     case 'timing':
       return {
         ...state,

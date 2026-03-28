@@ -27,6 +27,13 @@ vi.mock('./caffeinate.js', () => ({
   stop: (proc: unknown) => mockStop(proc),
 }))
 
+const mockReadTasks = vi.fn()
+const mockGetIncompleteTasks = vi.fn()
+vi.mock('./tasks/reader.js', () => ({
+  readTasks: (...args: unknown[]) => mockReadTasks(...args),
+  getIncompleteTasks: (...args: unknown[]) => mockGetIncompleteTasks(...args),
+}))
+
 function createMockTask(overrides: Partial<Task> = {}): Task {
   return {
     id: 1,
@@ -541,7 +548,8 @@ describe('loop-runner', () => {
       }
 
       // Drain
-      for await (const _event of gen) {
+      for await (const _of of gen) {
+        void _of
         /* drain */
       }
 
@@ -597,6 +605,55 @@ describe('loop-runner', () => {
 
       expect(process.listenerCount('SIGINT')).toBe(sigintBefore)
       expect(process.listenerCount('SIGTERM')).toBe(sigtermBefore)
+    })
+  })
+
+  describe('Auto mode (null task)', () => {
+    it('yields all-tasks-complete when no incomplete tasks exist', async () => {
+      const { runLoop } = await import('./loop-runner.js')
+      mockGetIncompleteTasks.mockReturnValue([])
+      mockReadTasks.mockReturnValue({ tasks: [] })
+      const backend = createMockBackend([])
+
+      const events = await collectEvents(
+        runLoop({ task: null, backend, maxIterations: 1, agentDir: '/tmp/test' }),
+      )
+
+      expect(events[0]).toEqual({ type: 'all-tasks-complete' })
+      expect(mockReadTasks).toHaveBeenCalledWith('/tmp/test')
+      expect(mockGetIncompleteTasks).toHaveBeenCalledWith([])
+    })
+
+    it('runs the first incomplete task when task is null', async () => {
+      const { runLoop } = await import('./loop-runner.js')
+      const task1 = createMockTask({ id: 1, title: 'Task 1' })
+      const task2 = createMockTask({ id: 2, title: 'Task 2' })
+      mockGetIncompleteTasks.mockReturnValue([task1, task2])
+      mockReadTasks.mockReturnValue({ tasks: [task1, task2] })
+      const backend = createMockBackend(['<complete>'])
+
+      const events = await collectEvents(
+        runLoop({ task: null, backend, maxIterations: 5, agentDir: '/tmp/test' }),
+      )
+
+      expect(events).toContainEqual({ type: 'complete' })
+      expect(mockAppendSessionLog).toHaveBeenCalledWith(
+        '/tmp/test',
+        expect.objectContaining({
+          taskId: 1,
+          taskTitle: 'Task 1',
+        }),
+      )
+    })
+
+    it('does not call readTasks when task is provided', async () => {
+      const { runLoop } = await import('./loop-runner.js')
+      const task = createMockTask()
+      const backend = createMockBackend(['<complete>'])
+
+      await collectEvents(runLoop({ task, backend, maxIterations: 1, agentDir: '/tmp/test' }))
+
+      expect(mockReadTasks).not.toHaveBeenCalled()
     })
   })
 })

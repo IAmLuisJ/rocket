@@ -10,7 +10,7 @@ import { BlockedScreen } from './components/BlockedScreen.js'
 import { DecideScreen } from './components/DecideScreen.js'
 import { useLoopRunner } from './hooks/useLoopRunner.js'
 
-export type AppState = 'selecting' | 'running' | 'complete' | 'blocked' | 'decide'
+export type AppState = 'selecting' | 'running' | 'complete' | 'blocked' | 'decide' | 'all-complete'
 
 export interface IterationStats {
   iteration: number
@@ -45,7 +45,9 @@ export function RocketLoopApp({
         ? 'running'
         : loopState.phase === 'max-reached'
           ? 'complete'
-          : (loopState.phase as AppState)
+          : loopState.phase === 'all-tasks-complete'
+            ? 'all-complete'
+            : (loopState.phase as AppState)
 
   useInput((input) => {
     if (phase !== 'running') return
@@ -76,7 +78,7 @@ export function RocketLoopApp({
     setSelectedTask(task)
   }
 
-  function handleDecideAnswer(_answer: string) {
+  function handleDecideAnswer() {
     // After a decision, restart the loop
     if (selectedTask) {
       start({
@@ -135,6 +137,16 @@ export function RocketLoopApp({
 
   if (phase === 'blocked') {
     return <BlockedScreen reason={loopState.blockedReason ?? 'Unknown reason'} />
+  }
+
+  if (phase === 'all-complete') {
+    return (
+      <Box flexDirection="column" paddingX={1}>
+        <Text color="green" bold>
+          🎉 All tasks complete! Your project is done.
+        </Text>
+      </Box>
+    )
   }
 
   // phase === 'decide'

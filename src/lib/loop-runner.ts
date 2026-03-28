@@ -6,9 +6,10 @@ import { detectComplete, detectBlocked, detectDecide } from './parser/tags.js'
 import * as caffeinate from './caffeinate.js'
 import { saveIteration } from './history.js'
 import { appendSessionLog, type SessionLog } from './log.js'
+import { readTasks, getIncompleteTasks } from './tasks/reader.js'
 
 export type LoopOptions = {
-  task: Task
+  task: Task | null
   backend: AgentBackend
   maxIterations: number
   agentDir: string
@@ -22,10 +23,23 @@ export type LoopEvent =
   | { type: 'blocked'; reason: string }
   | { type: 'decide'; question: string }
   | { type: 'max-reached' }
+  | { type: 'all-tasks-complete' }
   | { type: 'timing'; iterationN: number; elapsedMs: number }
 
 export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> {
-  const { task, backend, maxIterations, agentDir } = options
+  let task = options.task
+  const { backend, maxIterations, agentDir } = options
+
+  // Handle Auto mode: pick the first incomplete task
+  if (task === null) {
+    const tasksFile = readTasks(agentDir)
+    const incomplete = getIncompleteTasks(tasksFile.tasks)
+    if (incomplete.length === 0) {
+      yield { type: 'all-tasks-complete' }
+      return
+    }
+    task = incomplete[0]
+  }
 
   const sessionId = Date.now().toString()
   const loopStartMs = Date.now()

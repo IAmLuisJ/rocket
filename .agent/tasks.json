@@ -896,7 +896,7 @@
       "title": "Add CHANGELOG.md",
       "description": "Create CHANGELOG.md following Keep a Changelog format with an [Unreleased] section documenting all v0.1.0 features: rocket new, rocket loop (copilot backend), rocket init, rocket tasks.",
       "category": "docs",
-      "passes": false,
+      "passes": true,
       "passCondition": "CHANGELOG.md exists with [Unreleased] section and correct format",
       "specFilePath": ".agent/tasks/TASK-100.json"
     },
@@ -905,7 +905,7 @@
       "title": "Handle missing .agent/ directory gracefully in rocket loop",
       "description": "In loop.ts command handler, check if .agent/ exists in cwd before running preflight. If missing, show a friendly error: 'No .agent/ directory found. Run rocket init first.' and exit with code 1.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Running rocket loop in a directory without .agent/ shows the correct error message",
       "specFilePath": ".agent/tasks/TASK-101.json"
     },
@@ -914,7 +914,7 @@
       "title": "Add 'Auto — pick next incomplete' logic to loop runner",
       "description": "In loop-runner.ts, when task is null (Auto mode selected), call getIncompleteTasks() and pick the first one. If no incomplete tasks remain, show a completion message 'All tasks complete!' and exit.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "Auto mode selects the first incomplete task; when all tasks are complete, shows the correct message and exits",
       "specFilePath": ".agent/tasks/TASK-102.json"
     },
