@@ -986,7 +986,7 @@
       "title": "Add GitHub Actions CI workflow",
       "description": "Create .github/workflows/ci.yml that runs on push and PR to main: sets up Node.js 22, runs npm ci, npm run build, npm run lint, npm test. Use ubuntu-latest runner.",
       "category": "config",
-      "passes": false,
+      "passes": true,
       "passCondition": "CI workflow file exists with all four steps; workflow syntax is valid YAML",
       "specFilePath": ".agent/tasks/TASK-110.json"
     },
