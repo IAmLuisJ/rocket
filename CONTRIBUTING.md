@@ -530,3 +530,202 @@ When using `-p` (non-interactive/print mode), Claude CLI blocks on any file syst
 ### `ink-select-input` and `ink-text-input` require `ink@4` (not `ink@5`)
 
 The project pins `ink@4.4.1`. Both `ink-select-input@5` and `ink-text-input@5` declare `ink@^4` as a peer dependency and are not compatible with Ink 5's changed rendering model. If you see Ink-related type errors or runtime failures after updating dependencies, verify that you haven't pulled in `ink@5`.
+
+---
+
+## Development Setup
+
+### Clone and install
+
+```bash
+git clone https://github.com/github/rocket-cli.git
+cd rocket-cli
+npm install
+```
+
+### Build the project
+
+```bash
+npm run build    # Runs tsc and copies package.json to dist/
+```
+
+### Run in development mode
+
+```bash
+npm run dev      # tsx watch bin/rocket.ts — hot-reloads on file changes
+```
+
+---
+
+## Running Tests
+
+```bash
+npm test         # Runs Vitest in watch mode
+npm test -- run  # Runs once and exits
+```
+
+Tests are located alongside source files with `.test.ts` extension. The test suite covers:
+- Unit tests for libraries (backends, loop-runner, task readers, preflight checks)
+- Integration tests for Ink components
+- Mock-based testing for CLI commands
+
+Run linting and formatting:
+
+```bash
+npx eslint --fix src/   # Auto-fix linting issues
+npx prettier --write src/  # Format code
+```
+
+---
+
+## Adding a New Template
+
+Templates allow users to scaffold projects with `rocket new --type <template>`.
+
+### Steps to add a template
+
+1. **Create template directory**
+   ```bash
+   mkdir -p templates/mytemplate/
+   ```
+
+2. **Add template files**
+   - Place project files in the template directory
+   - Use `{{PLACEHOLDER}}` tokens for dynamic values (e.g., `{{PROJECT_NAME}}`, `{{DESCRIPTION}}`)
+   - Add `.tmpl` extension to files that need token substitution (e.g., `package.json.tmpl`)
+   - Plain files (without `.tmpl`) are copied as-is
+
+3. **Register the template in code**
+   - Update `src/lib/scaffold.ts` to add the template name to the `templateName` union type
+   - Update `src/tui/components/NewProjectWizard.tsx` to add it to the template selection list
+
+4. **Test the template**
+   ```bash
+   npm run dev
+   # Run: rocket new myproject --type mytemplate
+   ```
+
+### Token replacement
+
+The `template-engine.ts` processes files during scaffolding:
+- `{{PROJECT_NAME}}` → project name
+- `{{DESCRIPTION}}` → project description
+- Other tokens can be added as needed
+
+---
+
+## Adding a New Backend
+
+Backends enable Rocket to communicate with different AI services.
+
+### Steps to add a backend
+
+1. **Implement AgentBackend interface**
+   Create `src/lib/backends/mybackend.ts`:
+   ```typescript
+   import type { AgentBackend } from './types.js'
+   
+   export const myBackend: AgentBackend = {
+     name: 'My Backend',
+     spawn(prompt: string, opts: any) {
+       // Return a ChildProcess that outputs to stdout
+       // Should be streaming lines or JSON
+     },
+     parseOutput(line: string) {
+       // Parse and return { token: string } or null
+     },
+   }
+   ```
+
+2. **Register in backend selector**
+   - Update `src/lib/backends/index.ts` in the `getBackend()` function
+   - Add your backend to the selection logic
+
+3. **Add CLI flag**
+   - Update `src/cli.ts` loop command to register a flag (e.g., `--mybackend`)
+   - Add the option to the handler's type signature
+
+4. **Update documentation**
+   - Document the backend in `README.md` 
+   - Add setup instructions for users
+
+5. **Test the backend**
+   ```bash
+   npm run build
+   rocket loop --mybackend
+   ```
+
+---
+
+## Pull Request Guidelines
+
+1. **One logical change per PR**
+   - If adding a feature and fixing a bug, split into two PRs
+   - Keep related changes together
+
+2. **Run tests and linting**
+   ```bash
+   npm test -- run
+   npm run build
+   npx eslint src/
+   ```
+   All must pass before submitting.
+
+3. **Write clear commit messages**
+   - Use Conventional Commit format: `feat:`, `fix:`, `docs:`, `test:`, `chore:`
+   - First line ≤ 50 chars, wrap body at 72 chars
+   - Include `Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>` trailer
+
+4. **Add tests for new functionality**
+   - Write tests alongside the code (same directory)
+   - Aim for meaningful test coverage, not just line coverage
+
+5. **Update docs if needed**
+   - If changing behavior, update `README.md` or `CONTRIBUTING.md`
+   - Update `CHANGELOG.md` for user-facing changes
+
+---
+
+## Code Style
+
+### TypeScript
+
+- Prefer **const** over let/var
+- Use **strict mode** (tsconfig.json enforces this)
+- Prefer **explicit types** in function signatures
+- Avoid **any** — use `unknown` and narrow the type
+
+### Naming
+
+- File names: `kebab-case.ts`
+- Variables/functions: `camelCase`
+- Types/interfaces: `PascalCase`
+- Constants: `UPPER_SNAKE_CASE`
+
+### Imports
+
+- Use ESM imports (`import ... from '...'`)
+- Use `.js` file extensions in import paths (for Node ESM compatibility)
+- Group imports: React → libraries → local modules
+
+### Ink/React components
+
+- Props should be a single object (not spread parameters)
+- Use functional components with hooks
+- Component files: `PascalCase.tsx`
+
+### Comments
+
+- Only comment complex logic that isn't obvious
+- Prefer clear naming over comments
+- Keep comments up-to-date with code changes
+
+### Formatting
+
+- Linting: **ESLint** (npm run lint --fix)
+- Formatting: **Prettier** (npm run format)
+- Both tools run automatically on save if configured in your editor
+
+---
+
+For more information, see the [README.md](./README.md) for user documentation and architecture notes.

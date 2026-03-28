@@ -977,7 +977,7 @@
       "title": "Write CONTRIBUTING.md",
       "description": "Create CONTRIBUTING.md with: how to clone and build the project locally, how to run tests, how to add a new template, how to add a new backend, PR guidelines, and code style notes.",
       "category": "docs",
-      "passes": false,
+      "passes": true,
       "passCondition": "CONTRIBUTING.md exists with all required sections",
       "specFilePath": ".agent/tasks/TASK-109.json"
     },
