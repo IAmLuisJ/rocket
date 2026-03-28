@@ -1022,7 +1022,7 @@
       "title": "Create src/lib/feature/specGenerator.ts — prompt assembly and AI response parsing",
       "description": "Create src/lib/feature/specGenerator.ts. It assembles a structured prompt from: existing PRD content, the feature description, and the Q&A answer pairs. Calls the configured AI backend and collects the full streamed output. Parses the response expecting a JSON envelope: { spec: string, tasks: Task[] }. Returns { specMarkdown: string, tasks: Task[] }. Handles malformed or partial JSON gracefully — if parsing fails, throw a descriptive error with the raw output for debugging.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "specGenerator.ts exports generateSpec(context: SpecContext, backend: AgentBackend) => Promise<{ specMarkdown: string, tasks: Task[] }>; correctly parses a well-formed JSON envelope response",
       "specFilePath": ".agent/tasks/TASK-114.json"
     },
