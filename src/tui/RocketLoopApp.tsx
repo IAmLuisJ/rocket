@@ -91,14 +91,28 @@ export function RocketLoopApp({
     }
   }
 
+  const header = (
+    <Box marginBottom={1}>
+      <Text color="cyan" bold>
+        🚀 Rocket Loop
+      </Text>
+      <Text dimColor>
+        {' '}| Project: {projectName} | Backend: {backendName}
+      </Text>
+    </Box>
+  )
+
   if (phase === 'selecting') {
     return (
-      <TaskSelector
-        tasks={tasks}
-        backendName={backendName}
-        projectName={projectName}
-        onSelect={handleTaskSelect}
-      />
+      <Box flexDirection="column">
+        {header}
+        <TaskSelector
+          tasks={tasks}
+          backendName={backendName}
+          projectName={projectName}
+          onSelect={handleTaskSelect}
+        />
+      </Box>
     )
   }
 
@@ -109,6 +123,7 @@ export function RocketLoopApp({
 
     return (
       <Box flexDirection="column">
+        {header}
         <IterationHeader n={loopState.currentIteration} max={maxIterations} taskId={taskId} />
         {lastIterationTiming && loopState.currentIteration > 0 && (
           <Text color="yellow">⏱ {lastIterationTiming}</Text>
@@ -131,38 +146,52 @@ export function RocketLoopApp({
   if (phase === 'complete') {
     const outcome = loopState.phase === 'max-reached' ? 'max-iterations' : 'complete'
     return (
-      <CompletionReport
-        outcome={outcome}
-        task={selectedTask}
-        iterations={loopState.iterations}
-        totalMs={loopState.totalMs}
-        iterationStats={loopState.iterationStats}
-        summary=""
-      />
+      <Box flexDirection="column">
+        {header}
+        <CompletionReport
+          outcome={outcome}
+          task={selectedTask}
+          iterations={loopState.iterations}
+          totalMs={loopState.totalMs}
+          iterationStats={loopState.iterationStats}
+          summary=""
+        />
+      </Box>
     )
   }
 
   if (phase === 'blocked') {
-    return <BlockedScreen reason={loopState.blockedReason ?? 'Unknown reason'} />
+    return (
+      <Box flexDirection="column">
+        {header}
+        <BlockedScreen reason={loopState.blockedReason ?? 'Unknown reason'} />
+      </Box>
+    )
   }
 
   if (phase === 'all-complete') {
     return (
-      <Box flexDirection="column" paddingX={1}>
-        <Text color="green" bold>
-          🎉 All tasks complete! Your project is done.
-        </Text>
+      <Box flexDirection="column">
+        {header}
+        <Box paddingX={1}>
+          <Text color="green" bold>
+            🎉 All tasks complete! Your project is done.
+          </Text>
+        </Box>
       </Box>
     )
   }
 
   // phase === 'decide'
   return (
-    <DecideScreen
-      question={loopState.decideQuestion ?? 'No question provided'}
-      agentDir={agentDir}
-      onDecide={handleDecideAnswer}
-    />
+    <Box flexDirection="column">
+      {header}
+      <DecideScreen
+        question={loopState.decideQuestion ?? 'No question provided'}
+        agentDir={agentDir}
+        onDecide={handleDecideAnswer}
+      />
+    </Box>
   )
 }
 

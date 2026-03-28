@@ -932,7 +932,7 @@
       "title": "Add loop backend name to TUI header",
       "description": "In RocketLoopApp.tsx, render a header bar showing: 'Rocket Loop | Project: <cwd basename> | Backend: <backend.name>'. Use cyan for the Rocket Loop label and dim for the rest.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "TUI header shows correct project name and backend name; updates if backend changes between runs",
       "specFilePath": ".agent/tasks/TASK-104.json"
     },
