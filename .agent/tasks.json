@@ -959,7 +959,7 @@
       "title": "Add session ID display to loop TUI header",
       "description": "Show the current sessionId (truncated to 8 chars) in the loop TUI header. This allows users to find the corresponding history files in .agent/history/.",
       "category": "ui-ux",
-      "passes": false,
+      "passes": true,
       "passCondition": "TUI header shows a session ID that matches the prefix of history files created during the session",
       "specFilePath": ".agent/tasks/TASK-107.json"
     },

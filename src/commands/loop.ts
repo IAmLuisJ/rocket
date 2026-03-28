@@ -88,6 +88,7 @@ export async function runLoop(opts: {
   ensureLogFile(projectRoot)
 
   const projectName = basename(projectRoot)
+  const sessionId = Date.now().toString()
 
   // Start the Ink TUI
   const { waitUntilExit } = render(
@@ -98,6 +99,7 @@ export async function runLoop(opts: {
       projectName,
       maxIterations,
       agentDir,
+      sessionId,
     }),
   )
 

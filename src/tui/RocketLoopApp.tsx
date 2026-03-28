@@ -25,6 +25,7 @@ export interface RocketLoopAppProps {
   projectName: string
   maxIterations: number
   agentDir: string
+  sessionId: string
 }
 
 export function RocketLoopApp({
@@ -34,6 +35,7 @@ export function RocketLoopApp({
   projectName,
   maxIterations,
   agentDir,
+  sessionId,
 }: RocketLoopAppProps) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const { state: loopState, start, stop, togglePause, skip, paused } = useLoopRunner()
@@ -97,7 +99,7 @@ export function RocketLoopApp({
         🚀 Rocket Loop
       </Text>
       <Text dimColor>
-        {' '}| Project: {projectName} | Backend: {backendName}
+        {' '}| Project: {projectName} | Backend: {backendName} | Session: {sessionId.slice(0, 8)}
       </Text>
     </Box>
   )
