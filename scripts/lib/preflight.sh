@@ -1,5 +1,5 @@
 #!/bin/bash
-# Preflight module for ralph.sh
+# Preflight module for rocket.sh
 # Pre-flight checks before starting the main loop
 # Dependencies: constants.sh, logging.sh
 #
@@ -12,7 +12,7 @@
 # Exits with code 1 if not in a git repository
 check_git_repo() {
   if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    log_error "ralph.sh must be run inside a git repository"
+    log_error "rocket.sh must be run inside a git repository"
     exit 1
   fi
 }
@@ -46,7 +46,7 @@ check_required_files() {
 
   # Exit if any required files are missing
   if [ "$missing_required" = true ]; then
-    log_error "Please create the required files before running Ralph"
+    log_error "Please create the required files before running Rocket"
     exit 1
   fi
 

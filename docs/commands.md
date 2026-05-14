@@ -75,12 +75,12 @@ rocket new my-site --type website
 ### Synopsis
 
 ```
-rocket loop [--claude | --docker] [--once] [-n <max>]
+rocket loop [--claude | --docker] [--once] [--select] [-n <max>]
 ```
 
 ### Description
 
-Runs the AI development loop against the current project's `.agent/tasks.json`. Presents a task selection screen, then iterates — spawning the configured AI backend, monitoring its output stream, parsing for signal tags, and reporting results. On macOS, automatically runs `caffeinate -i` to prevent sleep during the loop.
+Runs the AI development loop against the current project's `.agent/tasks.json`. By default, Rocket starts the next incomplete task immediately. Pass `--select` to open the task selection screen before iterating. The loop spawns the configured AI backend, monitors its output stream, parses for signal tags, and reports results. On macOS, automatically runs `caffeinate -i` to prevent sleep during the loop.
 
 ### Arguments
 
@@ -93,12 +93,13 @@ None.
 | `--claude` | boolean | false | Use Claude Code CLI as the AI backend. |
 | `--docker` | boolean | false | Use Claude in a Docker sandbox. |
 | `--once` | boolean | false | Run a single iteration then exit. |
+| `--select` | boolean | false | Choose a task before starting instead of auto-picking the next incomplete task. |
 | `-n, --max <number>` | number | `10` | Maximum number of iterations before exiting. |
 
 ### Behavior
 
 1. **Preflight checks:** verifies `.agent/tasks.json` exists, the selected backend binary is in PATH, and (for `--docker`) Docker is running.
-2. **Task selection TUI:** lists incomplete tasks from `tasks.json`. User selects a specific task or "Auto — pick next incomplete."
+2. **Task focus:** starts the next incomplete task by default. With `--select`, lists incomplete tasks from `tasks.json` so the user can choose a specific task.
 3. **Loop starts:** for each iteration up to `--max`:
    a. Reads `PROMPT.md` + selected task details, assembles the prompt.
    b. Spawns the backend process.
@@ -128,6 +129,9 @@ None.
 ```bash
 # Default — Copilot CLI, up to 10 iterations
 rocket loop
+
+# Choose a specific task before starting
+rocket loop --select
 
 # Use Claude Code CLI
 rocket loop --claude

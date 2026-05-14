@@ -44,9 +44,10 @@ rocket loop --claude       # Claude Code CLI (no Docker)
 rocket loop --docker       # Claude in Docker sandbox
 rocket loop --once         # single iteration only
 rocket loop -n 20          # max 20 iterations
+rocket loop --select       # choose a task before starting
 ```
 
-On launch you select a focus task (or let Rocket pick the next incomplete one). The loop then spawns the AI backend, streams output with a live spinner preview, and monitors for exit signals:
+On launch Rocket starts the next incomplete task by default. Pass `--select` when you want to choose a specific focus task before the loop starts. The loop then spawns the AI backend, streams output with a live spinner preview, and monitors for exit signals:
 
 | Signal | Meaning | What Rocket does |
 |--------|---------|-----------------|

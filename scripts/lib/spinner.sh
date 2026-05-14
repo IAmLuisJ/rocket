@@ -1,5 +1,5 @@
 #!/bin/bash
-# Spinner module for ralph.sh
+# Spinner module for rocket.sh
 # Animated spinner display with step tracking
 # Dependencies: constants.sh, timing.sh, terminal.sh
 

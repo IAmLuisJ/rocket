@@ -33,7 +33,7 @@ program
   .option('--docker', 'Use Claude in Docker sandbox')
   .option('-n, --max-iterations <n>', 'Maximum iterations', '10')
   .option('--once', 'Run a single iteration and exit')
-  .option('--auto', 'Skip task selector and automatically pick the next incomplete task')
+  .option('--select', 'Choose a task before starting')
   .option('--no-caffeinate', 'Disable macOS sleep prevention')
   .action(
     async (opts: {
@@ -41,7 +41,7 @@ program
       docker?: boolean
       maxIterations?: string
       once?: boolean
-      auto?: boolean
+      select?: boolean
       caffeinate?: boolean
     }) => {
       const { runLoop } = await import('./commands/loop.js')
@@ -86,6 +86,16 @@ program
   .action(async (opts: { filter?: string }) => {
     const { runTasks } = await import('./commands/tasks.js')
     await runTasks(opts)
+  })
+
+program
+  .command('prd [description]')
+  .description('Initialize PRD and tasks using AI from a project description')
+  .option('--claude', 'Use Claude CLI directly (no Docker)')
+  .option('--docker', 'Use Claude in Docker sandbox')
+  .action(async (description: string | undefined, opts: { claude?: boolean; docker?: boolean }) => {
+    const { runPrd } = await import('./commands/prd.js')
+    await runPrd(description, opts)
   })
 
 program

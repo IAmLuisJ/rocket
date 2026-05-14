@@ -7,7 +7,7 @@
     "rocket": "./dist/bin/rocket.js"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && cp package.json dist/package.json",
+    "build": "tsc -p tsconfig.build.json && cp package.json dist/package.json && cp -r templates dist/templates && cp rocket.sh dist/rocket.sh && cp -r scripts dist/scripts && mkdir -p dist/.claude && cp -r .claude/skills dist/.claude/skills",
     "clean": "rm -rf dist/",
     "dev": "tsx watch bin/rocket.ts",
     "start": "node dist/bin/rocket.js",
@@ -25,6 +25,8 @@
   "files": [
     "dist/",
     "bin/",
+    "rocket.sh",
+    "scripts/",
     "templates/",
     "README.md",
     "CHANGELOG.md"

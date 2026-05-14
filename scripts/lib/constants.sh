@@ -1,5 +1,5 @@
 #!/bin/bash
-# Constants module for ralph.sh
+# Constants module for rocket.sh
 # Contains: Colors, paths, version, exit codes
 
 # Version

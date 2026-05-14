@@ -1,5 +1,5 @@
 #!/bin/bash
-# Notification module for ralph.sh
+# Notification module for rocket.sh
 # Cross-platform sound and desktop notifications
 # Dependencies: None
 

@@ -18,9 +18,8 @@ describe('detectComplete', () => {
     expect(detectComplete('<complet')).toBe(false)
   })
 
-  it('is case-sensitive', () => {
-    expect(detectComplete('<COMPLETE>')).toBe(false)
-    expect(detectComplete('<Complete>')).toBe(false)
+  it('detects legacy promise complete tag', () => {
+    expect(detectComplete('<promise>COMPLETE</promise>')).toBe(true)
   })
 })
 
@@ -60,6 +59,13 @@ describe('detectBlocked', () => {
       reason: 'reason',
     })
   })
+
+  it('extracts reason from legacy promise blocked tag', () => {
+    expect(detectBlocked('<promise>BLOCKED:Missing API key</promise>')).toEqual({
+      blocked: true,
+      reason: 'Missing API key',
+    })
+  })
 })
 
 describe('detectDecide', () => {
@@ -96,6 +102,13 @@ describe('detectDecide', () => {
     expect(detectDecide('before <decide>question?</decide> after')).toEqual({
       decide: true,
       question: 'question?',
+    })
+  })
+
+  it('extracts question from legacy promise decide tag', () => {
+    expect(detectDecide('<promise>DECIDE:Use REST?</promise>')).toEqual({
+      decide: true,
+      question: 'Use REST?',
     })
   })
 })

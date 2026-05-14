@@ -2,6 +2,7 @@ import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { mkdir, writeFile, rm } from 'fs/promises'
 import { execSync } from 'child_process'
+import { copy, pathExists } from 'fs-extra'
 import { processTemplate } from './template-engine.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -55,6 +56,9 @@ export async function scaffold(
   // Create .agent/ structure
   await createAgentStructure(destPath, projectName)
 
+  // Copy .claude/skills/
+  await copyClaudeSkills(destPath)
+
   // Step 2: Run npm install
   onProgress?.('installing')
   try {
@@ -103,6 +107,12 @@ async function removeDisabledFeatureFiles(
       }
     }
   }
+}
+
+async function copyClaudeSkills(destPath: string): Promise<void> {
+  const skillsSrc = join(__dirname, '../../.claude/skills')
+  if (!(await pathExists(skillsSrc))) return
+  await copy(skillsSrc, join(destPath, '.claude', 'skills'))
 }
 
 async function createAgentStructure(projectPath: string, projectName: string): Promise<void> {

@@ -24,8 +24,11 @@ export interface RocketLoopAppProps {
   backendName: string
   projectName: string
   maxIterations: number
+  projectRoot: string
   agentDir: string
   sessionId: string
+  selectTask?: boolean
+  caffeinate?: boolean
 }
 
 export function RocketLoopApp({
@@ -34,10 +37,15 @@ export function RocketLoopApp({
   backendName,
   projectName,
   maxIterations,
+  projectRoot,
   agentDir,
   sessionId,
+  selectTask = false,
+  caffeinate,
 }: RocketLoopAppProps) {
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+  const [selectedTask, setSelectedTask] = useState<Task | null>(
+    selectTask ? null : (tasks.find((task) => !task.passes) ?? null),
+  )
   const { state: loopState, start, stop, togglePause, skip, paused } = useLoopRunner()
   const { exit } = useApp()
 
@@ -72,10 +80,12 @@ export function RocketLoopApp({
         task: selectedTask,
         backend,
         maxIterations,
+        projectRoot,
         agentDir,
+        caffeinate,
       })
     }
-  }, [selectedTask, loopState.phase, start, backend, maxIterations, agentDir])
+  }, [selectedTask, loopState.phase, start, backend, maxIterations, projectRoot, agentDir, caffeinate])
 
   function handleTaskSelect(task: Task | null) {
     setSelectedTask(task)
@@ -88,7 +98,9 @@ export function RocketLoopApp({
         task: selectedTask,
         backend,
         maxIterations,
+        projectRoot,
         agentDir,
+        caffeinate,
       })
     }
   }

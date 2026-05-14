@@ -1,5 +1,5 @@
 #!/bin/bash
-# Timing module for ralph.sh
+# Timing module for rocket.sh
 # Step timing tracking and duration formatting
 # Dependencies: constants.sh
 #

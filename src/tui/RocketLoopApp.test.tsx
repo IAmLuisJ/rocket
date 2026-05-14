@@ -88,7 +88,9 @@ const defaultProps = {
   backendName: 'copilot',
   projectName: 'test-project',
   maxIterations: 5,
+  projectRoot: '/tmp/test-project',
   agentDir: '/tmp/agent',
+  sessionId: 'test-session',
 }
 
 beforeEach(() => {
@@ -106,8 +108,23 @@ beforeEach(() => {
 })
 
 describe('RocketLoopApp', () => {
-  it('starts in selecting state showing TaskSelector', () => {
+  it('starts the next incomplete task by default', async () => {
     const { lastFrame } = render(<RocketLoopApp {...defaultProps} />)
+    await new Promise((r) => setTimeout(r, 50))
+
+    expect(lastFrame()).toContain('Task #10')
+    expect(lastFrame()).not.toContain('TaskSelector')
+    expect(mockStart).toHaveBeenCalledWith(
+      expect.objectContaining({
+        task: makeTasks()[0],
+        projectRoot: '/tmp/test-project',
+        agentDir: '/tmp/agent',
+      }),
+    )
+  })
+
+  it('shows TaskSelector when selectTask is true', () => {
+    const { lastFrame } = render(<RocketLoopApp {...defaultProps} selectTask />)
     expect(lastFrame()).toContain('TaskSelector')
   })
 
@@ -120,20 +137,20 @@ describe('RocketLoopApp', () => {
 
 describe('RocketLoopApp keyboard shortcuts - selecting state', () => {
   it('does not call stop/exit when q is pressed in selecting state', () => {
-    const { stdin } = render(<RocketLoopApp {...defaultProps} />)
+    const { stdin } = render(<RocketLoopApp {...defaultProps} selectTask />)
     stdin.write('q')
     expect(mockStop).not.toHaveBeenCalled()
     expect(mockExit).not.toHaveBeenCalled()
   })
 
   it('does not call togglePause when p is pressed in selecting state', () => {
-    const { stdin } = render(<RocketLoopApp {...defaultProps} />)
+    const { stdin } = render(<RocketLoopApp {...defaultProps} selectTask />)
     stdin.write('p')
     expect(mockTogglePause).not.toHaveBeenCalled()
   })
 
   it('does not call skip when s is pressed in selecting state', () => {
-    const { stdin } = render(<RocketLoopApp {...defaultProps} />)
+    const { stdin } = render(<RocketLoopApp {...defaultProps} selectTask />)
     stdin.write('s')
     expect(mockSkip).not.toHaveBeenCalled()
   })
@@ -149,7 +166,7 @@ describe('RocketLoopApp keyboard shortcuts - running state', () => {
       totalMs: 0,
       iterationStats: [],
     }
-    const result = render(<RocketLoopApp {...defaultProps} />)
+    const result = render(<RocketLoopApp {...defaultProps} selectTask />)
     // Trigger task selection to move from 'selecting' to 'running'
     capturedOnSelect!(makeTasks()[0])
     return result

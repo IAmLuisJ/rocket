@@ -119,7 +119,7 @@ A persistent, observable AI loop that reads tasks from `.agent/tasks.json`, sele
 
 **Loop flow:**
 1. `rocket loop` launches the TUI
-2. Task selection screen: reads `.agent/tasks.json`, shows incomplete tasks, user selects focus task (or selects "Auto — pick next incomplete")
+2. Default focus: reads `.agent/tasks.json` and starts the next incomplete task automatically. If `--select` is passed, shows incomplete tasks and lets the user select a focus task.
 3. Loop runs: AI agent iterates on the task, Rocket monitors output
 4. Per-iteration: spinner + rolling preview of AI output, step timing, task status updates
 5. Exit conditions: `<complete>` tag (task done), `<blocked>` tag (needs human), `<decide>` tag (needs decision), max iterations reached

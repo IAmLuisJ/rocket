@@ -12,7 +12,7 @@ Rocket is a Node.js CLI tool that bootstraps opinionated starter project templat
 ## Key User Flows
 
 1. `rocket new my-app` → pick template → scaffold → `cd my-app && rocket loop`
-2. `rocket loop` → select task to focus → loop runs → view completion report
+2. `rocket loop` → next incomplete task starts automatically → view completion report
 3. `rocket loop --docker` → run with Claude in Docker sandbox instead
 4. `rocket init` in existing project → edit PRD + tasks → `rocket loop`
 
@@ -22,6 +22,6 @@ Rocket is a Node.js CLI tool that bootstraps opinionated starter project templat
 - TUI built with Ink (React for terminals)
 - Copilot CLI as default AI backend; Claude direct and Docker sandbox as alternatives
 - macOS caffeinate enabled by default during loop
-- Task-focused loop: select a specific task (not just iteration count) as the loop's focus
+- Task-focused loop: starts the next incomplete task by default, with `--select` for manual focus selection
 - Templates are bundled (no network at scaffold time)
 - No API keys stored by Rocket — auth delegated to AI backends

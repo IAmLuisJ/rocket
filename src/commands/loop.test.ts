@@ -165,6 +165,85 @@ describe('loop command renders RocketLoopApp', () => {
     )
   })
 
+  it('passes projectRoot and selectTask=false to RocketLoopApp by default', async () => {
+    const { existsSync } = await import('fs')
+    vi.mocked(existsSync).mockReturnValue(true)
+    const { readTasks, getIncompleteTasks } = await import('../lib/tasks/reader.js')
+    const fakeTasks = [{ id: 1, title: 'Test', passes: false }]
+    vi.mocked(readTasks).mockReturnValue({ tasks: fakeTasks } as ReturnType<typeof readTasks>)
+    vi.mocked(getIncompleteTasks).mockReturnValue(
+      fakeTasks as ReturnType<typeof getIncompleteTasks>,
+    )
+    const fakeBackend = { name: 'Copilot CLI', spawn: vi.fn(), parseOutput: vi.fn() }
+    const { getBackend } = await import('../lib/backends/index.js')
+    vi.mocked(getBackend).mockReturnValue(fakeBackend as ReturnType<typeof getBackend>)
+    const React = await import('react')
+    const createSpy = vi.spyOn(React.default, 'createElement')
+
+    const { runLoop } = await import('./loop.js')
+    await runLoop({})
+
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        projectRoot: expect.stringContaining('Rocket'),
+        selectTask: false,
+      }),
+    )
+  })
+
+  it('passes caffeinate=false to RocketLoopApp when --no-caffeinate is used', async () => {
+    const { existsSync } = await import('fs')
+    vi.mocked(existsSync).mockReturnValue(true)
+    const { readTasks, getIncompleteTasks } = await import('../lib/tasks/reader.js')
+    const fakeTasks = [{ id: 1, title: 'Test', passes: false }]
+    vi.mocked(readTasks).mockReturnValue({ tasks: fakeTasks } as ReturnType<typeof readTasks>)
+    vi.mocked(getIncompleteTasks).mockReturnValue(
+      fakeTasks as ReturnType<typeof getIncompleteTasks>,
+    )
+    const fakeBackend = { name: 'Copilot CLI', spawn: vi.fn(), parseOutput: vi.fn() }
+    const { getBackend } = await import('../lib/backends/index.js')
+    vi.mocked(getBackend).mockReturnValue(fakeBackend as ReturnType<typeof getBackend>)
+    const React = await import('react')
+    const createSpy = vi.spyOn(React.default, 'createElement')
+
+    const { runLoop } = await import('./loop.js')
+    await runLoop({ caffeinate: false })
+
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        caffeinate: false,
+      }),
+    )
+  })
+
+  it('passes selectTask=true when requested', async () => {
+    const { existsSync } = await import('fs')
+    vi.mocked(existsSync).mockReturnValue(true)
+    const { readTasks, getIncompleteTasks } = await import('../lib/tasks/reader.js')
+    const fakeTasks = [{ id: 1, title: 'Test', passes: false }]
+    vi.mocked(readTasks).mockReturnValue({ tasks: fakeTasks } as ReturnType<typeof readTasks>)
+    vi.mocked(getIncompleteTasks).mockReturnValue(
+      fakeTasks as ReturnType<typeof getIncompleteTasks>,
+    )
+    const fakeBackend = { name: 'Copilot CLI', spawn: vi.fn(), parseOutput: vi.fn() }
+    const { getBackend } = await import('../lib/backends/index.js')
+    vi.mocked(getBackend).mockReturnValue(fakeBackend as ReturnType<typeof getBackend>)
+    const React = await import('react')
+    const createSpy = vi.spyOn(React.default, 'createElement')
+
+    const { runLoop } = await import('./loop.js')
+    await runLoop({ select: true })
+
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        selectTask: true,
+      }),
+    )
+  })
+
   it('defaults maxIterations to 10 when not specified', async () => {
     const { existsSync } = await import('fs')
     vi.mocked(existsSync).mockReturnValue(true)
@@ -193,7 +272,7 @@ describe('loop command renders RocketLoopApp', () => {
 })
 
 describe('loop command --max-iterations flag registration', () => {
-  it('loop command has --max-iterations flag with default of 10', async () => {
+  it('loop command has --max-iterations and --select flags', async () => {
     const { program } = await import('../cli.js')
     const loopCmd = program.commands.find((c) => c.name() === 'loop')
     expect(loopCmd).toBeDefined()
@@ -201,5 +280,7 @@ describe('loop command --max-iterations flag registration', () => {
     expect(helpText).toContain('--max-iterations')
     expect(helpText).toContain('-n')
     expect(helpText).toContain('Maximum iterations')
+    expect(helpText).toContain('--select')
+    expect(helpText).toContain('Choose a task before starting')
   })
 })

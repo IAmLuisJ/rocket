@@ -1,5 +1,5 @@
 #!/bin/bash
-# Terminal module for ralph.sh
+# Terminal module for rocket.sh
 # ANSI support detection and terminal width utilities
 # Dependencies: constants.sh
 

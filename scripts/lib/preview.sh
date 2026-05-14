@@ -1,5 +1,5 @@
 #!/bin/bash
-# Preview module for ralph.sh
+# Preview module for rocket.sh
 # Rolling preview buffer display
 # Dependencies: constants.sh, terminal.sh
 

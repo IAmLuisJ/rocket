@@ -1,5 +1,5 @@
 #!/bin/bash
-# Output module for ralph.sh
+# Output module for rocket.sh
 # JSON parsing and ANSI stripping utilities
 # Dependencies: constants.sh, terminal.sh
 

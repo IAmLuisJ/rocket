@@ -12,7 +12,9 @@ export type LoopOptions = {
   task: Task | null
   backend: AgentBackend
   maxIterations: number
+  projectRoot?: string
   agentDir: string
+  caffeinate?: boolean
   onChild?: (proc: import('child_process').ChildProcess) => void
 }
 
@@ -29,10 +31,11 @@ export type LoopEvent =
 export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> {
   let task = options.task
   const { backend, maxIterations, agentDir } = options
+  const projectRoot = options.projectRoot ?? agentDir
 
   // Handle Auto mode: pick the first incomplete task
   if (task === null) {
-    const tasksFile = readTasks(agentDir)
+    const tasksFile = readTasks(projectRoot)
     const incomplete = getIncompleteTasks(tasksFile.tasks)
     if (incomplete.length === 0) {
       yield { type: 'all-tasks-complete' }
@@ -48,7 +51,7 @@ export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> 
   let currentChild: import('child_process').ChildProcess | null = null
   let aborted = false
 
-  const caffProc = caffeinate.start()
+  const caffProc = options.caffeinate === false ? null : caffeinate.start()
 
   const handleSignal = () => {
     aborted = true
@@ -71,7 +74,7 @@ export async function* runLoop(options: LoopOptions): AsyncGenerator<LoopEvent> 
 
       yield { type: 'iteration-start', n: i }
 
-      const prompt = buildLoopPrompt(agentDir, task)
+      const prompt = buildLoopPrompt(projectRoot, task)
       const startMs = Date.now()
 
       const child = backend.spawn(prompt, { prompt })

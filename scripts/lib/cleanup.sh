@@ -1,5 +1,5 @@
 #!/bin/bash
-# Cleanup module for ralph.sh
+# Cleanup module for rocket.sh
 # Signal handlers and process cleanup
 # Dependencies: constants.sh
 #

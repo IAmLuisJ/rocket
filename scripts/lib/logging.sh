@@ -1,5 +1,5 @@
 #!/bin/bash
-# Logging module for ralph.sh
+# Logging module for rocket.sh
 # Consistent, colored logging for different message types.
 # Dependencies: constants.sh
 #

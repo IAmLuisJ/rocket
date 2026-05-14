@@ -5,7 +5,6 @@ import React from 'react'
 import { checkAgentStructure, checkBackendAvailability } from '../lib/preflight.js'
 import { readTasks, getIncompleteTasks } from '../lib/tasks/reader.js'
 import { getBackend } from '../lib/backends/index.js'
-import { start as startCaffeinate, stop as stopCaffeinate } from '../lib/caffeinate.js'
 import { ensureLogFile } from '../lib/log.js'
 import { getDefaultPromptContent } from '../lib/prompt.js'
 import { RocketLoopApp } from '../tui/RocketLoopApp.js'
@@ -15,7 +14,7 @@ export async function runLoop(opts: {
   docker?: boolean
   maxIterations?: string
   once?: boolean
-  auto?: boolean
+  select?: boolean
   caffeinate?: boolean
 }): Promise<void> {
   const projectRoot = process.cwd()
@@ -81,9 +80,6 @@ export async function runLoop(opts: {
     process.exit(0)
   }
 
-  // Start caffeinate on macOS (unless --no-caffeinate)
-  const caffeinateProc = opts.caffeinate !== false ? startCaffeinate() : null
-
   // Ensure log file exists
   ensureLogFile(projectRoot)
 
@@ -98,14 +94,13 @@ export async function runLoop(opts: {
       backendName: backend.name,
       projectName,
       maxIterations,
+      projectRoot,
       agentDir,
       sessionId,
+      selectTask: opts.select === true,
+      caffeinate: opts.caffeinate,
     }),
   )
 
-  try {
-    await waitUntilExit()
-  } finally {
-    stopCaffeinate(caffeinateProc)
-  }
+  await waitUntilExit()
 }

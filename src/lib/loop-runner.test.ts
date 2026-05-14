@@ -231,6 +231,19 @@ describe('loop-runner', () => {
     expect(mockStop).toHaveBeenCalledWith(mockStart.mock.results[0]!.value)
   })
 
+  it('does not start caffeinate when disabled', async () => {
+    const { runLoop } = await import('./loop-runner.js')
+    const backend = createMockBackend(['<complete>'])
+    const task = createMockTask()
+
+    await collectEvents(
+      runLoop({ task, backend, maxIterations: 1, agentDir: '/tmp/test', caffeinate: false }),
+    )
+
+    expect(mockStart).not.toHaveBeenCalled()
+    expect(mockStop).toHaveBeenCalledWith(null)
+  })
+
   it('stops caffeinate even when loop reaches max iterations', async () => {
     const { runLoop } = await import('./loop-runner.js')
     const backend = createMockBackend(['Working...'])
@@ -616,7 +629,13 @@ describe('loop-runner', () => {
       const backend = createMockBackend([])
 
       const events = await collectEvents(
-        runLoop({ task: null, backend, maxIterations: 1, agentDir: '/tmp/test' }),
+        runLoop({
+          task: null,
+          backend,
+          maxIterations: 1,
+          projectRoot: '/tmp/test',
+          agentDir: '/tmp/test/.agent',
+        }),
       )
 
       expect(events[0]).toEqual({ type: 'all-tasks-complete' })
@@ -633,17 +652,25 @@ describe('loop-runner', () => {
       const backend = createMockBackend(['<complete>'])
 
       const events = await collectEvents(
-        runLoop({ task: null, backend, maxIterations: 5, agentDir: '/tmp/test' }),
+        runLoop({
+          task: null,
+          backend,
+          maxIterations: 5,
+          projectRoot: '/tmp/test',
+          agentDir: '/tmp/test/.agent',
+        }),
       )
 
       expect(events).toContainEqual({ type: 'complete' })
       expect(mockAppendSessionLog).toHaveBeenCalledWith(
-        '/tmp/test',
+        '/tmp/test/.agent',
         expect.objectContaining({
           taskId: 1,
           taskTitle: 'Task 1',
         }),
       )
+      const { buildLoopPrompt } = await import('./prompt.js')
+      expect(buildLoopPrompt).toHaveBeenCalledWith('/tmp/test', task1)
     })
 
     it('does not call readTasks when task is provided', async () => {

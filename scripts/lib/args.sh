@@ -1,5 +1,5 @@
 #!/bin/bash
-# Arguments module for ralph.sh
+# Arguments module for rocket.sh
 # CLI argument parsing
 # Dependencies: constants.sh
 

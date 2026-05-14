@@ -28,6 +28,10 @@ describe('hasCompleteTag', () => {
   it('returns false for incomplete tag', () => {
     expect(hasCompleteTag('<complet')).toBe(false)
   })
+
+  it('detects legacy promise complete tag', () => {
+    expect(hasCompleteTag('<promise>COMPLETE</promise>')).toBe(true)
+  })
 })
 
 describe('hasBlockedTag', () => {
@@ -38,6 +42,10 @@ describe('hasBlockedTag', () => {
   it('returns false for no tag', () => {
     expect(hasBlockedTag('no issues here')).toBe(false)
   })
+
+  it('detects legacy promise blocked tag', () => {
+    expect(hasBlockedTag('<promise>BLOCKED:Missing API key</promise>')).toBe(true)
+  })
 })
 
 describe('hasDecideTag', () => {
@@ -47,6 +55,10 @@ describe('hasDecideTag', () => {
 
   it('returns false for no tag', () => {
     expect(hasDecideTag('no decision needed')).toBe(false)
+  })
+
+  it('detects legacy promise decide tag', () => {
+    expect(hasDecideTag('<promise>DECIDE:Use REST?</promise>')).toBe(true)
   })
 })
 
@@ -62,6 +74,12 @@ describe('extractBlockedReason', () => {
   it('returns default when no closing tag', () => {
     expect(extractBlockedReason('<blocked>no end')).toBe('Agent is blocked and needs human input.')
   })
+
+  it('extracts reason from legacy promise blocked tag', () => {
+    expect(extractBlockedReason('<promise>BLOCKED:Missing API key</promise>')).toBe(
+      'Missing API key',
+    )
+  })
 })
 
 describe('extractDecideQuestion', () => {
@@ -73,5 +91,9 @@ describe('extractDecideQuestion', () => {
 
   it('returns default when no closing tag', () => {
     expect(extractDecideQuestion('<decide>no end')).toBe('Agent needs a decision from you.')
+  })
+
+  it('extracts question from legacy promise decide tag', () => {
+    expect(extractDecideQuestion('<promise>DECIDE:Use REST?</promise>')).toBe('Use REST?')
   })
 })
