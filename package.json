@@ -1,6 +1,6 @@
 {
   "name": "rocket-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Bootstrap projects and run AI development loops from the terminal",
   "type": "module",
   "bin": {
@@ -10,13 +10,16 @@
     "build": "tsc -p tsconfig.build.json && cp package.json dist/package.json && cp -r templates dist/templates && cp rocket.sh dist/rocket.sh && cp -r scripts dist/scripts && mkdir -p dist/.claude && cp -r .claude/skills dist/.claude/skills",
     "clean": "rm -rf dist/",
     "dev": "tsx watch bin/rocket.ts",
+    "desktop:build": "tsc -p desktop/renderer/tsconfig.json --noEmit && vite build --config desktop/renderer/vite.config.ts && tsc -p tsconfig.desktop.json",
+    "desktop:renderer:dev": "vite --config desktop/renderer/vite.config.ts",
+    "desktop:start": "npm run desktop:build && electron dist/desktop/main.js",
     "start": "node dist/bin/rocket.js",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint src/ bin/",
+    "lint": "eslint src/ bin/ desktop/renderer/",
     "typecheck": "tsc --noEmit",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"bin/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"bin/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"bin/**/*.ts\" \"desktop/renderer/**/*.{ts,tsx,css,html,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"bin/**/*.ts\" \"desktop/renderer/**/*.{ts,tsx,css,html,json}\"",
     "prepublishOnly": "npm run build"
   },
   "engines": {
@@ -50,6 +53,7 @@
     "ink-spinner": "^5.0.0",
     "ink-text-input": "^5.0.1",
     "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "strip-ansi": "^7.2.0",
     "zod": "^3.23.8"
   },
@@ -57,9 +61,12 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.0.0",
     "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.57.1",
+    "@vitejs/plugin-react": "^4.7.0",
     "@vitest/coverage-v8": "^2.0.5",
+    "electron": "^42.1.0",
     "esbuild-wasm": "^0.27.4",
     "eslint": "^9.17.0",
     "ink-testing-library": "^4.0.0",
@@ -67,6 +74,7 @@
     "tsx": "^4.21.0",
     "typescript": "~5.5.4",
     "typescript-eslint": "^8.57.1",
+    "vite": "^5.4.21",
     "vitest": "^2.0.5"
   }
 }

@@ -16,9 +16,29 @@ npm install -g rocket-cli
 
 > Requires Node.js 22+. macOS and Linux only.
 
+**Update an existing global install to the latest published build:**
+
+```bash
+npm install -g rocket-cli@latest
+rocket --version
+```
+
 ---
 
 ## Commands
+
+### Desktop GUI
+
+Rocket now includes an Electron desktop shell for managing local Rocket projects without leaving the task dashboard. The GUI uses the same `.agent/tasks.json`, progress readers, and task update logic as the CLI; the loop harness remains in the existing core services.
+
+```bash
+npm run desktop:build   # typecheck and build the Electron renderer/main process
+npm run desktop:start   # build, then launch the desktop app
+```
+
+In the app, choose a project folder containing `.agent/tasks.json`, then use the dashboard to scan progress, filter tasks, inspect pass conditions, and mark tasks complete or reopened.
+
+---
 
 ### `rocket new`
 
@@ -242,6 +262,78 @@ npm run dev                 # start the dev server
 | `npm run docker:reset` | Wipe and restart Postgres                    |
 
 **Schema** is defined in `server/db/schema.ts`. Edit it, run `npm run db:generate`, then `npm run db:migrate`.
+
+---
+
+## Build and Release
+
+### Build from source
+
+Use Node.js 22 or newer, then install dependencies and run the verification suite before building:
+
+```bash
+npm install
+npm run typecheck
+npm test
+npm run lint
+npm run build
+```
+
+`npm run build` compiles TypeScript into `dist/` and copies the runtime assets that the published CLI needs, including templates, scripts, `rocket.sh`, and bundled skills.
+
+To try the built CLI locally:
+
+```bash
+npm link
+rocket --version
+rocket --help
+```
+
+Alternatively, run the development entry point without linking:
+
+```bash
+npm run dev -- --help
+```
+
+### Publish to npm
+
+Before publishing, make sure you are logged in and the package version in `package.json` is the next release version:
+
+```bash
+npm whoami
+npm version patch   # or: npm version minor / npm version major
+npm publish
+```
+
+The `prepublishOnly` script runs `npm run build` automatically during `npm publish`. After publishing, verify npm has the new version:
+
+```bash
+npm view rocket-cli version
+```
+
+### Install the latest build
+
+For users who already have Rocket installed globally, update to the newest published npm build with:
+
+```bash
+npm install -g rocket-cli@latest
+rocket --version
+```
+
+If npm keeps serving an older cached version, clear the npm cache and reinstall:
+
+```bash
+npm cache verify
+npm install -g rocket-cli@latest
+```
+
+For local testing before a release, install directly from this checkout after building:
+
+```bash
+npm run build
+npm install -g .
+rocket --version
+```
 
 ---
 
