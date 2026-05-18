@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import { Box, Text, useInput } from 'ink'
+import type { NewTask } from '../../lib/feature/taskMerger.js'
 
 interface Props {
   specMarkdown: string
-  tasks: Array<{ title: string; category: string }>
+  tasks: NewTask[]
   onConfirm: (action: 'apply' | 'edit' | 'cancel') => void
 }
 
 export function FeatureDiffPreview({ specMarkdown, tasks, onConfirm }: Props) {
   const [selected, setSelected] = useState(0)
-  const options = ['Apply', 'Edit', 'Cancel'] as const
+  const options = ['Yes — apply changes', 'Edit — open in $EDITOR', 'Cancel'] as const
   const actions = ['apply', 'edit', 'cancel'] as const
 
   useInput((_input, key) => {
@@ -30,13 +31,13 @@ export function FeatureDiffPreview({ specMarkdown, tasks, onConfirm }: Props) {
         <Text bold>PRD Changes:</Text>
         {specMarkdown
           .split('\n')
-          .slice(0, 10)
+          .slice(0, 20)
           .map((line, i) => (
             <Box key={i} marginLeft={2}>
               <Text color="green">+ {line}</Text>
             </Box>
           ))}
-        {specMarkdown.split('\n').length > 10 && (
+        {specMarkdown.split('\n').length > 20 && (
           <Box marginLeft={2}>
             <Text dimColor>... and more</Text>
           </Box>
@@ -47,8 +48,9 @@ export function FeatureDiffPreview({ specMarkdown, tasks, onConfirm }: Props) {
         <Text bold>New Tasks ({tasks.length}):</Text>
         {tasks.map((t, i) => (
           <Box key={i} marginLeft={2}>
-            <Text color="green">+ </Text>
-            <Text>{t.title}</Text>
+            <Text>
+              #{i + 1} {t.title}
+            </Text>
             <Text dimColor> [{t.category}]</Text>
           </Box>
         ))}

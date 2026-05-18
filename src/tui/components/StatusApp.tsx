@@ -3,16 +3,24 @@ import { Box, Text, useApp, useInput } from 'ink'
 import type { Task } from '../../lib/tasks/schema.js'
 import type { ProgressStats } from '../../lib/progress/calculator.js'
 import { calculateProgress } from '../../lib/progress/calculator.js'
-import { readRecentActivity, detectCurrentFocusTask } from '../../lib/progress/logReader.js'
-import { getSessionSummary } from '../../lib/progress/historyReader.js'
+import {
+  readRecentActivity,
+  getCurrentTask,
+  type ActivityEntry,
+} from '../../lib/progress/logReader.js'
+import { readHistoryStats, type HistoryStats } from '../../lib/progress/historyReader.js'
 import { readTasks } from '../../lib/tasks/reader.js'
-import { ProgressBar } from './ProgressBar.js'
+import { StatusDashboard } from './StatusDashboard.js'
 
 interface Props {
   tasks: Task[]
   progress: ProgressStats
   watch?: boolean
   categoryFilter?: string
+  projectName?: string
+  activity?: ActivityEntry[]
+  history?: HistoryStats
+  currentTask?: Task | null
 }
 
 export function StatusApp({
@@ -20,10 +28,17 @@ export function StatusApp({
   progress: initialProgress,
   watch,
   categoryFilter,
+  projectName = process.cwd().split('/').pop() ?? 'project',
+  activity: initialActivity = [],
+  history: initialHistory = { sessionCount: 0, totalRuntimeSeconds: 0 },
+  currentTask: initialCurrentTask = null,
 }: Props) {
+  void initialTasks
   const { exit } = useApp()
-  const [, setTasks] = useState(initialTasks)
   const [progress, setProgress] = useState(initialProgress)
+  const [activity, setActivity] = useState<ActivityEntry[]>(initialActivity)
+  const [history, setHistory] = useState<HistoryStats>(initialHistory)
+  const [currentTask, setCurrentTask] = useState<Task | null>(initialCurrentTask)
 
   useInput((_input, key) => {
     if (key.escape || _input === 'q') {
@@ -33,112 +48,46 @@ export function StatusApp({
 
   // Watch mode: refresh every 5 seconds
   useEffect(() => {
+    const projectRoot = process.cwd()
+    const agentDir = `${projectRoot}/.agent`
+
+    async function refresh() {
+      try {
+        const tasksFile = readTasks(projectRoot)
+        const nextTasks = categoryFilter
+          ? tasksFile.tasks.filter((task) => task.category === categoryFilter)
+          : tasksFile.tasks
+        setProgress(calculateProgress(nextTasks))
+        setActivity(await readRecentActivity(agentDir, 5))
+        setHistory(await readHistoryStats(agentDir))
+        setCurrentTask(await getCurrentTask(agentDir, tasksFile.tasks))
+      } catch {
+        // Keep the last good dashboard state during watch refresh errors.
+      }
+    }
+
+    void refresh()
+
     if (!watch) return
 
     const interval = setInterval(() => {
-      try {
-        const projectRoot = process.cwd()
-        const tasksFile = readTasks(projectRoot)
-        setTasks(tasksFile.tasks)
-        setProgress(calculateProgress(tasksFile.tasks))
-      } catch {
-        // Ignore errors during refresh
-      }
+      void refresh()
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [watch])
-
-  const projectRoot = process.cwd()
-  const focusTask = detectCurrentFocusTask(projectRoot)
-  const recentActivity = readRecentActivity(projectRoot, 5)
-  const sessionSummary = getSessionSummary(projectRoot)
-
-  // Filter categories if requested
-  const categories = Object.entries(progress.byCategory)
-    .filter(([cat]) => !categoryFilter || cat === categoryFilter)
-    .sort(([, a], [, b]) => b.percent - a.percent)
-
-  const now = new Date()
-  const dateStr = now.toISOString().slice(0, 10)
-  const timeStr = now.toTimeString().slice(0, 5)
-
-  const totalMinutes = Math.round(sessionSummary.totalRuntimeSec / 60)
-  const hours = Math.floor(totalMinutes / 60)
-  const mins = totalMinutes % 60
-  const runtimeStr = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
+  }, [watch, categoryFilter])
 
   return (
-    <Box flexDirection="column" paddingX={2}>
-      <Box marginBottom={1}>
-        <Text color="cyan" bold>
-          Rocket Status
-        </Text>
-        <Text dimColor>
-          {' '}
-          · {dateStr} {timeStr}
-          {watch ? ' (watching)' : ''}
-        </Text>
-      </Box>
-
-      <Box marginBottom={1} flexDirection="column">
-        <Text bold>Overall Progress</Text>
-        <Box>
-          <ProgressBar percent={progress.overall.percent} width={30} />
-          <Text dimColor>
-            {' '}
-            {progress.overall.complete}/{progress.overall.total} tasks
-          </Text>
-        </Box>
-      </Box>
-
-      {focusTask && (
-        <Box marginBottom={1} flexDirection="column">
-          <Text bold>Current Focus Task</Text>
-          <Text>
-            #{focusTask.id} · {focusTask.title}
-          </Text>
-        </Box>
-      )}
-
-      <Box marginBottom={1} flexDirection="column">
-        <Text bold>By Category</Text>
-        {categories.map(([cat, stats]) => (
-          <Box key={cat}>
-            <Text>{cat.padEnd(16)}</Text>
-            <ProgressBar percent={stats.percent} width={10} />
-            <Text dimColor>
-              {' '}
-              {stats.complete}/{stats.total}
-            </Text>
-          </Box>
-        ))}
-      </Box>
-
-      {recentActivity.length > 0 && (
-        <Box marginBottom={1} flexDirection="column">
-          <Text bold>Recent Activity</Text>
-          {recentActivity.map((entry, i) => (
-            <Box key={i}>
-              <Text color={entry.outcome === 'complete' ? 'green' : 'yellow'}>
-                {entry.outcome === 'complete' ? '✅' : '🔄'}
-              </Text>
-              <Text>
-                {' '}
-                {entry.taskId ? `#${entry.taskId}` : 'Auto'} {entry.taskTitle ?? ''}{' '}
-              </Text>
-              <Text dimColor>{entry.durationSec.toFixed(0)}s</Text>
-            </Box>
-          ))}
-        </Box>
-      )}
-
-      <Box>
-        <Text dimColor>
-          Sessions: {sessionSummary.sessionCount} · Runtime: {runtimeStr}
-        </Text>
-      </Box>
-
+    <Box flexDirection="column">
+      <StatusDashboard
+        projectName={projectName}
+        stats={progress}
+        activity={activity}
+        history={history}
+        currentTask={currentTask}
+        categoryFilter={categoryFilter}
+        watch={watch}
+      />
       <Box marginTop={1}>
         <Text dimColor>Press q or Esc to exit</Text>
       </Box>

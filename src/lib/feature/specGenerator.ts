@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs'
+import fs from 'fs-extra'
 import { join } from 'path'
 import type { AgentBackend } from '../backends/types.js'
 import { buildSpecPrompt } from './prompts.js'
@@ -17,12 +17,14 @@ export async function generateSpec(
   backend: AgentBackend,
 ): Promise<SpecResult> {
   const prdPath = join(projectRoot, '.agent', 'prd', 'PRD.md')
-  const prdContent = readFileSync(prdPath, 'utf-8')
+  const prdContent = await fs.readFile(prdPath, 'utf-8')
   const prompt = buildSpecPrompt(prdContent, featureDescription, qa)
 
   const output = await collectBackendOutput(backend, prompt, projectRoot)
+  return parseSpecResponse(output, join(projectRoot, '.agent'))
+}
 
-  // Try to extract JSON from the output — it may be wrapped in markdown fences
+export async function parseSpecResponse(output: string, agentDir?: string): Promise<SpecResult> {
   const jsonStr = extractJson(output)
 
   try {
@@ -37,15 +39,23 @@ export async function generateSpec(
       tasks: parsed.tasks as SpecResult['tasks'],
     }
   } catch (err) {
+    if (agentDir) {
+      const logPath = join(agentDir, 'logs', 'LOG.md')
+      await fs.ensureDir(join(agentDir, 'logs'))
+      await fs.appendFile(
+        logPath,
+        `\n## Feature Generation Error\n\`\`\`\n${output}\n\`\`\`\n`,
+        'utf-8',
+      )
+    }
     const message = err instanceof Error ? err.message : String(err)
     throw new Error(
-      `Failed to parse AI response as JSON: ${message}\n\nRaw output:\n${output.slice(0, 500)}`,
+      `Could not parse AI response: ${message}. See .agent/logs/LOG.md for raw output.`,
     )
   }
 }
 
 function extractJson(text: string): string {
-  // Try to find JSON within markdown code fences
   const fenceMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)```/)
   if (fenceMatch) return fenceMatch[1].trim()
 

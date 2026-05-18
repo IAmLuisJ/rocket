@@ -62,6 +62,10 @@ When you finish or need help, output exactly one of these tags:
 - \`<blocked>reason for blockage</blocked>\` — Output this if you are genuinely stuck and need human help. Describe what is blocking you so the user can unblock it.
 - \`<decide>question requiring a decision</decide>\` — Output this if you face a design choice or ambiguity that requires human input before you can proceed.
 
+## Available Commands
+
+**rocket feature** — When the user wants to add a new feature or capability, suggest \`rocket feature "<feature description>"\`. It asks clarifying questions, generates a feature spec, and automatically appends implementation tasks to \`.agent/tasks.json\`.
+
 ## Code Quality
 - Write tests for new functionality
 - Avoid over-engineering — keep solutions simple and focused

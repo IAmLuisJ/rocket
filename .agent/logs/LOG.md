@@ -550,3 +550,135 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-115 — Create src/lib/feature/taskMerger.ts — append new tasks to tasks.json
 - **Outcome:** pass
 - **Summary:** Refactored mergeTasks to the async tasksPath-based API, returning { added, newMaxId }, preserving existing tasks, assigning sequential IDs from the current max, and validating all incoming tasks before writing. Updated the feature command to await the new API and added focused Vitest coverage for sequential IDs, empty merges, invalid tasks, and atomic validation. Screenshot: N/A (non-UI task).
+
+## Session 2026-05-17 · TASK-116
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-116 — Create src/lib/feature/prdWriter.ts — append feature spec to PRD.md
+- **Outcome:** pass
+- **Summary:** Added async writeFeatureSpec with idempotent PRD appends and coverage. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-117
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-117 — Create src/tui/components/FeatureDiffPreview.tsx — diff preview TUI
+- **Outcome:** pass
+- **Summary:** Updated FeatureDiffPreview to show diff lines, numbered tasks, and apply/edit/cancel choices. Screenshot: N/A (covered by Ink unit smoke tests).
+
+## Session 2026-05-17 · TASK-121
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-121 — Implement --backend flag override for feature command
+- **Outcome:** pass
+- **Summary:** Validated feature backend overrides for copilot, claude, and docker. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-123
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-123 — Handle streaming AI response parsing in specGenerator.ts
+- **Outcome:** pass
+- **Summary:** Added parseSpecResponse for fenced JSON and raw-output error logging. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-124
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-124 — Implement 'Edit' option in confirmation prompt
+- **Outcome:** pass
+- **Summary:** Implemented $EDITOR-based feature spec editing before apply. Screenshot: N/A (covered by Ink unit smoke tests).
+
+## Session 2026-05-17 · TASK-125
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-125 — Print summary output after applying feature changes
+- **Outcome:** pass
+- **Summary:** Printed formatted success summary after feature changes are applied. Screenshot: N/A (covered by Ink unit smoke tests).
+
+## Session 2026-05-17 · TASK-126
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-126 — Add rocket feature to Commander help output
+- **Outcome:** pass
+- **Summary:** Updated Commander help for rocket feature with description, flags, and examples. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-127
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-127 — Write unit tests for taskMerger.ts
+- **Outcome:** pass
+- **Summary:** Expanded taskMerger tests for IDs, validation, preservation, and empty merges. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-128
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-128 — Write unit tests for prdWriter.ts
+- **Outcome:** pass
+- **Summary:** Expanded prdWriter tests for section creation, appending, preservation, idempotency, and empty files. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-129
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-129 — Update README with rocket feature command docs
+- **Outcome:** pass
+- **Summary:** Updated README rocket feature docs with usage, flags, and example output. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-130
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-130 — Add rocket feature to .agent/PROMPT.md loop template
+- **Outcome:** pass
+- **Summary:** Documented rocket feature in the default and current PROMPT.md guidance. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-133
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-133 — Create src/lib/progress/logReader.ts — parse recent activity from LOG.md
+- **Outcome:** pass
+- **Summary:** Implemented async logReader activity parsing with missing-file fallback. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-134
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-134 — Create src/lib/progress/historyReader.ts — count sessions and compute total runtime
+- **Outcome:** pass
+- **Summary:** Implemented historyReader session counts and runtime stats with missing-dir fallback. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-135
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-135 — Create src/tui/components/ProgressBar.tsx — Unicode block progress bar
+- **Outcome:** pass
+- **Summary:** Implemented ProgressBar counts, responsive width fallback, and block rendering coverage. Screenshot: N/A (covered by Ink unit smoke tests).
+
+## Session 2026-05-17 · TASK-136
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-136 — Create src/tui/components/StatusDashboard.tsx — full dashboard layout
+- **Outcome:** pass
+- **Summary:** Added StatusDashboard layout for progress, focus task, categories, activity, and session stats. Screenshot: N/A (covered by Ink unit smoke tests).
+
+## Session 2026-05-17 · TASK-137
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-137 — Implement --watch mode in StatusDashboard
+- **Outcome:** pass
+- **Summary:** Kept status watch refresh and q/Esc exit wired through StatusApp. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-138
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-138 — Implement --json flag — structured JSON output
+- **Outcome:** pass
+- **Summary:** Implemented structured rocket status --json output without Ink rendering. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-139
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-139 — Implement --incomplete flag — list all incomplete tasks
+- **Outcome:** pass
+- **Summary:** Implemented rocket status --incomplete output and category combination. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-140
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-140 — Implement --category flag — filter dashboard to single category
+- **Outcome:** pass
+- **Summary:** Validated and applied status category filtering. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-141
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-141 — Detect current focus task from LOG.md
+- **Outcome:** pass
+- **Summary:** Added current focus task detection from in-progress LOG.md entries. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-142
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-142 — Handle missing .agent/ files gracefully in rocket status
+- **Outcome:** pass
+- **Summary:** Handled missing status files gracefully with user-facing fallback output. Screenshot: N/A.
+
+## Session 2026-05-17 · TASK-144
+- **Time:** 2026-05-17T23:45:00.000-04:00
+- **Task:** TASK-144 — Add rocket status to Commander help and README docs
+- **Outcome:** pass
+- **Summary:** Updated rocket status README docs and retained Commander help coverage. Screenshot: N/A.

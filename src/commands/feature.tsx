@@ -1,5 +1,8 @@
 import { existsSync } from 'fs'
+import { readFile, rm, writeFile } from 'fs/promises'
+import { spawnSync } from 'child_process'
 import { join } from 'path'
+import { tmpdir } from 'os'
 import { render } from 'ink'
 import React, { useState } from 'react'
 import { Box, Text, useApp } from 'ink'
@@ -10,10 +13,11 @@ import { generateClarifyingQuestions } from '../lib/feature/clarifier.js'
 import { generateSpec, type SpecResult } from '../lib/feature/specGenerator.js'
 import { mergeTasks } from '../lib/feature/taskMerger.js'
 import { appendFeatureSpec } from '../lib/feature/prdWriter.js'
-import { SEED_QUESTIONS } from '../lib/feature/prompts.js'
 import { FeatureWizard } from '../tui/components/FeatureWizard.js'
 import { FeatureDiffPreview } from '../tui/components/FeatureDiffPreview.js'
 import Spinner from 'ink-spinner'
+
+const VALID_BACKENDS = ['copilot', 'claude', 'docker'] as const
 
 interface FeatureAppProps {
   projectRoot: string
@@ -84,9 +88,14 @@ function FeatureApp({ projectRoot, description, backend, noQuestions, dryRun }: 
     }
 
     if (action === 'edit') {
-      // For now, re-run generation with seed questions
-      setQuestions(SEED_QUESTIONS)
-      setPhase('wizard')
+      try {
+        setSpecResult(await editSpecResult(specResult))
+        setPhase('preview')
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err)
+        setStatusText(`Error: ${msg}`)
+        setPhase('done')
+      }
       return
     }
 
@@ -101,10 +110,19 @@ function FeatureApp({ projectRoot, description, backend, noQuestions, dryRun }: 
     try {
       const tasksPath = join(projectRoot, '.agent', 'tasks.json')
       const mergeResult = await mergeTasks(specResult.tasks, tasksPath)
-      const section = appendFeatureSpec(projectRoot, specResult.specMarkdown)
+      const section = await appendFeatureSpec(projectRoot, specResult.specMarkdown)
+      const firstId =
+        mergeResult.added === 0
+          ? mergeResult.newMaxId
+          : mergeResult.newMaxId - mergeResult.added + 1
+
+      console.log(`\n\x1b[32mFeature '${featureDesc}' added!\x1b[0m`)
+      console.log(`   ${mergeResult.added} tasks added to tasks.json`)
+      console.log(`   PRD updated: ${section}`)
+      console.log(`\n   Run \x1b[36mrocket loop\x1b[0m to start working on the new tasks.`)
 
       setStatusText(
-        `Done! Added ${mergeResult.added} tasks (IDs ${mergeResult.newMaxId - mergeResult.added + 1}–${mergeResult.newMaxId}). Updated ${section} in PRD.md.`,
+        `Done! Added ${mergeResult.added} tasks (IDs ${firstId}–${mergeResult.newMaxId}). Updated ${section} in PRD.md.`,
       )
       setPhase('done')
       setTimeout(() => exit(), 100)
@@ -186,6 +204,11 @@ export async function runFeature(
     process.exit(1)
   }
 
+  if (opts.backend && !VALID_BACKENDS.includes(opts.backend as (typeof VALID_BACKENDS)[number])) {
+    console.error(`Invalid backend: ${opts.backend}. Valid options: ${VALID_BACKENDS.join(', ')}`)
+    process.exit(1)
+  }
+
   // Select backend
   const backendOpts: { claude?: boolean; docker?: boolean } = {}
   if (opts.backend === 'claude') backendOpts.claude = true
@@ -206,4 +229,35 @@ export async function runFeature(
   )
 
   await waitUntilExit()
+}
+
+async function editSpecResult(specResult: SpecResult): Promise<SpecResult> {
+  const tmpFile = join(tmpdir(), `rocket-feature-${Date.now()}.json`)
+  await writeFile(
+    tmpFile,
+    JSON.stringify({ spec: specResult.specMarkdown, tasks: specResult.tasks }, null, 2),
+    'utf-8',
+  )
+
+  try {
+    const editor = process.env.EDITOR || 'vi'
+    const result = spawnSync(editor, [tmpFile], { stdio: 'inherit' })
+    if (result.error) throw result.error
+    if (result.status !== 0) throw new Error(`${editor} exited with status ${result.status}`)
+
+    const parsed = JSON.parse(await readFile(tmpFile, 'utf-8')) as {
+      spec?: unknown
+      tasks?: unknown
+    }
+    if (typeof parsed.spec !== 'string' || !Array.isArray(parsed.tasks)) {
+      throw new Error('Edited feature spec must be JSON with "spec" and "tasks" fields')
+    }
+
+    return {
+      specMarkdown: parsed.spec,
+      tasks: parsed.tasks as SpecResult['tasks'],
+    }
+  } finally {
+    await rm(tmpFile, { force: true })
+  }
 }

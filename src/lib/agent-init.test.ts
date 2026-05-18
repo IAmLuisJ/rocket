@@ -103,6 +103,11 @@ describe('createAgentStructure', () => {
     expect(prompt).toContain('over-engineering')
     expect(prompt).toContain('errors gracefully')
     expect(prompt).toContain('Commit')
+
+    // Available command guidance
+    expect(prompt).toContain('rocket feature')
+    expect(prompt).toContain('add a new feature')
+    expect(prompt).toContain('automatically appends implementation tasks')
   })
 
   it('does not overwrite existing files when run twice', async () => {

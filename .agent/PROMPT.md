@@ -3,6 +3,7 @@
 You are implementing the project described in @.agent/prd/SUMMARY.md
 
 ## Your mission
+
 Read `.agent/tasks.json`, find the current focus task (specified below), and implement it completely.
 
 ## Task Flow
@@ -14,10 +15,10 @@ Tasks are listed in @.agent/tasks.json
 3. Check existing dir structure in @.agent/STRUCTURE.md
 4. Implement steps by step according to spec and write unit test
 5. **UI tasks only:** do a Playwright smoke test
-    - Check console for errors
-    - Write minimal e2e test (happy path only)
-    - Skip e2e if unit test already covers functionality
-    - Save UI Screenshot to `.agent/screenshots/TASK-${ID}-{index}.png`, verify UI correctness. If debugging, use previous screenshots as reference.
+   - Check console for errors
+   - Write minimal e2e test (happy path only)
+   - Skip e2e if unit test already covers functionality
+   - Save UI Screenshot to `.agent/screenshots/TASK-${ID}-{index}.png`, verify UI correctness. If debugging, use previous screenshots as reference.
 6. Run `eslint --fix`, `prettier --write` and end to end tests for affected files.
 7. Run `tsc` and unit tests project-wide
 8. All tests must pass. Broke unrelated test? Fix it before proceeding.
@@ -27,6 +28,7 @@ Tasks are listed in @.agent/tasks.json
 12. Commit changes, using the Conventional Commit format.
 
 ## Rules
+
 - **CRITICAL**: Only work on **ONE task per invocation**. After committing the task, output `<promise>TASK-{ID}:DONE</promise>` and **STOP immediately**. Do NOT read the next task. Do NOT continue working. Your response **must END** after the promise tag. Any output after it is a violation.
 - Kill all background processes (dev server, etc.) before outputting the promise tag.
 - No git init/remote changes. **No git push**.
@@ -34,6 +36,7 @@ Tasks are listed in @.agent/tasks.json
 - **CRITICAL**: When **ALL** tasks pass → output `<promise>COMPLETE</promise>` and **nothing else**.
 
 ## Project structure
+
 - `src/commands/` — CLI command implementations
 - `src/lib/` — core library modules
 - `src/tui/` — Ink React components for terminal UI
@@ -41,6 +44,7 @@ Tasks are listed in @.agent/tasks.json
 - `.agent/tasks.json` — the task list you are working from
 
 ## Current stack
+
 - Node.js 22, TypeScript, Commander.js, Ink v4 (React for terminals)
 - Zod for schema validation, fs-extra for file operations
 - Vitest for testing
@@ -61,3 +65,7 @@ When stuck after all possible solutions exhausted, output one of the following t
 ```
 <promise>DECIDE:question (Option A vs B)</promise>
 ```
+
+## Available Commands
+
+**rocket feature** — When the user wants to add a new feature or capability, suggest `rocket feature "<feature description>"`. It asks clarifying questions, generates a feature spec, and automatically appends implementation tasks to `.agent/tasks.json`.

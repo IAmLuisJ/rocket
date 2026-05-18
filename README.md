@@ -49,11 +49,11 @@ rocket loop --select       # choose a task before starting
 
 On launch Rocket starts the next incomplete task by default. Pass `--select` when you want to choose a specific focus task before the loop starts. The loop then spawns the AI backend, streams output with a live spinner preview, and monitors for exit signals:
 
-| Signal | Meaning | What Rocket does |
-|--------|---------|-----------------|
-| `<complete>` | Task is finished | Exits loop, shows completion report |
-| `<blocked>` | AI needs human input | Pauses, shows reason, exits cleanly |
-| `<decide>` | AI needs a decision | Pauses, shows question, exits cleanly |
+| Signal       | Meaning              | What Rocket does                      |
+| ------------ | -------------------- | ------------------------------------- |
+| `<complete>` | Task is finished     | Exits loop, shows completion report   |
+| `<blocked>`  | AI needs human input | Pauses, shows reason, exits cleanly   |
+| `<decide>`   | AI needs a decision  | Pauses, shows question, exits cleanly |
 
 Add these tags to your `.agent/PROMPT.md` so the AI knows to emit them.
 
@@ -66,12 +66,29 @@ Describe a feature in plain English — Rocket asks clarifying questions, genera
 ```bash
 rocket feature "Add user authentication"
 rocket feature              # interactive description prompt
+rocket feature [description]
 rocket feature "..." --no-questions
 rocket feature "..." --dry-run
 rocket feature "..." --backend claude
 ```
 
+| Flag               | Description                                                             |
+| ------------------ | ----------------------------------------------------------------------- |
+| `--no-questions`   | Skip clarification questions and generate directly from the description |
+| `--dry-run`        | Preview the generated spec and tasks without writing files              |
+| `--backend <name>` | Choose `copilot`, `claude`, or `docker` for this feature generation run |
+
 The full flow: clarification questions → AI-generated spec + tasks → diff preview → apply. New tasks are appended to `tasks.json` with IDs continuing from the current max.
+
+Example output:
+
+```text
+Feature 'Add dark mode toggle' added!
+   3 tasks added to tasks.json
+   PRD updated: ## Features Added
+
+   Run rocket loop to start working on the new tasks.
+```
 
 ---
 
@@ -86,6 +103,13 @@ rocket status --json        # output raw JSON for scripting
 rocket status --incomplete  # list all incomplete tasks
 rocket status --category api-endpoint
 ```
+
+| Flag                | Description                                                      |
+| ------------------- | ---------------------------------------------------------------- |
+| `--watch`           | Auto-refresh the dashboard every 5 seconds; press `q` to exit    |
+| `--json`            | Print structured JSON for scripts and dashboards                 |
+| `--incomplete`      | Print one line per incomplete task instead of rendering the TUI  |
+| `--category <name>` | Filter dashboard stats or incomplete output to one task category |
 
 Dashboard preview:
 
@@ -163,11 +187,11 @@ Creates `.agent/prd/PRD.md`, `.agent/PROMPT.md`, `.agent/tasks.json`, and `.agen
 
 ## AI Backends
 
-| Backend | Flag | Command used | Requirement |
-|---------|------|-------------|-------------|
-| GitHub Copilot CLI | _(default)_ | `copilot --autopilot --prompt "..."` | `copilot` in PATH, GitHub auth |
-| Claude Code CLI | `--claude` | `claude --model opus -p "..."` | `claude` in PATH |
-| Claude + Docker | `--docker` | `docker sandbox run claude . -- --model opus -p "..."` | Docker running |
+| Backend            | Flag        | Command used                                           | Requirement                    |
+| ------------------ | ----------- | ------------------------------------------------------ | ------------------------------ |
+| GitHub Copilot CLI | _(default)_ | `copilot --autopilot --prompt "..."`                   | `copilot` in PATH, GitHub auth |
+| Claude Code CLI    | `--claude`  | `claude --model opus -p "..."`                         | `claude` in PATH               |
+| Claude + Docker    | `--docker`  | `docker sandbox run claude . -- --model opus -p "..."` | Docker running                 |
 
 ---
 
@@ -175,11 +199,11 @@ Creates `.agent/prd/PRD.md`, `.agent/PROMPT.md`, `.agent/tasks.json`, and `.agen
 
 Place these in your `.agent/PROMPT.md` so the AI knows when to use them:
 
-| Tag | Meaning | What Rocket does |
-|-----|---------|-----------------|
-| `<complete>` | Task is finished | Exits loop with success screen |
-| `<blocked>` | Needs human input | Pauses, shows reason, exits |
-| `<decide>` | Needs a decision | Pauses, shows question, exits |
+| Tag          | Meaning           | What Rocket does               |
+| ------------ | ----------------- | ------------------------------ |
+| `<complete>` | Task is finished  | Exits loop with success screen |
+| `<blocked>`  | Needs human input | Pauses, shows reason, exits    |
+| `<decide>`   | Needs a decision  | Pauses, shows question, exits  |
 
 ---
 
@@ -196,6 +220,7 @@ Place these in your `.agent/PROMPT.md` so the AI knows when to use them:
 The Web App template includes a Docker Compose setup for PostgreSQL.
 
 **Start the database:**
+
 ```bash
 cd my-app
 cp .env.example .env        # configure your credentials
@@ -206,15 +231,15 @@ npm run dev                 # start the dev server
 
 **Drizzle commands:**
 
-| Command | Description |
-|---------|-------------|
-| `npm run db:generate` | Generate migration files from schema changes |
-| `npm run db:migrate` | Run pending migrations |
-| `npm run db:push` | Push schema directly (good for dev) |
-| `npm run db:studio` | Open Drizzle Studio (visual DB browser) |
-| `npm run docker:up` | Start Postgres container |
-| `npm run docker:down` | Stop Postgres container |
-| `npm run docker:reset` | Wipe and restart Postgres |
+| Command                | Description                                  |
+| ---------------------- | -------------------------------------------- |
+| `npm run db:generate`  | Generate migration files from schema changes |
+| `npm run db:migrate`   | Run pending migrations                       |
+| `npm run db:push`      | Push schema directly (good for dev)          |
+| `npm run db:studio`    | Open Drizzle Studio (visual DB browser)      |
+| `npm run docker:up`    | Start Postgres container                     |
+| `npm run docker:down`  | Stop Postgres container                      |
+| `npm run docker:reset` | Wipe and restart Postgres                    |
 
 **Schema** is defined in `server/db/schema.ts`. Edit it, run `npm run db:generate`, then `npm run db:migrate`.
 

@@ -1,24 +1,28 @@
-import { readFileSync, writeFileSync } from 'fs'
+import { readFile, writeFile } from 'fs/promises'
 import { join } from 'path'
 
 const FEATURES_SECTION = '## Features Added'
 
-export function appendFeatureSpec(projectRoot: string, specMarkdown: string): string {
-  const prdPath = join(projectRoot, '.agent', 'prd', 'PRD.md')
-  let content = readFileSync(prdPath, 'utf-8')
+export async function writeFeatureSpec(specMarkdown: string, prdPath: string): Promise<string> {
+  const content = await readFile(prdPath, 'utf-8').catch(() => '')
+  const trimmedSpec = specMarkdown.trim()
 
-  const block = `\n### ${new Date().toISOString().slice(0, 10)}\n\n${specMarkdown}\n`
-
-  if (content.includes(FEATURES_SECTION)) {
-    // Append under the existing section
-    const idx = content.indexOf(FEATURES_SECTION)
-    const insertAt = idx + FEATURES_SECTION.length
-    content = content.slice(0, insertAt) + '\n' + block + content.slice(insertAt)
-  } else {
-    // Create the section at the end
-    content = content.trimEnd() + '\n\n' + FEATURES_SECTION + '\n' + block
+  if (trimmedSpec.length > 0 && content.includes(trimmedSpec.slice(0, 100))) {
+    return FEATURES_SECTION
   }
 
-  writeFileSync(prdPath, content, 'utf-8')
+  const nextContent = content.includes(FEATURES_SECTION)
+    ? `${content.trimEnd()}\n\n${trimmedSpec}\n`
+    : `${content.trimEnd()}\n\n${FEATURES_SECTION}\n\n${trimmedSpec}\n`
+
+  await writeFile(prdPath, nextContent.trimStart(), 'utf-8')
   return FEATURES_SECTION
+}
+
+export async function appendFeatureSpec(
+  projectRoot: string,
+  specMarkdown: string,
+): Promise<string> {
+  const prdPath = join(projectRoot, '.agent', 'prd', 'PRD.md')
+  return writeFeatureSpec(specMarkdown, prdPath)
 }

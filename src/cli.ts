@@ -51,10 +51,20 @@ program
 
 program
   .command('feature [description]')
-  .description('Add a feature: AI generates spec and tasks, updates PRD')
+  .description('Generate a feature spec and tasks from a natural language description')
   .option('--no-questions', 'Skip clarification questions')
   .option('--dry-run', 'Preview changes without writing files')
   .option('--backend <name>', 'AI backend: copilot | claude | docker')
+  .addHelpText(
+    'after',
+    `
+Examples:
+  rocket feature "Add dark mode toggle"
+  rocket feature --no-questions "Add email notifications"
+  rocket feature --dry-run "Add user profiles"
+  rocket feature "Add audit logs" --backend claude
+`,
+  )
   .action(
     async (
       description: string | undefined,
