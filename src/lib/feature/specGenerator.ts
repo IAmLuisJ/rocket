@@ -3,16 +3,11 @@ import { join } from 'path'
 import type { AgentBackend } from '../backends/types.js'
 import { buildSpecPrompt } from './prompts.js'
 import { collectBackendOutput } from './clarifier.js'
+import type { NewTask } from './taskMerger.js'
 
 export interface SpecResult {
   specMarkdown: string
-  tasks: Array<{
-    title: string
-    description: string
-    category: string
-    passes: boolean
-    passCondition: string
-  }>
+  tasks: NewTask[]
 }
 
 export async function generateSpec(

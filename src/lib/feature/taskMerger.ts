@@ -1,41 +1,38 @@
-import { readTasks, writeTasks, getMaxTaskId } from '../tasks/reader.js'
-import { TaskSchema } from '../tasks/schema.js'
+import { readFile, writeFile } from 'fs/promises'
+import { getMaxTaskId } from '../tasks/reader.js'
+import { TaskSchema, TasksFileSchema, type Task } from '../tasks/schema.js'
 
 export interface MergeResult {
-  tasksAdded: number
+  added: number
   newMaxId: number
 }
 
-export function mergeTasks(
-  projectRoot: string,
-  newTasks: Array<{
-    title: string
-    description: string
-    category: string
-    passes: boolean
-    passCondition: string
-  }>,
-): MergeResult {
-  const tasksFile = readTasks(projectRoot)
-  let nextId = getMaxTaskId(tasksFile.tasks) + 1
+export type NewTask = Omit<Task, 'id'>
 
-  for (const raw of newTasks) {
-    const task = TaskSchema.parse({
-      id: nextId,
-      title: raw.title,
-      description: raw.description,
-      category: raw.category,
-      passes: raw.passes,
-      passCondition: raw.passCondition,
-    })
-    tasksFile.tasks.push(task)
-    nextId++
+export async function mergeTasks(newTasks: NewTask[], tasksPath: string): Promise<MergeResult> {
+  const raw = JSON.parse(await readFile(tasksPath, 'utf-8')) as unknown
+  const tasksFile = TasksFileSchema.parse(raw)
+  const maxId = getMaxTaskId(tasksFile.tasks)
+
+  if (newTasks.length === 0) {
+    return { added: 0, newMaxId: maxId }
   }
 
-  writeTasks(projectRoot, tasksFile)
+  const tasksToAdd = newTasks.map((task, index) =>
+    TaskSchema.parse({
+      ...task,
+      id: maxId + index + 1,
+    }),
+  )
+
+  await writeFile(
+    tasksPath,
+    JSON.stringify({ tasks: [...tasksFile.tasks, ...tasksToAdd] }, null, 2),
+    'utf-8',
+  )
 
   return {
-    tasksAdded: newTasks.length,
-    newMaxId: nextId - 1,
+    added: tasksToAdd.length,
+    newMaxId: maxId + tasksToAdd.length,
   }
 }

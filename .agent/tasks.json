@@ -1031,7 +1031,7 @@
       "title": "Create src/lib/feature/taskMerger.ts — append new tasks to tasks.json",
       "description": "Create src/lib/feature/taskMerger.ts. It reads the current .agent/tasks.json, finds the maximum existing task ID, and appends the provided new tasks with IDs continuing from max+1. Validates each new task against the existing Zod task schema (from src/lib/tasks/schema.ts) before writing. Writes the updated task list back to tasks.json with 2-space JSON formatting. Returns the number of tasks added and the new max ID.",
       "category": "functional",
-      "passes": false,
+      "passes": true,
       "passCondition": "taskMerger.ts exports mergeTasks(newTasks: Omit<Task, 'id'>[], tasksPath: string) => Promise<{ added: number, newMaxId: number }>; IDs are sequential from previous max+1; existing tasks are unchanged",
       "specFilePath": ".agent/tasks/TASK-115.json"
     },

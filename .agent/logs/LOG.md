@@ -544,3 +544,9 @@ You've hit your limit · resets 5pm (America/Detroit)
 - **Task:** TASK-52 — Create src/lib/backends/index.ts — backend selector
 - **Outcome:** pass
 - **Summary:** Renamed selectBackend to getBackend per spec. Added conflict check that throws when both --claude and --docker are set. Added re-export of AgentBackend, BackendOptions, ParsedOutput types. Updated all consumers (loop.ts, feature.tsx, loop.test.ts, CONTRIBUTING.md). Created index.test.ts with 5 tests covering default/claude/docker/both-throws/both-false. All 326 tests pass, tsc clean.
+
+## Session 2026-05-17 · TASK-115
+- **Time:** 2026-05-17T23:32:00.000-04:00
+- **Task:** TASK-115 — Create src/lib/feature/taskMerger.ts — append new tasks to tasks.json
+- **Outcome:** pass
+- **Summary:** Refactored mergeTasks to the async tasksPath-based API, returning { added, newMaxId }, preserving existing tasks, assigning sequential IDs from the current max, and validating all incoming tasks before writing. Updated the feature command to await the new API and added focused Vitest coverage for sequential IDs, empty merges, invalid tasks, and atomic validation. Screenshot: N/A (non-UI task).

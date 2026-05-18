@@ -75,7 +75,7 @@ function FeatureApp({ projectRoot, description, backend, noQuestions, dryRun }: 
     void runGeneration(answers)
   }
 
-  function handlePreviewConfirm(action: 'apply' | 'edit' | 'cancel') {
+  async function handlePreviewConfirm(action: 'apply' | 'edit' | 'cancel') {
     if (action === 'cancel' || !specResult) {
       setStatusText('Cancelled.')
       setPhase('done')
@@ -98,14 +98,21 @@ function FeatureApp({ projectRoot, description, backend, noQuestions, dryRun }: 
       return
     }
 
-    const mergeResult = mergeTasks(projectRoot, specResult.tasks)
-    const section = appendFeatureSpec(projectRoot, specResult.specMarkdown)
+    try {
+      const tasksPath = join(projectRoot, '.agent', 'tasks.json')
+      const mergeResult = await mergeTasks(specResult.tasks, tasksPath)
+      const section = appendFeatureSpec(projectRoot, specResult.specMarkdown)
 
-    setStatusText(
-      `Done! Added ${mergeResult.tasksAdded} tasks (IDs ${mergeResult.newMaxId - mergeResult.tasksAdded + 1}–${mergeResult.newMaxId}). Updated ${section} in PRD.md.`,
-    )
-    setPhase('done')
-    setTimeout(() => exit(), 100)
+      setStatusText(
+        `Done! Added ${mergeResult.added} tasks (IDs ${mergeResult.newMaxId - mergeResult.added + 1}–${mergeResult.newMaxId}). Updated ${section} in PRD.md.`,
+      )
+      setPhase('done')
+      setTimeout(() => exit(), 100)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      setStatusText(`Error: ${msg}`)
+      setPhase('done')
+    }
   }
 
   if (phase === 'input') {
