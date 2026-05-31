@@ -1,11 +1,17 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import type { ChildProcess } from 'child_process'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
+import { getBackend } from '../lib/backends/index.js'
+import type { AgentBackend } from '../lib/backends/types.js'
+import { runDesktopLoop } from '../lib/desktop/loopService.js'
 import { readProjectDashboard, setTaskPasses } from '../lib/desktop/projectService.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 let mainWindow: BrowserWindow | null = null
+let activeChild: ChildProcess | null = null
+let loopRunning = false
 
 async function createWindow() {
   mainWindow = new BrowserWindow({
@@ -53,6 +59,59 @@ ipcMain.handle(
   },
 )
 
+ipcMain.handle(
+  'loop:start',
+  async (
+    event,
+    options: {
+      projectRoot: string
+      backendName: 'copilot' | 'claude' | 'docker'
+      maxIterations: number
+      taskId?: number | null
+    },
+  ) => {
+    if (loopRunning) {
+      return { ok: false, message: 'A Rocket loop is already running.' }
+    }
+
+    loopRunning = true
+    const backend = selectBackend(options.backendName)
+
+    void runDesktopLoop({
+      projectRoot: options.projectRoot,
+      backend,
+      maxIterations: options.maxIterations,
+      taskId: options.taskId,
+      caffeinate: false,
+      onChild(proc) {
+        activeChild = proc
+      },
+      emit(loopEvent) {
+        event.sender.send('loop:event', loopEvent)
+      },
+    })
+      .catch((err: unknown) => {
+        event.sender.send('loop:event', {
+          type: 'error',
+          message: err instanceof Error ? err.message : String(err),
+        })
+      })
+      .finally(() => {
+        activeChild = null
+        loopRunning = false
+      })
+
+    return { ok: true, message: `Started ${backend.name}` }
+  },
+)
+
+ipcMain.handle('loop:stop', async () => {
+  if (!activeChild) return { ok: false, message: 'No active loop process.' }
+  activeChild.kill('SIGTERM')
+  activeChild = null
+  return { ok: true, message: 'Stop signal sent.' }
+})
+
 app.whenReady().then(async () => {
   await createWindow()
 
@@ -68,3 +127,10 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+function selectBackend(name: 'copilot' | 'claude' | 'docker'): AgentBackend {
+  return getBackend({
+    claude: name === 'claude',
+    docker: name === 'docker',
+  })
+}
