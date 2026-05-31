@@ -1,11 +1,18 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { DesktopLoopEvent } from '../lib/desktop/loopService.js'
-import type { ProjectDashboard } from '../lib/desktop/projectService.js'
+import type { ProjectDashboard, TaskDetailsInput } from '../lib/desktop/projectService.js'
+import type { RecentProject } from '../lib/desktop/recentProjects.js'
 
 export interface RocketDesktopApi {
   readProject(projectRoot: string): Promise<ProjectDashboard>
   chooseProject(): Promise<ProjectDashboard | null>
+  recentProjects(): Promise<RecentProject[]>
   setTaskPasses(projectRoot: string, taskId: number, passes: boolean): Promise<ProjectDashboard>
+  setTaskDetails(
+    projectRoot: string,
+    taskId: number,
+    details: TaskDetailsInput,
+  ): Promise<ProjectDashboard>
   startLoop(options: {
     projectRoot: string
     backendName: 'copilot' | 'claude' | 'docker'
@@ -25,12 +32,23 @@ const rocket: RocketDesktopApi = {
   chooseProject() {
     return ipcRenderer.invoke('project:choose') as Promise<ProjectDashboard | null>
   },
+  recentProjects() {
+    return ipcRenderer.invoke('project:recent') as Promise<RecentProject[]>
+  },
   setTaskPasses(projectRoot, taskId, passes) {
     return ipcRenderer.invoke(
       'task:set-passes',
       projectRoot,
       taskId,
       passes,
+    ) as Promise<ProjectDashboard>
+  },
+  setTaskDetails(projectRoot, taskId, details) {
+    return ipcRenderer.invoke(
+      'task:set-details',
+      projectRoot,
+      taskId,
+      details,
     ) as Promise<ProjectDashboard>
   },
   startLoop(options) {

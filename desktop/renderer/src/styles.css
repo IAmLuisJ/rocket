@@ -25,7 +25,8 @@ body {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -56,6 +57,17 @@ input {
   padding: 0 11px;
 }
 
+textarea {
+  width: 100%;
+  min-height: 96px;
+  resize: vertical;
+  border: 1px solid #c8c0ad;
+  background: #fffaf0;
+  color: #24231f;
+  padding: 10px 11px;
+  line-height: 1.45;
+}
+
 .project-controls input {
   min-width: 320px;
 }
@@ -82,6 +94,12 @@ select {
   align-items: center;
   padding: 18px 10px;
   gap: 24px;
+}
+
+.recent-rail {
+  display: grid;
+  gap: 8px;
+  margin-top: auto;
 }
 
 .brand-mark {
@@ -111,6 +129,21 @@ select {
 .rail-button.active {
   background: #d85f31;
   border-color: #d85f31;
+}
+
+.recent-project-button {
+  width: 38px;
+  min-height: 38px;
+  padding: 0;
+  border-color: #514b3e;
+  background: #312f29;
+  color: #ffddb1;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.recent-project-button:hover {
+  border-color: #ffb84d;
 }
 
 .workspace {
@@ -310,6 +343,31 @@ select {
 
 .detail-panel .panel-heading {
   padding-inline: 0;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.task-editor {
+  display: grid;
+  gap: 14px;
+  padding-top: 18px;
+}
+
+.task-editor label {
+  display: grid;
+  gap: 6px;
+  color: #7c6f55;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.task-editor input,
+.task-editor select {
+  width: 100%;
 }
 
 .detail-panel h3 {

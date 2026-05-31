@@ -1,9 +1,23 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { ProjectDashboard } from '../../../src/lib/desktop/projectService'
-import type { Task } from '../../../src/lib/tasks/schema'
+import type { RecentProject } from '../../../src/lib/desktop/recentProjects'
+import type { Task, TaskCategory } from '../../../src/lib/tasks/schema'
 
 type Filter = 'all' | 'incomplete' | 'complete'
 type BackendName = 'copilot' | 'claude' | 'docker'
+type TaskDraft = Pick<Task, 'title' | 'description' | 'category' | 'passCondition'>
+
+const taskCategories: TaskCategory[] = [
+  'config',
+  'functional',
+  'ui-ux',
+  'data-model',
+  'api-endpoint',
+  'integration',
+  'security',
+  'testing',
+  'docs',
+]
 
 const emptyDashboard: ProjectDashboard = {
   projectRoot: '',
@@ -17,15 +31,23 @@ const emptyDashboard: ProjectDashboard = {
 }
 
 export function App() {
+  const hasDesktopBridge = Boolean(window.rocket)
   const [dashboard, setDashboard] = useState<ProjectDashboard>(emptyDashboard)
   const [projectPath, setProjectPath] = useState('')
   const [filter, setFilter] = useState<Filter>('incomplete')
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
-  const [status, setStatus] = useState('Open a Rocket project to inspect tasks and loop state.')
+  const [status, setStatus] = useState(
+    hasDesktopBridge
+      ? 'Open a Rocket project to inspect tasks and loop state.'
+      : 'Rocket desktop bridge is unavailable in browser preview.',
+  )
   const [backendName, setBackendName] = useState<BackendName>('copilot')
   const [maxIterations, setMaxIterations] = useState(1)
   const [loopRunning, setLoopRunning] = useState(false)
   const [loopLines, setLoopLines] = useState<string[]>([])
+  const [recentProjects, setRecentProjects] = useState<RecentProject[]>([])
+  const [editingTask, setEditingTask] = useState(false)
+  const [taskDraft, setTaskDraft] = useState<TaskDraft | null>(null)
 
   const visibleTasks = useMemo(() => {
     if (filter === 'complete') return dashboard.tasks.filter((task) => task.passes)
@@ -35,6 +57,11 @@ export function App() {
 
   const selectedTask =
     dashboard.tasks.find((task) => task.id === selectedTaskId) ?? visibleTasks[0] ?? null
+
+  useEffect(() => {
+    setEditingTask(false)
+    setTaskDraft(selectedTask ? toTaskDraft(selectedTask) : null)
+  }, [selectedTask])
 
   useEffect(() => {
     if (!window.rocket?.onLoopEvent) return
@@ -62,7 +89,16 @@ export function App() {
     })
   }, [])
 
+  useEffect(() => {
+    void refreshRecentProjects()
+  }, [])
+
   async function chooseProject() {
+    if (!window.rocket) {
+      setStatus('Open Rocket Desktop to choose a project from disk.')
+      return
+    }
+
     const next = await window.rocket.chooseProject()
     if (!next) return
     setDashboard(next)
@@ -71,9 +107,14 @@ export function App() {
     setStatus(
       next.hasAgent ? `Loaded ${next.projectName}` : 'That folder is not a Rocket project yet.',
     )
+    await refreshRecentProjects()
   }
 
   async function loadProject() {
+    if (!window.rocket) {
+      setStatus('Open Rocket Desktop to load projects from disk.')
+      return
+    }
     if (!projectPath.trim()) return
     const next = await window.rocket.readProject(projectPath.trim())
     setDashboard(next)
@@ -81,16 +122,49 @@ export function App() {
     setStatus(
       next.hasAgent ? `Loaded ${next.projectName}` : 'No .agent/tasks.json found in that folder.',
     )
+    await refreshRecentProjects()
   }
 
   async function toggleTask(task: Task) {
+    if (!window.rocket) {
+      setStatus('Open Rocket Desktop to update tasks.')
+      return
+    }
+
     const next = await window.rocket.setTaskPasses(dashboard.projectRoot, task.id, !task.passes)
     setDashboard(next)
     setSelectedTaskId(task.id)
     setStatus(`#${task.id} ${task.passes ? 'reopened' : 'marked complete'}.`)
   }
 
+  async function saveTaskDetails() {
+    if (!window.rocket) {
+      setStatus('Open Rocket Desktop to update tasks.')
+      return
+    }
+    if (!selectedTask || !taskDraft) return
+
+    try {
+      const next = await window.rocket.setTaskDetails(
+        dashboard.projectRoot,
+        selectedTask.id,
+        taskDraft,
+      )
+      setDashboard(next)
+      setSelectedTaskId(selectedTask.id)
+      setEditingTask(false)
+      setStatus(`#${selectedTask.id} updated.`)
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : String(error))
+    }
+  }
+
   async function startLoop(taskId: number | null) {
+    if (!window.rocket) {
+      setStatus('Open Rocket Desktop to run the loop harness.')
+      return
+    }
+
     if (!dashboard.hasAgent) {
       setStatus('Open a Rocket project before starting a loop.')
       return
@@ -108,8 +182,34 @@ export function App() {
   }
 
   async function stopLoop() {
+    if (!window.rocket) {
+      setStatus('Open Rocket Desktop to control the loop harness.')
+      return
+    }
+
     const result = await window.rocket.stopLoop()
     setStatus(result.message)
+  }
+
+  async function openRecentProject(projectRoot: string) {
+    if (!window.rocket) {
+      setStatus('Open Rocket Desktop to load recent projects.')
+      return
+    }
+
+    const next = await window.rocket.readProject(projectRoot)
+    setDashboard(next)
+    setProjectPath(next.projectRoot)
+    setSelectedTaskId(next.currentTask?.id ?? next.tasks.find((task) => !task.passes)?.id ?? null)
+    setStatus(
+      next.hasAgent ? `Loaded ${next.projectName}` : 'Recent project is missing Rocket files.',
+    )
+    await refreshRecentProjects()
+  }
+
+  async function refreshRecentProjects() {
+    if (!window.rocket) return
+    setRecentProjects(await window.rocket.recentProjects())
   }
 
   return (
@@ -127,6 +227,18 @@ export function App() {
             ▶
           </button>
         </nav>
+        <div className="recent-rail" aria-label="Recent projects">
+          {recentProjects.map((project) => (
+            <button
+              key={project.projectRoot}
+              className="recent-project-button"
+              title={project.projectRoot}
+              onClick={() => openRecentProject(project.projectRoot)}
+            >
+              {project.projectName.slice(0, 2).toUpperCase()}
+            </button>
+          ))}
+        </div>
       </aside>
 
       <section className="workspace">
@@ -142,8 +254,10 @@ export function App() {
               placeholder="/path/to/rocket/project"
               aria-label="Project path"
             />
-            <button onClick={loadProject}>Load</button>
-            <button className="primary" onClick={chooseProject}>
+            <button onClick={loadProject} disabled={!hasDesktopBridge}>
+              Load
+            </button>
+            <button className="primary" onClick={chooseProject} disabled={!hasDesktopBridge}>
               Open
             </button>
           </div>
@@ -232,15 +346,15 @@ export function App() {
               </label>
               <div className="loop-actions">
                 <button
-                  disabled={loopRunning || !selectedTask}
+                  disabled={!hasDesktopBridge || loopRunning || !selectedTask}
                   onClick={() => startLoop(selectedTask?.id ?? null)}
                 >
                   Run Selected
                 </button>
-                <button disabled={loopRunning} onClick={() => startLoop(null)}>
+                <button disabled={!hasDesktopBridge || loopRunning} onClick={() => startLoop(null)}>
                   Run Next
                 </button>
-                <button disabled={!loopRunning} onClick={stopLoop}>
+                <button disabled={!hasDesktopBridge || !loopRunning} onClick={stopLoop}>
                   Stop
                 </button>
               </div>
@@ -253,26 +367,99 @@ export function App() {
                     <p className="eyebrow">Focus</p>
                     <h2>#{selectedTask.id}</h2>
                   </div>
-                  <button onClick={() => toggleTask(selectedTask)}>
-                    {selectedTask.passes ? 'Reopen' : 'Complete'}
-                  </button>
+                  <div className="detail-actions">
+                    {editingTask ? (
+                      <>
+                        <button onClick={() => setEditingTask(false)}>Cancel</button>
+                        <button className="primary" onClick={saveTaskDetails}>
+                          Save
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => {
+                            setTaskDraft(toTaskDraft(selectedTask))
+                            setEditingTask(true)
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button onClick={() => toggleTask(selectedTask)}>
+                          {selectedTask.passes ? 'Reopen' : 'Complete'}
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <h3>{selectedTask.title}</h3>
-                <p>{selectedTask.description}</p>
-                <dl>
-                  <div>
-                    <dt>Category</dt>
-                    <dd>{selectedTask.category}</dd>
+                {editingTask && taskDraft ? (
+                  <div className="task-editor">
+                    <label>
+                      Title
+                      <input
+                        value={taskDraft.title}
+                        onChange={(event) =>
+                          setTaskDraft({ ...taskDraft, title: event.target.value })
+                        }
+                      />
+                    </label>
+                    <label>
+                      Description
+                      <textarea
+                        value={taskDraft.description}
+                        onChange={(event) =>
+                          setTaskDraft({ ...taskDraft, description: event.target.value })
+                        }
+                      />
+                    </label>
+                    <label>
+                      Category
+                      <select
+                        value={taskDraft.category}
+                        onChange={(event) =>
+                          setTaskDraft({
+                            ...taskDraft,
+                            category: event.target.value as TaskCategory,
+                          })
+                        }
+                      >
+                        {taskCategories.map((category) => (
+                          <option value={category} key={category}>
+                            {category}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      Pass Condition
+                      <textarea
+                        value={taskDraft.passCondition}
+                        onChange={(event) =>
+                          setTaskDraft({ ...taskDraft, passCondition: event.target.value })
+                        }
+                      />
+                    </label>
                   </div>
-                  <div>
-                    <dt>Status</dt>
-                    <dd>{selectedTask.passes ? 'Complete' : 'Pending'}</dd>
-                  </div>
-                  <div>
-                    <dt>Pass Condition</dt>
-                    <dd>{selectedTask.passCondition}</dd>
-                  </div>
-                </dl>
+                ) : (
+                  <>
+                    <h3>{selectedTask.title}</h3>
+                    <p>{selectedTask.description}</p>
+                    <dl>
+                      <div>
+                        <dt>Category</dt>
+                        <dd>{selectedTask.category}</dd>
+                      </div>
+                      <div>
+                        <dt>Status</dt>
+                        <dd>{selectedTask.passes ? 'Complete' : 'Pending'}</dd>
+                      </div>
+                      <div>
+                        <dt>Pass Condition</dt>
+                        <dd>{selectedTask.passCondition}</dd>
+                      </div>
+                    </dl>
+                  </>
+                )}
               </>
             ) : (
               <div className="empty-state">Select a task to see implementation details.</div>
@@ -324,4 +511,13 @@ function formatRuntime(totalSeconds: number) {
   const minutes = Math.floor((totalSeconds % 3600) / 60)
   if (hours > 0) return `${hours}h ${minutes}m`
   return `${minutes}m`
+}
+
+function toTaskDraft(task: Task): TaskDraft {
+  return {
+    title: task.title,
+    description: task.description,
+    category: task.category,
+    passCondition: task.passCondition,
+  }
 }

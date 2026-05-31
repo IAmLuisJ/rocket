@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { mkdtemp, mkdir, rm, writeFile, readFile } from 'fs/promises'
 import { join } from 'path'
 import { tmpdir } from 'os'
-import { readProjectDashboard, setTaskPasses } from './projectService.js'
+import { readProjectDashboard, setTaskDetails, setTaskPasses } from './projectService.js'
 
 describe('desktop project service', () => {
   let tmpDir: string
@@ -89,5 +89,39 @@ describe('desktop project service', () => {
       tasks: Array<{ id: number; passes: boolean }>
     }
     expect(updated.tasks.find((task) => task.id === 2)?.passes).toBe(true)
+  })
+
+  it('updates editable task details without changing completion state', async () => {
+    await writeAgentProject()
+
+    const dashboard = await setTaskDetails(tmpDir, 2, {
+      title: 'Design polished desktop GUI',
+      description: 'Build the task management surface for Rocket Desktop',
+      category: 'ui-ux',
+      passCondition: 'Task detail edits persist to .agent/tasks.json',
+    })
+
+    const updatedTask = dashboard.tasks.find((task) => task.id === 2)
+    expect(updatedTask).toMatchObject({
+      id: 2,
+      title: 'Design polished desktop GUI',
+      description: 'Build the task management surface for Rocket Desktop',
+      category: 'ui-ux',
+      passes: false,
+      passCondition: 'Task detail edits persist to .agent/tasks.json',
+    })
+  })
+
+  it('rejects invalid task detail updates', async () => {
+    await writeAgentProject()
+
+    await expect(
+      setTaskDetails(tmpDir, 2, {
+        title: '',
+        description: 'Missing title should fail validation',
+        category: 'ui-ux',
+        passCondition: 'Validation rejects the update',
+      }),
+    ).rejects.toThrow()
   })
 })

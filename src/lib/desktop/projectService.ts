@@ -1,6 +1,6 @@
 import { existsSync } from 'fs'
 import { basename, join } from 'path'
-import type { Task } from '../tasks/schema.js'
+import { TaskSchema, type Task, type TaskCategory } from '../tasks/schema.js'
 import { calculateProgress, type ProgressStats } from '../progress/calculator.js'
 import { readHistoryStats, type HistoryStats } from '../progress/historyReader.js'
 import { getCurrentTask, readRecentActivity, type ActivityEntry } from '../progress/logReader.js'
@@ -15,6 +15,13 @@ export interface ProjectDashboard {
   activity: ActivityEntry[]
   history: HistoryStats
   currentTask: Task | null
+}
+
+export interface TaskDetailsInput {
+  title: string
+  description: string
+  category: TaskCategory
+  passCondition: string
 }
 
 export async function readProjectDashboard(projectRoot: string): Promise<ProjectDashboard> {
@@ -62,5 +69,32 @@ export async function setTaskPasses(
   writeTasks(projectRoot, {
     tasks: tasksFile.tasks.map((task) => (task.id === taskId ? { ...task, passes } : task)),
   })
+  return readProjectDashboard(projectRoot)
+}
+
+export async function setTaskDetails(
+  projectRoot: string,
+  taskId: number,
+  details: TaskDetailsInput,
+): Promise<ProjectDashboard> {
+  const tasksFile = readTasks(projectRoot)
+  let found = false
+  const tasks = tasksFile.tasks.map((task) => {
+    if (task.id !== taskId) return task
+    found = true
+    return TaskSchema.parse({
+      ...task,
+      title: details.title,
+      description: details.description,
+      category: details.category,
+      passCondition: details.passCondition,
+    })
+  })
+
+  if (!found) {
+    throw new Error(`Task #${taskId} was not found.`)
+  }
+
+  writeTasks(projectRoot, { tasks })
   return readProjectDashboard(projectRoot)
 }

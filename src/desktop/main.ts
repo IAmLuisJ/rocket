@@ -5,7 +5,13 @@ import { fileURLToPath } from 'url'
 import { getBackend } from '../lib/backends/index.js'
 import type { AgentBackend } from '../lib/backends/types.js'
 import { runDesktopLoop } from '../lib/desktop/loopService.js'
-import { readProjectDashboard, setTaskPasses } from '../lib/desktop/projectService.js'
+import {
+  readProjectDashboard,
+  setTaskDetails,
+  setTaskPasses,
+  type TaskDetailsInput,
+} from '../lib/desktop/projectService.js'
+import { readRecentProjects, rememberRecentProject } from '../lib/desktop/recentProjects.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -36,7 +42,11 @@ async function createWindow() {
 }
 
 ipcMain.handle('project:read', async (_event, projectRoot: string) => {
-  return readProjectDashboard(projectRoot)
+  const dashboard = await readProjectDashboard(projectRoot)
+  if (dashboard.hasAgent) {
+    await rememberRecentProject(getRecentProjectsPath(), dashboard)
+  }
+  return dashboard
 })
 
 ipcMain.handle('project:choose', async () => {
@@ -49,13 +59,28 @@ ipcMain.handle('project:choose', async () => {
     : await dialog.showOpenDialog(options)
 
   if (result.canceled || result.filePaths.length === 0) return null
-  return readProjectDashboard(result.filePaths[0])
+  const dashboard = await readProjectDashboard(result.filePaths[0])
+  if (dashboard.hasAgent) {
+    await rememberRecentProject(getRecentProjectsPath(), dashboard)
+  }
+  return dashboard
+})
+
+ipcMain.handle('project:recent', async () => {
+  return readRecentProjects(getRecentProjectsPath())
 })
 
 ipcMain.handle(
   'task:set-passes',
   async (_event, projectRoot: string, taskId: number, passes: boolean) => {
     return setTaskPasses(projectRoot, taskId, passes)
+  },
+)
+
+ipcMain.handle(
+  'task:set-details',
+  async (_event, projectRoot: string, taskId: number, details: TaskDetailsInput) => {
+    return setTaskDetails(projectRoot, taskId, details)
   },
 )
 
@@ -133,4 +158,8 @@ function selectBackend(name: 'copilot' | 'claude' | 'docker'): AgentBackend {
     claude: name === 'claude',
     docker: name === 'docker',
   })
+}
+
+function getRecentProjectsPath(): string {
+  return join(app.getPath('userData'), 'recent-projects.json')
 }
