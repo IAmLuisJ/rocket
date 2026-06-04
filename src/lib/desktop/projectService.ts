@@ -1,4 +1,5 @@
 import { existsSync } from 'fs'
+import { readFile } from 'fs/promises'
 import { basename, join } from 'path'
 import { TaskSchema, type Task, type TaskCategory } from '../tasks/schema.js'
 import { calculateProgress, type ProgressStats } from '../progress/calculator.js'
@@ -22,6 +23,12 @@ export interface TaskDetailsInput {
   description: string
   category: TaskCategory
   passCondition: string
+}
+
+export interface ProjectContext {
+  hasAgent: boolean
+  prdMarkdown: string
+  summaryMarkdown: string
 }
 
 export async function readProjectDashboard(projectRoot: string): Promise<ProjectDashboard> {
@@ -57,6 +64,27 @@ export async function readProjectDashboard(projectRoot: string): Promise<Project
     activity,
     history,
     currentTask,
+  }
+}
+
+export async function readProjectContext(projectRoot: string): Promise<ProjectContext> {
+  const prdDir = join(projectRoot, '.agent', 'prd')
+  const prdPath = join(prdDir, 'PRD.md')
+  const summaryPath = join(prdDir, 'SUMMARY.md')
+
+  if (!existsSync(prdPath) && !existsSync(summaryPath)) {
+    return { hasAgent: false, prdMarkdown: '', summaryMarkdown: '' }
+  }
+
+  const [prdMarkdown, summaryMarkdown] = await Promise.all([
+    readOptionalTextFile(prdPath),
+    readOptionalTextFile(summaryPath),
+  ])
+
+  return {
+    hasAgent: true,
+    prdMarkdown,
+    summaryMarkdown,
   }
 }
 
@@ -97,4 +125,12 @@ export async function setTaskDetails(
 
   writeTasks(projectRoot, { tasks })
   return readProjectDashboard(projectRoot)
+}
+
+async function readOptionalTextFile(path: string): Promise<string> {
+  try {
+    return await readFile(path, 'utf-8')
+  } catch {
+    return ''
+  }
 }

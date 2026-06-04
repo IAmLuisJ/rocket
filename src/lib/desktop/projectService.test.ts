@@ -2,7 +2,12 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { mkdtemp, mkdir, rm, writeFile, readFile } from 'fs/promises'
 import { join } from 'path'
 import { tmpdir } from 'os'
-import { readProjectDashboard, setTaskDetails, setTaskPasses } from './projectService.js'
+import {
+  readProjectContext,
+  readProjectDashboard,
+  setTaskDetails,
+  setTaskPasses,
+} from './projectService.js'
 
 describe('desktop project service', () => {
   let tmpDir: string
@@ -18,6 +23,7 @@ describe('desktop project service', () => {
   async function writeAgentProject() {
     await mkdir(join(tmpDir, '.agent', 'logs'), { recursive: true })
     await mkdir(join(tmpDir, '.agent', 'history'), { recursive: true })
+    await mkdir(join(tmpDir, '.agent', 'prd'), { recursive: true })
     await writeFile(
       join(tmpDir, '.agent', 'tasks.json'),
       JSON.stringify({
@@ -51,6 +57,11 @@ describe('desktop project service', () => {
         '- **Outcome**: in-progress',
         '- **Elapsed**: 0m 5s',
       ].join('\n'),
+    )
+    await writeFile(join(tmpDir, '.agent', 'prd', 'PRD.md'), '# Rocket PRD\n\nBuild the CLI.')
+    await writeFile(
+      join(tmpDir, '.agent', 'prd', 'SUMMARY.md'),
+      '# Rocket Summary\n\nCurrent focus.',
     )
   }
 
@@ -123,5 +134,27 @@ describe('desktop project service', () => {
         passCondition: 'Validation rejects the update',
       }),
     ).rejects.toThrow()
+  })
+
+  it('reads project PRD and summary content for the desktop context view', async () => {
+    await writeAgentProject()
+
+    const context = await readProjectContext(tmpDir)
+
+    expect(context).toEqual({
+      hasAgent: true,
+      prdMarkdown: '# Rocket PRD\n\nBuild the CLI.',
+      summaryMarkdown: '# Rocket Summary\n\nCurrent focus.',
+    })
+  })
+
+  it('returns empty context for folders without Rocket PRD files', async () => {
+    const context = await readProjectContext(tmpDir)
+
+    expect(context).toEqual({
+      hasAgent: false,
+      prdMarkdown: '',
+      summaryMarkdown: '',
+    })
   })
 })

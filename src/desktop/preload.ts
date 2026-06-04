@@ -1,12 +1,17 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { DesktopLoopEvent } from '../lib/desktop/loopService.js'
-import type { ProjectDashboard, TaskDetailsInput } from '../lib/desktop/projectService.js'
+import type {
+  ProjectContext,
+  ProjectDashboard,
+  TaskDetailsInput,
+} from '../lib/desktop/projectService.js'
 import type { RecentProject } from '../lib/desktop/recentProjects.js'
 
 export interface RocketDesktopApi {
   readProject(projectRoot: string): Promise<ProjectDashboard>
   chooseProject(): Promise<ProjectDashboard | null>
   recentProjects(): Promise<RecentProject[]>
+  readProjectContext(projectRoot: string): Promise<ProjectContext>
   setTaskPasses(projectRoot: string, taskId: number, passes: boolean): Promise<ProjectDashboard>
   setTaskDetails(
     projectRoot: string,
@@ -34,6 +39,9 @@ const rocket: RocketDesktopApi = {
   },
   recentProjects() {
     return ipcRenderer.invoke('project:recent') as Promise<RecentProject[]>
+  },
+  readProjectContext(projectRoot) {
+    return ipcRenderer.invoke('project:context', projectRoot) as Promise<ProjectContext>
   },
   setTaskPasses(projectRoot, taskId, passes) {
     return ipcRenderer.invoke(

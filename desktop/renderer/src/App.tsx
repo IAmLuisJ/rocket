@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { ProjectDashboard } from '../../../src/lib/desktop/projectService'
+import type { ProjectContext, ProjectDashboard } from '../../../src/lib/desktop/projectService'
 import type { RecentProject } from '../../../src/lib/desktop/recentProjects'
 import type { Task, TaskCategory } from '../../../src/lib/tasks/schema'
 
 type Filter = 'all' | 'incomplete' | 'complete'
 type BackendName = 'copilot' | 'claude' | 'docker'
+type DetailView = 'task' | 'context'
 type TaskDraft = Pick<Task, 'title' | 'description' | 'category' | 'passCondition'>
 
 const taskCategories: TaskCategory[] = [
@@ -30,6 +31,12 @@ const emptyDashboard: ProjectDashboard = {
   currentTask: null,
 }
 
+const emptyContext: ProjectContext = {
+  hasAgent: false,
+  prdMarkdown: '',
+  summaryMarkdown: '',
+}
+
 export function App() {
   const hasDesktopBridge = Boolean(window.rocket)
   const [dashboard, setDashboard] = useState<ProjectDashboard>(emptyDashboard)
@@ -48,6 +55,8 @@ export function App() {
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([])
   const [editingTask, setEditingTask] = useState(false)
   const [taskDraft, setTaskDraft] = useState<TaskDraft | null>(null)
+  const [detailView, setDetailView] = useState<DetailView>('task')
+  const [projectContext, setProjectContext] = useState<ProjectContext>(emptyContext)
 
   const visibleTasks = useMemo(() => {
     if (filter === 'complete') return dashboard.tasks.filter((task) => task.passes)
@@ -107,6 +116,7 @@ export function App() {
     setStatus(
       next.hasAgent ? `Loaded ${next.projectName}` : 'That folder is not a Rocket project yet.',
     )
+    await refreshProjectContext(next)
     await refreshRecentProjects()
   }
 
@@ -122,6 +132,7 @@ export function App() {
     setStatus(
       next.hasAgent ? `Loaded ${next.projectName}` : 'No .agent/tasks.json found in that folder.',
     )
+    await refreshProjectContext(next)
     await refreshRecentProjects()
   }
 
@@ -204,7 +215,16 @@ export function App() {
     setStatus(
       next.hasAgent ? `Loaded ${next.projectName}` : 'Recent project is missing Rocket files.',
     )
+    await refreshProjectContext(next)
     await refreshRecentProjects()
+  }
+
+  async function refreshProjectContext(nextDashboard = dashboard) {
+    if (!window.rocket || !nextDashboard.hasAgent) {
+      setProjectContext(emptyContext)
+      return
+    }
+    setProjectContext(await window.rocket.readProjectContext(nextDashboard.projectRoot))
   }
 
   async function refreshRecentProjects() {
@@ -360,7 +380,21 @@ export function App() {
               </div>
             </section>
 
-            {selectedTask ? (
+            <div className="detail-switch" aria-label="Detail view">
+              {(['task', 'context'] as const).map((item) => (
+                <button
+                  key={item}
+                  className={detailView === item ? 'selected' : ''}
+                  onClick={() => setDetailView(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+
+            {detailView === 'context' ? (
+              <ProjectContextPanel context={projectContext} />
+            ) : selectedTask ? (
               <>
                 <div className="panel-heading">
                   <div>
@@ -504,6 +538,37 @@ function Metric({ label, value }: { label: string; value: string }) {
       <strong>{value}</strong>
     </div>
   )
+}
+
+function ProjectContextPanel({ context }: { context: ProjectContext }) {
+  return (
+    <section className="context-panel" aria-label="Project context">
+      <div className="panel-heading">
+        <div>
+          <p className="eyebrow">Context</p>
+          <h2>PRD</h2>
+        </div>
+      </div>
+      {!context.hasAgent ? (
+        <div className="empty-state">Open a Rocket project to read its PRD and summary.</div>
+      ) : (
+        <div className="context-sections">
+          <article>
+            <h3>Summary</h3>
+            <MarkdownBlock value={context.summaryMarkdown || 'No SUMMARY.md content found.'} />
+          </article>
+          <article>
+            <h3>Product Requirements</h3>
+            <MarkdownBlock value={context.prdMarkdown || 'No PRD.md content found.'} />
+          </article>
+        </div>
+      )}
+    </section>
+  )
+}
+
+function MarkdownBlock({ value }: { value: string }) {
+  return <pre className="markdown-block">{value}</pre>
 }
 
 function formatRuntime(totalSeconds: number) {

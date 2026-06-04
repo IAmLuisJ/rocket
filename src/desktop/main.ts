@@ -6,6 +6,7 @@ import { getBackend } from '../lib/backends/index.js'
 import type { AgentBackend } from '../lib/backends/types.js'
 import { runDesktopLoop } from '../lib/desktop/loopService.js'
 import {
+  readProjectContext,
   readProjectDashboard,
   setTaskDetails,
   setTaskPasses,
@@ -68,6 +69,10 @@ ipcMain.handle('project:choose', async () => {
 
 ipcMain.handle('project:recent', async () => {
   return readRecentProjects(getRecentProjectsPath())
+})
+
+ipcMain.handle('project:context', async (_event, projectRoot: string) => {
+  return readProjectContext(projectRoot)
 })
 
 ipcMain.handle(
